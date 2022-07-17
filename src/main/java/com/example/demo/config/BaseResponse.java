@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 import static com.example.demo.config.BaseResponseStatus.SUCCESS;
 
@@ -30,6 +31,12 @@ public class BaseResponse<T> {
     // 요청에 실패한 경우
     public BaseResponse(BaseResponseStatus status) {
         this.isSuccess = status.isSuccess();
+        this.message = status.getMessage();
+        this.code = status.getCode();
+    }
+
+    public BaseResponse(CoolsmsException status) {
+        this.isSuccess = false;
         this.message = status.getMessage();
         this.code = status.getCode();
     }

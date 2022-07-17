@@ -88,5 +88,13 @@ public class UserProvider {
         }
 
     }
+    public  int checkExistingUser(String phoneNum) throws BaseException {
+        try {
+            int result = userDao.checkExistingUser(phoneNum);
+            return result;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }

@@ -8,8 +8,12 @@ import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.Random;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -145,6 +149,41 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+    //문자 인증
+    @ResponseBody
+    @PostMapping("/sms")
+    public BaseResponse<String> createAuth(@RequestBody PostSMSReq postSMSReq){
+        try {
+                //휴대폰번호 비었는지 확인
+                {
+                if (postSMSReq.getPhoneNum().equals("")) {
+                    return new BaseResponse<>(EMPTY_PHONENUM);
+                }
+
+                //휴대폰번호 숫자로만 구성되었는지 확인
+                boolean isNumeric = postSMSReq.getPhoneNum().matches("[+-]?\\d*(\\.\\d+)?");
+                if (!isNumeric) {
+                    return new BaseResponse<>(INCORRECT_TYPEOF_PHONENUM);
+                }
+            }
+
+                //휴대폰번호 형태 확인
+                if (postSMSReq.getPhoneNum().length()!=11) {
+                    return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
+                }
+
+
+
+            System.out.println(postSMSReq.getPhoneNum());
+          userService.createAuth(postSMSReq.getPhoneNum());
+          return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception){
+            return new BaseResponse<>((exception.getMessage()));
+         } catch (CoolsmsException exception){
+            System.out.println("sms에러");
+           return new BaseResponse<>(FAILED_TO_COOLSMS);
+    }
     }
 
 

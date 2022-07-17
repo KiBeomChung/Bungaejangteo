@@ -29,9 +29,9 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
-
-
-
+    EMPTY_PHONENUM(false,2018,"휴대폰 번호를 입력해주세요."),
+    INCORRECT_TYPEOF_PHONENUM(false,2019,"휴대폰 번호는 숫자로만 구성되어야 합니다."),
+    INCORRECT_SHAPEOF_PHONENUM(false,2020,"정확한 휴대폰 번호를 입력해주세요"),
     /**
      * 3000 : Response 오류
      */
@@ -41,6 +41,8 @@ public enum BaseResponseStatus {
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
+
+    FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),
 
 
 

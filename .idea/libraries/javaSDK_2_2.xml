@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javaSDK-2.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../Downloads/java-sdk-2.2-http-cv52/lib/javaSDK-2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/java-sdk-2.2-http-cv52/lib/json-simple-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
