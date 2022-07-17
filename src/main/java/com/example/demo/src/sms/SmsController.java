@@ -2,6 +2,7 @@ package com.example.demo.src.sms;
 
 import com.example.demo.src.sms.SmsProvider;
 import com.example.demo.src.sms.SmsService;
+import com.example.demo.src.user.model.GetUserRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
@@ -77,6 +78,28 @@ public class SmsController {
             System.out.println("sms에러");
             return new BaseResponse<>(FAILED_TO_COOLSMS);
         }
+    }
+
+    /**
+     * 본인 인증 API
+     * [GET] sms/:phone?code=
+     * @return BaseResponse<GetUserRes>
+     */
+    @ResponseBody
+    @GetMapping("/{phoneNum}")
+    public BaseResponse<String> checkAuth(@PathVariable("phoneNum") String phoneNum,@RequestParam(value="code")  String code) {
+        try{
+
+            String realAuth = smsProvider.checkAuth(phoneNum,code);
+            if (!realAuth.equals(code)){
+                throw new BaseException(FAILED_TO_CHECK_AUTH);
+            }
+            return new BaseResponse<>(SUCCESS);
+
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 
 }

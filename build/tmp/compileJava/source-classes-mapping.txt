@@ -4,8 +4,8 @@ com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
-com/example/demo/src/sms/SmsController.java
- com.example.demo.src.sms.SmsController
+com/example/demo/src/user/UserProvider.java
+ com.example.demo.src.user.UserProvider
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/user/model/PostLoginRes.java
@@ -50,5 +50,5 @@ com/example/demo/DemoApplication.java
  com.example.demo.DemoApplication
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
-com/example/demo/src/user/UserProvider.java
- com.example.demo.src.user.UserProvider
+com/example/demo/src/sms/SmsController.java
+ com.example.demo.src.sms.SmsController

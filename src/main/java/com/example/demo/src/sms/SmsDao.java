@@ -40,4 +40,11 @@ public class SmsDao {
         Object[] createAuthParams = new Object[]{phoneNum, numStr};
         return this.jdbcTemplate.update(createAuthQuery, createAuthParams);
     }
+
+    public String checkAuth(String phoneNum) {
+        System.out.println("dfsdf");
+        return this.jdbcTemplate.queryForObject("select authCode from SMSAuths where phoneNum = ?",
+                (rs, rowNum) -> rs.getString("authCode"), phoneNum);
+
+    }
 }

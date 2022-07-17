@@ -39,4 +39,15 @@ public class SmsProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public String checkAuth(String phoneNum,String code) throws BaseException {
+        try {
+            return(smsDao.checkAuth(phoneNum));
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
