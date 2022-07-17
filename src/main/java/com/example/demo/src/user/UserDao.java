@@ -100,26 +100,6 @@ public class UserDao {
 
     }
 
-    public int checkExistingUser(String phoneNum) {
-        return this.jdbcTemplate.queryForObject("select count(*) from SMSAuths where phoneNum = ?",
-                (rs, rowNum) -> rs.getInt("count(*)"), phoneNum);
 
-    }
-
-
-    public int updateAuth(String phoneNum, String numStr) {
-
-        String createAuthQuery = "update SMSAuths set authCode = ? where phoneNum = ?";
-        Object[] createAuthParams = new Object[]{numStr, phoneNum};
-        return this.jdbcTemplate.update(createAuthQuery, createAuthParams);
-
-    }
-
-    public int createAuth(String phoneNum, String numStr) {
-
-        String createAuthQuery = "insert into SMSAuths (phoneNum, authCode) VALUES (?,?)";
-        Object[] createAuthParams = new Object[]{phoneNum, numStr};
-        return this.jdbcTemplate.update(createAuthQuery, createAuthParams);
-    }
 }
 
