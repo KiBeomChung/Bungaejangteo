@@ -75,7 +75,7 @@ public class SmsController {
             return new BaseResponse<>((exception.getMessage()));
         } catch (CoolsmsException exception){
             System.out.println("sms에러");
-            return new BaseResponse<>(exception);
+            return new BaseResponse<>(FAILED_TO_COOLSMS);
         }
     }
 
