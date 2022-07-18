@@ -124,8 +124,8 @@ public class UserController {
      */
 
     @ResponseBody
-    @PostMapping("/storename")
-    public BaseResponse<String> createStoreName(@RequestParam(value="storeName")  String storeName){
+    @PostMapping("/store")
+    public BaseResponse<String> createStoreName(@RequestParam(value="storename")  String storeName){
         try {
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUserIdx();
