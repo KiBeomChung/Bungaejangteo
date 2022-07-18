@@ -68,10 +68,9 @@ public class SmsController {
                 }
             }
 
-
             System.out.println(postSMSReq.getPhoneNum());
-            smsService.createAuth(postSMSReq.getPhoneNum());
-            return new BaseResponse<>(SUCCESS);
+            String code = smsService.createAuth(postSMSReq.getPhoneNum());
+            return new BaseResponse<>(code);
         } catch (BaseException exception){
             return new BaseResponse<>((exception.getMessage()));
         } catch (CoolsmsException exception){

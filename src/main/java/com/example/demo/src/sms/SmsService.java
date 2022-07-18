@@ -41,7 +41,7 @@ public class SmsService {
 
     }
 
-    public void createAuth(String phoneNum) throws BaseException, CoolsmsException{
+    public String createAuth(String phoneNum) throws BaseException, CoolsmsException{
 
         String api_key = "NCSDCUZHZXY4LW73";
         String api_secret = "TCLU8WCBHQFSWWI5LADNVCJB6VW8WHCJ";
@@ -84,5 +84,7 @@ public class SmsService {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+
+        return numStr;
     }
 }
