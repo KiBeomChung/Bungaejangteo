@@ -33,6 +33,10 @@ public enum BaseResponseStatus {
     INCORRECT_TYPEOF_PHONENUM(false,2019,"휴대폰 번호는 숫자로만 구성되어야 합니다."),
     INCORRECT_SHAPEOF_PHONENUM(false,2020,"정확한 휴대폰 번호를 입력해주세요"),
     POST_USERS_EMPTY_NAME(false,2021,"이름을 입력해주세요"),
+    POST_USERS_EMPTY_STORENAME(false,2022,"상점 이름을 입력해주세요"),
+    POST_USERS_LONG_STORENAME(false,2023,"상점 이름은 10자 이내로 설정해주세요"),
+    INCORRECT_TYPEOF_STORENAME(false,2024,"상점 이름은 한국어,영어,숫자만 사용가능합니다"),
+
 
     /**
      * 3000 : Response 오류
@@ -43,6 +47,8 @@ public enum BaseResponseStatus {
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
+
+    POST_USERS_EXISTS_STORENAME(false, 3015, "이미 존재하는 상점 이름입니다"),
 
     // sms
     FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),
@@ -55,10 +61,11 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
-    MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
+    MODIFY_FAIL_STORENAME(false,4014,"상점이름 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");
+
 
 
     // 5000 : 필요시 만들어서 쓰세요

@@ -93,6 +93,22 @@ public class UserDao {
 
     }
 
+    public int createStoreName(int userIdx,String storeName) {
+        String createStoreNameQuery = "update Users set storeName = ? where id = ? ";
+        Object[] createStoreNameParams = new Object[]{storeName, userIdx};
+
+        return this.jdbcTemplate.update(createStoreNameQuery, createStoreNameParams);
+    }
+
+    public int checkExistStoreName(String storeName) {
+        String checkStoreNameQuery = "select exists(select storeName from Users where storeName = ?)";
+        String checkStoreNameParams = storeName;
+        return this.jdbcTemplate.queryForObject(checkStoreNameQuery,
+                int.class,
+                checkStoreNameParams);
+
+    }
+
 
 }
 

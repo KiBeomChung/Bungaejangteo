@@ -83,5 +83,13 @@ public class UserProvider {
 
     }
 
+    public int checkExistStoreName(String storeName) throws BaseException{
+        try{
+            return userDao.checkExistStoreName(storeName);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
 }

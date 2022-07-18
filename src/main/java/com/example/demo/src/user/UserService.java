@@ -54,16 +54,20 @@ public class UserService {
         }
     }
 
-    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+
+    public void createStoreName(int userIdx,String storeName) throws BaseException{
         try {
-            int result = userDao.modifyUserName(patchUserReq);
+            int result = userDao.createStoreName(userIdx,storeName);
             if (result == 0) {
-                throw new BaseException(MODIFY_FAIL_USERNAME);
+                throw new BaseException(MODIFY_FAIL_STORENAME);
             }
         } catch (Exception exception) {
+            System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
+
         }
     }
+
 
 
 
