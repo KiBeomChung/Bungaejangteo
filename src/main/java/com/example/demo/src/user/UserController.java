@@ -98,7 +98,7 @@ public class UserController {
         if(postUserReq.getName() == null){
             return new BaseResponse<>(POST_USERS_EMPTY_NAME);
         }
-        //이메일 정규표현
+        //휴대폰 정규표현
         if(!isRegexPhonNum(postUserReq.getPhoneNum())){
             return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
         }

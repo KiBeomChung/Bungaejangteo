@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
+import static com.example.demo.utils.ValidationRegex.isRegexPhonNum;
 
 @RestController
 @RequestMapping("/app/sms")
@@ -60,13 +61,12 @@ public class SmsController {
                 if (!isNumeric) {
                     return new BaseResponse<>(INCORRECT_TYPEOF_PHONENUM);
                 }
-            }
 
-            //휴대폰번호 형태 확인
-            if (postSMSReq.getPhoneNum().length()!=11) {
-                return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
+                //휴대폰번호 형태 확인
+                if (!isRegexPhonNum(postSMSReq.getPhoneNum())) {
+                    return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
+                }
             }
-
 
 
             System.out.println(postSMSReq.getPhoneNum());
