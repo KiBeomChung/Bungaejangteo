@@ -51,7 +51,7 @@ public class SmsController {
         try {
             //휴대폰번호 비었는지 확인
             {
-                if (postSMSReq.getPhoneNum().equals("")) {
+                if (postSMSReq.getPhoneNum()==null) {
                     return new BaseResponse<>(EMPTY_PHONENUM);
                 }
 

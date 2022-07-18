@@ -32,6 +32,8 @@ public enum BaseResponseStatus {
     EMPTY_PHONENUM(false,2018,"휴대폰 번호를 입력해주세요."),
     INCORRECT_TYPEOF_PHONENUM(false,2019,"휴대폰 번호는 숫자로만 구성되어야 합니다."),
     INCORRECT_SHAPEOF_PHONENUM(false,2020,"정확한 휴대폰 번호를 입력해주세요"),
+    POST_USERS_EMPTY_NAME(false,2021,"이름을 입력해주세요"),
+
     /**
      * 3000 : Response 오류
      */

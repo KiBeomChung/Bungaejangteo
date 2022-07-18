@@ -61,30 +61,24 @@ public class UserProvider {
         }
     }
 
-    public int checkEmail(String email) throws BaseException{
+    public int checkExisttUser(String phoneNum) throws BaseException{
         try{
-            return userDao.checkEmail(email);
+            return userDao.checkExisttUser(phoneNum);
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
-        User user = userDao.getPwd(postLoginReq);
-        String password;
+    public PostUserRes logIn(PostUserReq postUserReq) throws BaseException{
         try {
-            password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
-        } catch (Exception ignored) {
-            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
-        }
 
-        if(postLoginReq.getPassword().equals(password)){
-            int userIdx = userDao.getPwd(postLoginReq).getUserIdx();
+            int userIdx = userDao.getUserIdx(postUserReq);
             String jwt = jwtService.createJwt(userIdx);
-            return new PostLoginRes(userIdx,jwt);
+            return new PostUserRes(userIdx, jwt, true);
         }
-        else{
-            throw new BaseException(FAILED_TO_LOGIN);
+        catch (Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
         }
 
     }
