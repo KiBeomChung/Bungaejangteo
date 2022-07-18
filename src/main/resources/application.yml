@@ -11,4 +11,4 @@ spring:
     username: testUser
     password: pass7987
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
-    # driver-class-name: com.mysql.jdbc.Driver # mysql 5버전
+    # driver-class-name: com.mysql.jdbc.Driver #mysql 5버전
