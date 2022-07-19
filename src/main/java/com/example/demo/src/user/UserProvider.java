@@ -31,25 +31,23 @@ public class UserProvider {
         this.jwtService = jwtService;
     }
 
-    public List<GetUserRes> getUsers() throws BaseException{
-        try{
+    public List<GetUserRes> getUsers() throws BaseException {
+        try {
             List<GetUserRes> getUserRes = userDao.getUsers();
             return getUserRes;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<GetUserRes> getUsersByEmail(String email) throws BaseException{
-        try{
+    public List<GetUserRes> getUsersByEmail(String email) throws BaseException {
+        try {
             List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
             return getUsersRes;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-                    }
+    }
 
 
     public GetUserRes getUser(int userIdx) throws BaseException {
@@ -61,33 +59,42 @@ public class UserProvider {
         }
     }
 
-    public int checkExisttUser(String phoneNum) throws BaseException{
-        try{
+    public int checkExisttUser(String phoneNum) throws BaseException {
+        try {
             return userDao.checkExisttUser(phoneNum);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public PostUserRes logIn(PostUserReq postUserReq) throws BaseException{
+    public PostUserRes logIn(PostUserReq postUserReq) throws BaseException {
         try {
 
             int userIdx = userDao.getUserIdx(postUserReq);
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(userIdx, jwt, true);
-        }
-        catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
 
     }
 
-    public int checkExistStoreName(String storeName) throws BaseException{
-        try{
+    public int checkExistStoreName(String storeName) throws BaseException {
+        try {
             return userDao.checkExistStoreName(storeName);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetUserStoreInfoRes getUserStoreInfo(int id) throws BaseException {
+
+        if (userDao.checkId(id) == 0) { //db에 입력받은 id가 존재하는지 확인
+            throw new BaseException(NOT_AVALIABLE_USER_STORE);
+        } else {
+            GetUserStoreInfoRes getUserStoreInfo = userDao.getUserStoreInfo(id);
+            return getUserStoreInfo;
         }
     }
 

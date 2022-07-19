@@ -65,6 +65,8 @@ public enum BaseResponseStatus {
     FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),
 
     FAILED_TO_CHECK_AUTH(false,3016,"인증 번호가 일치하지 않습니다."),
+
+    NOT_AVALIABLE_USER_STORE(false,3020, "조회할 수 없는 유저의 상점입니다."),
     /**
      * 4000 : Database, Server 오류
      */

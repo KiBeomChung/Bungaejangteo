@@ -125,5 +125,34 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyStroeInfoQuery, modifyStoreInfoParams);
 
     }
+
+    public GetUserStoreInfoRes getUserStoreInfo(int id) {
+        String getUserStoreInfoQuery = "select Users.imageUrl,\n" +
+                "Users.storeName,\n" +
+                "Users.shopUrl,\n" +
+                "Users.contactTime,\n" +
+                "Users.description,\n" +
+                "Users.policy,\n" +
+                "Users.precautions\n" +
+                "from Users\n" +
+                "where id = ?;";
+        int getUserStoreInfoParam = id;
+        return this.jdbcTemplate.queryForObject(getUserStoreInfoQuery,
+                (rs, rowNum) -> new GetUserStoreInfoRes(
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getString("shopUrl"),
+                        rs.getString("contactTime"),
+                        rs.getString("description"),
+                        rs.getString("policy"),
+                        rs.getString("precautions")),
+                getUserStoreInfoParam);
+    }
+
+    public int checkId(int id){
+        String checkIdQuery = "select exists(select id from Users where id = ? and status = 'NORMAL')";
+        int checkIdParam = id;
+        return this.jdbcTemplate.queryForObject(checkIdQuery, int.class, checkIdParam);
+    }
 }
 

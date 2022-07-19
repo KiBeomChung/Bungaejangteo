@@ -158,6 +158,32 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("modify/stores/{id}")
+    public BaseResponse<GetUserStoreInfoRes> getUserStoreInfoRes(@PathVariable("id") int id){
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (id != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            GetUserStoreInfoRes getUserStoreInfoRes = userProvider.getUserStoreInfo(id);
+            return new BaseResponse<>(getUserStoreInfoRes);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+    /**
+     * 상점 정보 수정 API
+     * @param patchUserStoreInfoReq
+     * @param id
+     * @return
+     * @throws BaseException
+     */
+    @ResponseBody
     @PatchMapping("modify/stores/{id}")
     public BaseResponse<String> modifyStoreInfo(@RequestBody PatchUserStoreInfoReq patchUserStoreInfoReq,
                                                 @PathVariable("id") int id) throws BaseException {
