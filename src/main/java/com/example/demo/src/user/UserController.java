@@ -155,6 +155,16 @@ public class UserController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping("modify/stores/{id}")
+    public BaseResponse<String> modifyStoreInfo(@RequestBody PatchUserStoreInfoReq patchUserStoreInfoReq,
+                                                @PathVariable("id") int id) {
+
+        userService.modifyStoreInfo(patchUserStoreInfoReq, id);
+        String result = "완료";
+
+        return new BaseResponse<>(result);
+    }
 
 
 

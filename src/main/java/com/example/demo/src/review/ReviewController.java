@@ -9,13 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
-
-import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
 
 @RestController
-@RequestMapping("/app/review")
+@RequestMapping("/app/reviews")
 public class ReviewController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,9 +41,11 @@ public class ReviewController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public BaseResponse<List<GetReviewRes>> getUserReviewResBaseResponse(@PathVariable("id") int id) throws BaseException {
+    public BaseResponse<List<GetReviewRes>> getReviewResBaseResponse(@PathVariable("id") int id) throws BaseException {
 
-            List<GetReviewRes> getUserReviewRes = reviewProvider.getReviewRes(id);
-            return new BaseResponse<>(getUserReviewRes);
-        }
+        Timestamp dateNow = new Timestamp(System.currentTimeMillis());
+
+        List<GetReviewRes> getReviewRes = reviewProvider.getReviewRes(id);
+        return new BaseResponse<>(getReviewRes);
     }
+}

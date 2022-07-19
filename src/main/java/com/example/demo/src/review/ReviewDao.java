@@ -20,11 +20,12 @@ public class ReviewDao {
 
     public List<GetReviewRes> getReviewList(int id){
 
-        String getReviewListQuery = "select Users.imageUrl, Buy.id, Users.storeName, reviewScore, reviewText, Products.name, Review.createdAt\n" +
+        String getReviewListQuery = "select Users.imageUrl, Buy.id, Users.storeName, reviewScore, PayResult.bungaePay, reviewText, Products.name, Review.createdAt\n" +
                 "from Review\n" +
                 "inner join Buy on Review.reviewId = Buy.reviewId\n" +
                 "inner join Users on Buy.id = Users.id\n" +
                 "inner join Products on Products.productId = Review.productId\n" +
+                "inner join PayResult on Buy.buyId = PayResult.buyId\n" +
                 "inner join Sell on Sell.reviewId = Review.reviewId\n" +
                 "and Sell.id = ?\n" +
                 "where Review.status = 'active'";
@@ -35,9 +36,27 @@ public class ReviewDao {
                         rs.getInt("id"),
                         rs.getString("storeName"),
                         rs.getInt("reviewScore"),
+                        rs.getString("bungaePay"),
                         rs.getString("reviewText"),
                         rs.getString("name"),
                         rs.getTimestamp("createdAt")
                 ), getReviewListParam);
     }
+
+//    public List<GetDateRes> getCreatedDate(int id){
+//        String getCreatedDateQuery = "select Review.createdAt\n" +
+//                "from Review\n" +
+//                "inner join Buy on Review.reviewId = Buy.reviewId\n" +
+//                "inner join Users on Buy.id = Users.id\n" +
+//                "inner join Products on Products.productId = Review.productId\n" +
+//                "inner join PayResult on Buy.buyId = PayResult.buyId\n" +
+//                "inner join Sell on Sell.reviewId = Review.reviewId\n" +
+//                "and Sell.id = ?\n" +
+//                "where Review.status = 'active'";
+//                int getCreatedDateParam = id;
+//        return this.jdbcTemplate.query(getCreatedDateQuery,
+//                (rs, rowNum) -> new GetDateRes(
+//                        rs.getTimestamp("createdAt")
+//                ), getCreatedDateParam);
+//    }
 }

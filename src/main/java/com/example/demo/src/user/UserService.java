@@ -66,4 +66,8 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public void modifyStoreInfo(PatchUserStoreInfoReq patchUserStoreInfoReq,int id){
+        userDao.modifyStoreInfo(patchUserStoreInfoReq, id);
+    }
 }

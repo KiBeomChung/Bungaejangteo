@@ -109,6 +109,22 @@ public class UserDao {
 
     }
 
+    public int modifyStoreInfo(PatchUserStoreInfoReq patchUserStoreInfoReq, int id){
+        String modifyStroeInfoQuery = "update Users set storeName = ?,\n" +
+                "contactTime = ?,\n " +
+                "description = ?,\n" +
+                "policy = ?,\n" +
+                "precautions = ?\n" +
+                "where id = ?";
+        int modifyStoreIdParam = id;
+        Object[] modifyStoreInfoParams = new Object[]{patchUserStoreInfoReq.getStoreName(),
+        patchUserStoreInfoReq.getContactTime(), patchUserStoreInfoReq.getDescription(), patchUserStoreInfoReq.getPolicy(),
+        patchUserStoreInfoReq.getPrecautions(), modifyStoreIdParam};
+
+        return this.jdbcTemplate.update(modifyStroeInfoQuery, modifyStoreInfoParams);
+
+    }
+
 
 
 
