@@ -30,9 +30,7 @@ public class UserController {
     private final JwtService jwtService;
 
 
-
-
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService) {
         this.userProvider = userProvider;
         this.userService = userService;
         this.jwtService = jwtService;
@@ -43,21 +41,22 @@ public class UserController {
      * [GET] /users
      * 회원 번호 및 이메일 검색 조회 API
      * [GET] /users? Email=
-     * @return BaseResponse<List<GetUserRes>>
+     *
+     * @return BaseResponse<List < GetUserRes>>
      */
     //Query String
     @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/app/users
     public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
-        try{
-            if(Email == null){
+        try {
+            if (Email == null) {
                 List<GetUserRes> getUsersRes = userProvider.getUsers();
                 return new BaseResponse<>(getUsersRes);
             }
             // Get Users
             List<GetUserRes> getUsersRes = userProvider.getUsersByEmail(Email);
             return new BaseResponse<>(getUsersRes);
-        } catch(BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
@@ -65,6 +64,7 @@ public class UserController {
     /**
      * 회원 1명 조회 API
      * [GET] /users/:userIdx
+     *
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
@@ -72,10 +72,10 @@ public class UserController {
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
     public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
         // Get Users
-        try{
+        try {
             GetUserRes getUserRes = userProvider.getUser(userIdx);
             return new BaseResponse<>(getUserRes);
-        } catch(BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
 
@@ -84,70 +84,72 @@ public class UserController {
     /**
      * 본인인증 로그인/회원가입 API
      * [POST] /users
+     *
      * @return BaseResponse<PostUserRes>
      */
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
 
-        if(postUserReq.getPhoneNum() == null){
+        if (postUserReq.getPhoneNum() == null) {
             return new BaseResponse<>(EMPTY_PHONENUM);
         }
 
-        if(postUserReq.getName() == null){
+        if (postUserReq.getName() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_NAME);
         }
         //휴대폰 정규표현
-        if(!isRegexPhonNum(postUserReq.getPhoneNum())){
+        if (!isRegexPhonNum(postUserReq.getPhoneNum())) {
             return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
         }
-        try{
+        try {
             if (userProvider.checkExisttUser(postUserReq.getPhoneNum()) == 1) {
                 System.out.println(22222);
                 PostUserRes postUserRes = userProvider.logIn(postUserReq);
                 return new BaseResponse<>(postUserRes);
-            }else{
+            } else {
                 PostUserRes postUserRes = userService.createUser(postUserReq);
                 return new BaseResponse<>(postUserRes);
             }
 
-        } catch(BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
 
 
     /**
-      * 회원가입-상점이름 설정 API
-      * [PATCH] /users/storename
+     * 회원가입-상점이름 설정 API
+     * [PATCH] /users/storename
+     *
      * @return BaseResponse<String>
      */
 
     @ResponseBody
     @PostMapping("/store")
-    public BaseResponse<String> createStoreName(@RequestParam(value="storename")  String storeName){
+    public BaseResponse<String> createStoreName(@RequestParam(value = "storename") String storeName) {
         try {
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUserIdx();
 
             System.out.println(storeName);
-            if(storeName.equals("")){
+            if (storeName.equals("")) {
                 return new BaseResponse<>(POST_USERS_EMPTY_STORENAME);
             }
 
-            if(!isRegexLangType(storeName)){
+            if (!isRegexLangType(storeName)) {
                 return new BaseResponse<>(INCORRECT_TYPEOF_STORENAME);
             }
 
-            if (storeName.length()>10){
+            if (storeName.length() > 10) {
                 return new BaseResponse<>(POST_USERS_LONG_STORENAME);
             }
 
-            if (userProvider.checkExistStoreName(storeName) == 1){
+            if (userProvider.checkExistStoreName(storeName) == 1) {
                 return new BaseResponse<>(POST_USERS_EXISTS_STORENAME);
             }
 
-            userService.createStoreName(userIdxByJwt,storeName);
+            userService.createStoreName(userIdxByJwt, storeName);
 
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException exception) {
@@ -158,14 +160,56 @@ public class UserController {
     @ResponseBody
     @PatchMapping("modify/stores/{id}")
     public BaseResponse<String> modifyStoreInfo(@RequestBody PatchUserStoreInfoReq patchUserStoreInfoReq,
-                                                @PathVariable("id") int id) {
+                                                @PathVariable("id") int id) throws BaseException {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
 
-        userService.modifyStoreInfo(patchUserStoreInfoReq, id);
-        String result = "완료";
+            if (id != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            if(patchUserStoreInfoReq.getStoreName() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_STORENAME);
+            }
+            if(patchUserStoreInfoReq.getStoreName().length() > 10){
+                return new BaseResponse<>(PATCH_USERS_LONG_STORENAME);
+            }
+            if(patchUserStoreInfoReq.getShopUrl() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_SHOPURL);
+            }
+            if(patchUserStoreInfoReq.getShopUrl().length() > 50){
+                return new BaseResponse<>(PATCH_USERS_LONG_SHOPURL);
+            }
+            if (!isRegexLangType(patchUserStoreInfoReq.getStoreName())) {
+                return new BaseResponse<>(INCORRECT_TYPEOF_STORENAME);
+            }
+            if(patchUserStoreInfoReq.getContactTime() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_CONTACTTIME);
+            }
+            if(patchUserStoreInfoReq.getDescription() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_DESCRIPTION);
+            }
+            if(patchUserStoreInfoReq.getDescription().length() > 1000){
+                return new BaseResponse<>(PATCH_USERS_LONG_DESCRIPTION);
+            }
+            if(patchUserStoreInfoReq.getPolicy() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_POLICY);
+            }
+            if(patchUserStoreInfoReq.getPolicy().length() > 1000){
+                return new BaseResponse<>(PATCH_USERS_LONG_POLICY);
+            }
+            if(patchUserStoreInfoReq.getPrecautions() == null){
+                return new BaseResponse<>(PATCH_USERS_EMPTY_PRECAUTIONS);
+            }
+            if(patchUserStoreInfoReq.getPrecautions().length() > 1000){
+                return new BaseResponse<>(PATCH_USERS_LONG_PRECAUTIONS);
+            }
 
-        return new BaseResponse<>(result);
+            userService.modifyStoreInfo(patchUserStoreInfoReq, id);
+            String result = "수정 완료하였습니다.";
+
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
-
-
-
 }

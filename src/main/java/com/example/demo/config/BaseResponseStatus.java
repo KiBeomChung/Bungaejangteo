@@ -37,6 +37,18 @@ public enum BaseResponseStatus {
     POST_USERS_LONG_STORENAME(false,2023,"상점 이름은 10자 이내로 설정해주세요"),
     INCORRECT_TYPEOF_STORENAME(false,2024,"상점 이름은 한국어,영어,숫자만 사용가능합니다"),
 
+    // [PATCH] /users
+    PATCH_USERS_EMPTY_STORENAME(false,2050,"상점 이름을 입력해주세요."),
+    PATCH_USERS_LONG_STORENAME(false, 2051, "상점 이름은 10자 이내로 수정해주세요."),
+    PATCH_USERS_EMPTY_SHOPURL(false, 2052, "등록할 url을 입력해주세요."),
+    PATCH_USERS_LONG_SHOPURL(false,2053, "url은 50자 이내로 입력해주세요"),
+    PATCH_USERS_EMPTY_CONTACTTIME(false, 2054, "연락 가능 시간을 입력하세요."),
+    PATCH_USERS_EMPTY_DESCRIPTION(false, 2055, "상점 소개를 입력하세요."),
+    PATCH_USERS_LONG_DESCRIPTION(false, 2056, "상점 소개를 1000자 이내로 입력하세요."),
+    PATCH_USERS_EMPTY_POLICY(false, 2057, "교환/반품/환불 정책을 입력하세요."),
+    PATCH_USERS_LONG_POLICY(false, 2058, "교환/반품/환불 정책을 1000자 이내로 입력하세요."),
+    PATCH_USERS_EMPTY_PRECAUTIONS(false, 2059, "구매전 유의사항을 입력하세요."),
+    PATCH_USERS_LONG_PRECAUTIONS(false, 2060, "구매전 유의사항은 1000자 이내로 입력하세요."),
 
     /**
      * 3000 : Response 오류

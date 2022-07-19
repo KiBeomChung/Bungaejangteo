@@ -10,6 +10,7 @@ import lombok.Setter;
 public class PatchUserStoreInfoReq {
 
     private String storeName;
+    private String shopUrl;
     private String contactTime;
     private String description;
     private String policy;
