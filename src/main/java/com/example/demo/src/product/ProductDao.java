@@ -1,8 +1,11 @@
 package com.example.demo.src.product;
 
 //import com.example.demo.src.product.model*
+import com.example.demo.config.BaseException;
 import com.example.demo.src.product.model.GetProductRes;
+import com.example.demo.src.product.model.PostReportReq;
 import com.example.demo.src.user.model.GetUserRes;
+import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -53,6 +56,21 @@ public class ProductDao {
                         rs.getInt("isSafePayment"),
                         rs.getInt("likeCount")
                        ));
+    }
+
+    public int  createReport(int userIdx, Integer productIdx,PostReportReq postReportReq) throws BaseException {
+        String createReportQuery = "insert into ProductReports (userId, productId, reportType, detailReason) VALUES (?,?,?,?)";
+        Object[] createReportParams = new Object[]{userIdx,productIdx, postReportReq.getReportType(),postReportReq.getDetailReason()};
+        return this.jdbcTemplate.update(createReportQuery, createReportParams);
+    }
+
+    public int getReport(int userIdx,int productIdx) throws BaseException{
+        String getReportQuery = "select exists(select * from ProductReports where userId = ? and productId = ?)";
+        Object[] getReportParams = new Object[]{userIdx,productIdx};
+        return this.jdbcTemplate.queryForObject(getReportQuery,
+                int.class,
+                getReportParams);
+
     }
 }
 

@@ -2,10 +2,8 @@ package com.example.demo.src.product;
 
 
 import com.example.demo.config.BaseException;
-//import com.example.demo.src.product.model*
+import com.example.demo.src.product.model.*;
 import com.example.demo.src.product.model.GetProductRes;
-import com.example.demo.src.sms.SmsDao;
-import com.example.demo.src.user.model.GetUserRes;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,15 @@ public class ProductProvider {
         try {
             List<GetProductRes> getProductRes = productDao.getRecommendProducts(userIdx);
             return getProductRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int getReport(int userIdx,int productIdx) throws BaseException {
+        try {
+            return productDao.getReport(userIdx,productIdx);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);

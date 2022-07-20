@@ -50,6 +50,11 @@ public enum BaseResponseStatus {
     PATCH_USERS_EMPTY_PRECAUTIONS(false, 2059, "구매전 유의사항을 입력하세요."),
     PATCH_USERS_LONG_PRECAUTIONS(false, 2060, "구매전 유의사항은 1000자 이내로 입력하세요."),
 
+    //[POST] /products
+    POST_REPORT_EMPTY_PRODUCT_IDX(false,2071,"상품 idx값을 입력해주세요"),
+    POST_REPORT_EMPTY_REPORT_TYPE(false,2072,"신고 유형 코드를 입력해주세요"),
+    INVALIDT_REPORT_TYPE(false,2073,"유효한 신고 유형 코드가 아닙니다"),
+
     /**
      * 3000 : Response 오류
      */
@@ -67,6 +72,9 @@ public enum BaseResponseStatus {
     FAILED_TO_CHECK_AUTH(false,3016,"인증 번호가 일치하지 않습니다."),
 
     NOT_AVALIABLE_USER_STORE(false,3020, "조회할 수 없는 유저의 상점입니다."),
+
+    //[POST] products/report
+    POST_REPORT_EXIST_REPORT(false, 3021, "이미 신고한 상품입니다"),
     /**
      * 4000 : Database, Server 오류
      */
