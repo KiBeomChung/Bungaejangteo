@@ -30,8 +30,15 @@ public class FavoriteController {
         this.favoriteService = favoriteService;
     }
 
+    /**
+     * 상점 팔로우 추가
+     *
+     * @param followingId
+     * @param followerId
+     * @return
+     */
     @ResponseBody
-    @PostMapping("/{followingId}/{followerId}")
+    @PostMapping("/add/{followingId}/{followerId}")
     public BaseResponse<PostFavoriteStoreRes> addFavorite(@PathVariable("followingId") int followingId,
                                                           @PathVariable("followerId") int followerId) {
         try {
@@ -45,6 +52,23 @@ public class FavoriteController {
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
 
+    @ResponseBody
+    @DeleteMapping("/delete/{followingId}/{followerId}")
+    public BaseResponse<String> deleteFavorite(@PathVariable("followingId") int followingId,
+                                               @PathVariable("followerId") int followerId) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (followerId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            String result = favoriteService.deleteFavorite(followingId, followerId);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }

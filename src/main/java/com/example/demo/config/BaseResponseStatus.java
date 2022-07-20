@@ -87,8 +87,12 @@ public enum BaseResponseStatus {
 
     //[POST] favorites
     NOT_AVALIABLE_ADD_FOLLOW(false, 3040, "해당 상점은 팔로잉 할 수 없는 상태입니다."),
+
+    //[DELETE] favorites
+    FOLLOW_CANCEL_FAIL(false, 3050, "팔로위 취소 하지 못했습니다."),
+
     //[POST] likes
-    FAILED_TO_PRODUCT_LIKE(false,3050,"찜 생성에 실패하였습니다"),
+    FAILED_TO_PRODUCT_LIKE(false,3051,"찜 생성에 실패하였습니다"),
 
     /**
      * 4000 : Database, Server 오류
