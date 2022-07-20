@@ -39,7 +39,7 @@ public class ProductDao {
                 "       FROM ProductImages" +
                 "       ORDER BY createdAt)b" +
                 " GROUP BY productId" +
-                " HAVING count(*) = 1)as imageTable" +
+                " )as imageTable" +
                 " on imageTable.productId = Products.productId)" +
                 " left outer join (select productId,count(*) as likeCount from Likes group by productId)as c" +
                 " on Products.productId =  c.productId order by rand() limit 10" ;
