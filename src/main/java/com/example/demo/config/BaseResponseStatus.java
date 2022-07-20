@@ -93,6 +93,8 @@ public enum BaseResponseStatus {
 
     //[POST] likes
     FAILED_TO_PRODUCT_LIKE(false,3051,"찜 생성에 실패하였습니다"),
+    //[PATCH] likes
+    FAILED_TO_CANCEL_LIKE(false,3052,"찜 취소에 실패하였습니다"),
 
     /**
      * 4000 : Database, Server 오류

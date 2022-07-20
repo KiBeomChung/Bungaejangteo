@@ -47,6 +47,29 @@ public class LikeController {
             }
         }
 
+        /**
+         * 상품 찜 취소 API
+         * [PATCH] /likes/:productIdx
+         * @return BaseResponse<String>
+         */
+        // Body
+        @ResponseBody
+        @PatchMapping("/{productIdx}")
+        public BaseResponse<String> cancelLike(@PathVariable("productIdx") int productIdx) {
+            try {
+                //jwt에서 idx 추출.
+                int userIdxByJwt = jwtService.getUserIdx();
+
+                likeService.cancelLike(userIdxByJwt,productIdx);
+                return new BaseResponse<>(SUCCESS);
+
+            } catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+        }
+
+
+
 
 
 

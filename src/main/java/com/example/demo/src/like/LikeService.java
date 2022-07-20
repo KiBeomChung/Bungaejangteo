@@ -40,5 +40,18 @@ public class LikeService {
         }
     }
 
+    public void cancelLike(int userIdx,int productIdx) throws BaseException {
+        try{
+            int result = likeDao.cancelLike(userIdx, productIdx);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_CANCEL_LIKE);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
+
 
 }
