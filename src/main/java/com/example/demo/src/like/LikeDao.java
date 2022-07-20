@@ -41,7 +41,7 @@ public class LikeDao {
 
     public int cancelLike(int userIdx, int productIdx){
 
-        String cancelLikeQuery = "update Likes set status = 'INACTIVE' where userId = ? and productId = ?";
+        String cancelLikeQuery = "update Likes set status = 'DELETED' where userId = ? and productId = ?";
         Object[] cancelLikeParams = new Object[]{userIdx,productIdx};
         return this.jdbcTemplate.update(cancelLikeQuery, cancelLikeParams);
 
