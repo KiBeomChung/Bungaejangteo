@@ -64,6 +64,10 @@ public enum BaseResponseStatus {
     INCORRECT_SHAPEOF_LATITUDE(false,2081,"올바른 위도 형식이 아닙니다"),
     INCORRECT_SHAPEOF_LONGITUDE(false,2082,"올바른 경도 형식이 아닙니다"),
     INVALIDT_CATEGORY_CODE_TYPE(false,2083,"유효한 카테고리 코드가 아닙니다"),
+
+    //[POST] likes/collections
+    POST_COLLECTION_EMPTY_COLLECTION_NAME(false,2090,"찜 컬렉션명을 입력해주세요"),
+    POST_COLLECTION_LONG_COLLECTION_NAME(false, 2091, "찜 컬렉션명을 10자 이내로 입력해주세요."),
     /**
      * 3000 : Response 오류
      */
@@ -95,6 +99,9 @@ public enum BaseResponseStatus {
     FAILED_TO_PRODUCT_LIKE(false,3051,"찜 생성에 실패하였습니다"),
     //[PATCH] likes
     FAILED_TO_CANCEL_LIKE(false,3052,"찜 취소에 실패하였습니다"),
+    //[POST] likes/collections
+    FAILED_TO_CREATE_COLLECTION(false,3053,"찜 컬렉션 생성에 실패하였습니다"),
+
 
     /**
      * 4000 : Database, Server 오류

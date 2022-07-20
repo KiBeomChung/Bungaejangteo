@@ -53,5 +53,18 @@ public class LikeService {
         }
     }
 
+    public void createCollection(int userIdx,String collectionName) throws BaseException {
+        try{
+            int result = likeDao.createCollection(userIdx,collectionName);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_CREATE_COLLECTION);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
+
 
 }

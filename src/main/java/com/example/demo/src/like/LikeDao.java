@@ -1,5 +1,7 @@
 package com.example.demo.src.like;
 
+import com.example.demo.config.BaseException;
+import com.example.demo.src.product.model.PostReportReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -44,4 +46,11 @@ public class LikeDao {
         return this.jdbcTemplate.update(cancelLikeQuery, cancelLikeParams);
 
     }
+
+    public int  createCollection(int userIdx, String collectionName) throws BaseException {
+        String createCollectionQuery = "insert into LikeCollections (name,userId) VALUES (?,?)";
+        Object[] createCollectionParams = new Object[]{collectionName,userIdx};
+        return this.jdbcTemplate.update(createCollectionQuery, createCollectionParams);
+    }
+
 }
