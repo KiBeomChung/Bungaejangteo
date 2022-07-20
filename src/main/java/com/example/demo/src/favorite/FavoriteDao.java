@@ -34,4 +34,10 @@ public class FavoriteDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, String.class);
     }
 
+    public int checkUserStatus(int followingId){ //자신이 팔로우 하려는 상점이 신고 받지 않았는지 체크 하는 메소드
+        String checkUserStatusQuery = "select exists(select id from Users where Users.id = ? AND Users.status ='NORMAL')";
+        int checkUserStatusParam = followingId;
+        return this.jdbcTemplate.queryForObject(checkUserStatusQuery, int.class, checkUserStatusParam);
+    }
+
 }

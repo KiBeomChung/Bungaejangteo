@@ -84,6 +84,10 @@ public enum BaseResponseStatus {
 
     //[POST] products/report
     POST_REPORT_EXIST_REPORT(false, 3021, "이미 신고한 상품입니다"),
+
+    //[POST] favorites
+    NOT_AVALIABLE_ADD_FOLLOW(false, 3040, "해당 상점은 팔로잉 할 수 없는 상태입니다."),
+
     /**
      * 4000 : Database, Server 오류
      */

@@ -1,5 +1,6 @@
 package com.example.demo.src.favorite;
 
+import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.favorite.model.PostFavoriteStoreRes;
 import com.example.demo.utils.JwtService;
@@ -7,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
 @RestController
 @RequestMapping("/app/favorites")
@@ -31,9 +34,17 @@ public class FavoriteController {
     @PostMapping("/{followingId}/{followerId}")
     public BaseResponse<PostFavoriteStoreRes> addFavorite(@PathVariable("followingId") int followingId,
                                                           @PathVariable("followerId") int followerId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (followerId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
 
-        PostFavoriteStoreRes postFavoriteStoreRes = favoriteService.addFavorite(followingId, followerId);
-        return new BaseResponse<>(postFavoriteStoreRes);
+            PostFavoriteStoreRes postFavoriteStoreRes = favoriteService.addFavorite(followingId, followerId);
+            return new BaseResponse<>(postFavoriteStoreRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
 
     }
 }
