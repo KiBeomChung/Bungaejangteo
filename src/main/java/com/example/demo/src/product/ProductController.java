@@ -97,6 +97,10 @@ public class ProductController {
             return new BaseResponse<>(POST_PRODUCT_EMPTY_CATEGORY);
         }
 
+        if (!(postProductReq.getCategory() > 0 && postProductReq.getCategory() < 20 )) {
+            return new BaseResponse<>( INVALIDT_CATEGORY_CODE_TYPE);
+        }
+
         if (postProductReq.getPrice() == null) {
             return new BaseResponse<>(POST_PRODUCT_PRODUCT_EMPTY_PRICE);
         }
