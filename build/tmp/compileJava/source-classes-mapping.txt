@@ -42,6 +42,8 @@ com/example/demo/src/favorite/FavoriteDao.java
  com.example.demo.src.favorite.FavoriteDao
 com/example/demo/src/user/model/PostLoginReq.java
  com.example.demo.src.user.model.PostLoginReq
+com/example/demo/src/product/model/PostReportReq.java
+ com.example.demo.src.product.model.PostReportReq
 com/example/demo/src/favorite/FavoriteProvider.java
  com.example.demo.src.favorite.FavoriteProvider
 com/example/demo/src/product/ProductDao.java

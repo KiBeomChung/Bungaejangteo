@@ -55,6 +55,15 @@ public enum BaseResponseStatus {
     POST_REPORT_EMPTY_REPORT_TYPE(false,2072,"신고 유형 코드를 입력해주세요"),
     INVALIDT_REPORT_TYPE(false,2073,"유효한 신고 유형 코드가 아닙니다"),
 
+    POST_PRODUCT_EMPTY_PRODUCT_IDX(false,2074,"상품 인덱스를 입력해주세요"),
+    POST_PRODUCT_EMPTY_PRODUCT_NAME(false,2075,"상품 이름을 입력해주세요"),
+    POST_PRODUCT_EMPTY_CATEGORY(false,2076,"상품 카테고리 코드를 입력해주세요"),
+    POST_PRODUCT_PRODUCT_EMPTY_PRICE(false,2077,"상품 가격을 입력해주세요"),
+    POST_PRODUCT_EMPTY_DESCRIPTION(false,2078,"상품 설명을 입력해주세요"),
+    POST_PRODUCT_PRODUCT_EMPTY_IMAGES(false,2079,"상품 이미지를 최소 1개 넣어주세요"),
+    INCORRECT_TYPEOF_PRODUCT_INT(false,2080,"상품인덱스, 가격, 카테고리코드는 숫자만 입력해주세요"),
+    INCORRECT_SHAPEOF_LATITUDE(false,2081,"올바른 위도 형식이 아닙니다"),
+    INCORRECT_SHAPEOF_LONGITUDE(false,2082,"올바른 경도 형식이 아닙니다"),
     /**
      * 3000 : Response 오류
      */

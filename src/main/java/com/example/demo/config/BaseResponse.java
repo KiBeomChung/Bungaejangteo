@@ -20,6 +20,7 @@ public class BaseResponse<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
+
     // 요청에 성공한 경우
     public BaseResponse(T result) {
         this.isSuccess = SUCCESS.isSuccess();

@@ -10,6 +10,8 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import static com.example.demo.config.BaseResponseStatus.*;
+import static com.example.demo.utils.ValidationRegex.*;
+
 
 
 import java.util.List;
@@ -77,6 +79,58 @@ public class ProductController {
             int userIdxByJwt = jwtService.getUserIdx();
             productService.createReport(userIdxByJwt,productIdx,postReportReq);
             return new BaseResponse<>(SUCCESS);
+
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @PostMapping("")
+    public BaseResponse<Integer> createProduct(@RequestBody PostProductReq postProductReq) {
+
+        if (postProductReq.getName() == null) {
+            return new BaseResponse<>(POST_PRODUCT_EMPTY_PRODUCT_NAME);
+        }
+
+        if (postProductReq.getCategory() == null) {
+            return new BaseResponse<>(POST_PRODUCT_EMPTY_CATEGORY);
+        }
+
+        if (postProductReq.getPrice() == null) {
+            return new BaseResponse<>(POST_PRODUCT_PRODUCT_EMPTY_PRICE);
+        }
+
+        if (postProductReq.getDescription() == null) {
+            return new BaseResponse<>(POST_PRODUCT_EMPTY_DESCRIPTION);
+        }
+
+        if (postProductReq.getImages() == null) {
+            return new BaseResponse<>(POST_PRODUCT_PRODUCT_EMPTY_IMAGES);
+        }
+
+        if (!(isRegexLangType(postProductReq.getCategory().toString())|| isRegexLangType(postProductReq.getPrice().toString()) )) {
+            return new BaseResponse<>(INCORRECT_TYPEOF_PRODUCT_INT);
+        }
+
+        if (postProductReq.getLatitude() != null){
+            if (!isRegexLatidue(String.valueOf(postProductReq.getLatitude()))) {
+                return new BaseResponse<>(INCORRECT_SHAPEOF_LATITUDE);
+            }
+
+        }
+
+        if (postProductReq.getLongitude() != null){
+            if (!isRegexLogitude(String.valueOf(postProductReq.getLongitude()))) {
+                return new BaseResponse<>(INCORRECT_SHAPEOF_LONGITUDE);
+            }
+        }
+
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            int productIdx = productService.createProduct(userIdxByJwt,postProductReq);
+            return new BaseResponse<>(productIdx);
 
 
         } catch (BaseException exception) {

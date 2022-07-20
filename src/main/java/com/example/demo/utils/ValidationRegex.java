@@ -25,6 +25,32 @@ public class ValidationRegex {
         return matcher.find();
     }
 
+    public static boolean isRegexIntType(String target) {
+        String regex = "[0-9]";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
+
+    public static boolean isRegexLatidue(String target) {
+        System.out.println(target);
+        String regex = "^(\\d{2}([.]\\d{7})?)?$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
+    public static boolean isRegexLogitude(String target) {
+        System.out.println(target);
+        String regex = "^(\\d{3}([.]\\d{7})?)?$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
+
+
 
 
 }

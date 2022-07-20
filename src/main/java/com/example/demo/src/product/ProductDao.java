@@ -3,12 +3,15 @@ package com.example.demo.src.product;
 //import com.example.demo.src.product.model*
 import com.example.demo.config.BaseException;
 import com.example.demo.src.product.model.GetProductRes;
+import com.example.demo.src.product.model.PostProductReq;
 import com.example.demo.src.product.model.PostReportReq;
 import com.example.demo.src.user.model.GetUserRes;
 import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -72,6 +75,41 @@ public class ProductDao {
                 getReportParams);
 
     }
+
+    public int createProduct(int userIdx, PostProductReq postProductReq) throws BaseException {
+        String createProductQuery = "insert into Products(userId,name,category,price,isDeliveryIncluded,count,isOld,isExchangeAvailable,isSafePayment,region,latitude,longitude,description) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        Object[] createProductParams = new Object[]{userIdx,postProductReq.getName(),postProductReq.getCategory(),postProductReq.getPrice(),postProductReq.getIsDeliveryIncluded(),postProductReq.getCount(),
+                postProductReq.getIsOld(),postProductReq.getIsExchangeAvailable(),postProductReq.getIsSafePayment(),postProductReq.getRegion(),postProductReq.getLatitude(),postProductReq.getLongitude(),postProductReq.getDescription()};
+        this.jdbcTemplate.update(createProductQuery, createProductParams);
+
+        String lastInserIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
+    }
+
+
+    @Transactional
+   public int createProductImages(int productIdx, List<String> Images) throws BaseException {
+        int result = 0;
+        for (int i = 0 ; i < Images.size(); i++){
+            String createProductImagesQuery = "insert into ProductImages (productId,imageUrl) VALUES (?,?)";
+            Object[] createProductImagesParams = new Object[]{productIdx,(Images.get(i))};
+            result += this.jdbcTemplate.update(createProductImagesQuery, createProductImagesParams);
+        }
+        return result;
+    }
+
+    @Transactional
+    public int createProductTags(int productIdx, List<String> tags) throws BaseException {
+        int result = 0;
+        for (int i = 0 ; i < tags.size(); i++){
+            String createProductTagsQuery = "insert into ProductTags (productId,tag) VALUES (?,?)";
+            Object[] createProductTagsParams = new Object[]{productIdx,(tags.get(i))};
+            result += this.jdbcTemplate.update(createProductTagsQuery, createProductTagsParams);
+        }
+        return result;
+    }
+
+
 }
 
 
