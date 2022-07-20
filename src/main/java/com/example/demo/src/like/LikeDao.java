@@ -1,12 +1,14 @@
 package com.example.demo.src.like;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.like.model.PostCollectionProductReq;
 import com.example.demo.src.product.model.PostReportReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class LikeDao {
@@ -59,5 +61,16 @@ public class LikeDao {
         return this.jdbcTemplate.update(updateCollectionQuery, updateCollectionParams);
     }
 
+    public int  createCollectionProduct(int userIdx, int collectionIdx, List<Integer> productIdxList) throws BaseException {
+
+        int result = 0;
+        for (int i = 0 ; i < productIdxList.size(); i++){
+            String createCollectionQuery = "update Likes set collectionId = ? where userId = ? and productId = ?";
+            Object[] createCollectionParams = new Object[]{collectionIdx,userIdx,productIdxList.get(i)};
+            result += this.jdbcTemplate.update(createCollectionQuery, createCollectionParams);
+        }
+        return result;
+
+    }
 
 }

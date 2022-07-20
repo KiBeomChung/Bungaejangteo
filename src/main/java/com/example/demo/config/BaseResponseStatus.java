@@ -68,6 +68,7 @@ public enum BaseResponseStatus {
     //[POST] likes/collections
     POST_COLLECTION_EMPTY_COLLECTION_NAME(false,2090,"찜 컬렉션명을 입력해주세요"),
     POST_COLLECTION_LONG_COLLECTION_NAME(false, 2091, "찜 컬렉션명을 10자 이내로 입력해주세요."),
+    POST_COLLECTION_PRODUCT_EMPTY_PRODUCTLIST(false, 2092, "찜 컬렉션에 넣을 상품 idx 리스트를 입력해주세요"),
     /**
      * 3000 : Response 오류
      */
@@ -103,6 +104,7 @@ public enum BaseResponseStatus {
     FAILED_TO_CREATE_COLLECTION(false,3053,"찜 컬렉션 생성에 실패하였습니다"),
     //[PATCH] likes/collections
     FAILED_TO_UPDATE_COLLECTION(false,3054,"찜 컬렉션 수정에 실패하였습니다"),
+    FAILED_TO_CREATE_COLLECTION_PRODUCT(false,3055,"상품을 찜 컬렉션으로 이동하는 것에 실패하였습니다"),
 
     /**
      * 4000 : Database, Server 오류

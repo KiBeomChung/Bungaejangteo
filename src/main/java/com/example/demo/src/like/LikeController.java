@@ -76,7 +76,6 @@ public class LikeController {
      * [POST] /likes/collections
      * @return BaseResponse<String>
      */
-    // Body
     @ResponseBody
     @PostMapping("/collections")
     public BaseResponse<String> createCollection(@RequestBody PostCollectionReq postCollectionReq) {
@@ -104,7 +103,7 @@ public class LikeController {
 
         @ResponseBody
         @PatchMapping("/collections/{collectionIdx}")
-        public BaseResponse<String> updateCollection( @PathVariable("collectionIdx") int collectionIdx,@RequestBody PostCollectionReq postCollectionReq) {
+        public BaseResponse<String> updateCollection(@PathVariable("collectionIdx") int collectionIdx,@RequestBody PostCollectionReq postCollectionReq) {
             if(postCollectionReq.getName() == null){
                 return new BaseResponse<>(POST_COLLECTION_EMPTY_COLLECTION_NAME);
             }
@@ -118,6 +117,26 @@ public class LikeController {
                 return new BaseResponse<>((exception.getStatus()));
             }
         }
+
+        /**
+         * 찜 컬렉션으로 상품 이동 API
+         * [POST] likes/collections/:collectionIdx/:productIdx
+         * @return BaseResponse<String>
+         */
+        @PostMapping("/collections/{collectionIdx}")
+        public BaseResponse<String> createCollectionProduct(@PathVariable("collectionIdx") int collectionIdx,@RequestBody PostCollectionProductReq postCollectionProductReq) {
+            if(postCollectionProductReq.getProductIdxList() == null){
+                return new BaseResponse<>(POST_COLLECTION_PRODUCT_EMPTY_PRODUCTLIST);
+            }
+            try {
+                int userIdxByJwt = jwtService.getUserIdx();
+                likeService.createCollectionProduct(userIdxByJwt,collectionIdx,postCollectionProductReq.getProductIdxList());
+                return new BaseResponse<>(SUCCESS);
+            } catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+        }
+
 
 
 
