@@ -101,7 +101,8 @@ public enum BaseResponseStatus {
     FAILED_TO_CANCEL_LIKE(false,3052,"찜 취소에 실패하였습니다"),
     //[POST] likes/collections
     FAILED_TO_CREATE_COLLECTION(false,3053,"찜 컬렉션 생성에 실패하였습니다"),
-
+    //[PATCH] likes/collections
+    FAILED_TO_UPDATE_COLLECTION(false,3054,"찜 컬렉션 수정에 실패하였습니다"),
 
     /**
      * 4000 : Database, Server 오류

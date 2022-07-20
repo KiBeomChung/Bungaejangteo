@@ -66,5 +66,18 @@ public class LikeService {
         }
     }
 
+    public void updateCollection(int collectionIdx,String collectionName) throws BaseException {
+        try{
+            int result = likeDao.updateCollection(collectionIdx,collectionName);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_UPDATE_COLLECTION);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
+
 
 }

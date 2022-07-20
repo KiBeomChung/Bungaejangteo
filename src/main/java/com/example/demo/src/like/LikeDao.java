@@ -53,4 +53,11 @@ public class LikeDao {
         return this.jdbcTemplate.update(createCollectionQuery, createCollectionParams);
     }
 
+    public int  updateCollection(int collectionIdx, String collectionName) throws BaseException {
+        String updateCollectionQuery = "update LikeCollections set name = ? where id = ?";
+        Object[] updateCollectionParams = new Object[]{collectionName,collectionIdx};
+        return this.jdbcTemplate.update(updateCollectionQuery, updateCollectionParams);
+    }
+
+
 }

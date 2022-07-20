@@ -96,7 +96,28 @@ public class LikeController {
         }
     }
 
+        /**
+         * 상품 찜 컬렉션 수정 API
+         * [PATCH] /likes/collections/:collectionIdx
+         * @return BaseResponse<String>
+         */
 
+        @ResponseBody
+        @PatchMapping("/collections/{collectionIdx}")
+        public BaseResponse<String> updateCollection( @PathVariable("collectionIdx") int collectionIdx,@RequestBody PostCollectionReq postCollectionReq) {
+            if(postCollectionReq.getName() == null){
+                return new BaseResponse<>(POST_COLLECTION_EMPTY_COLLECTION_NAME);
+            }
+            if(postCollectionReq.getName().length()>10){
+                return new BaseResponse<>(POST_COLLECTION_LONG_COLLECTION_NAME);
+            }
+            try {
+                likeService.updateCollection(collectionIdx,postCollectionReq.getName());
+                return new BaseResponse<>(SUCCESS);
+            } catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+        }
 
 
 
