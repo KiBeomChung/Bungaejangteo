@@ -49,6 +49,14 @@ public class ValidationRegex {
         return matcher.find();
     }
 
+    public static boolean isRegexBirth(String target) {
+        System.out.println(target);
+        String regex = "^(19[0-9][0-9]|20\\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
 
 
 

@@ -86,4 +86,8 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public void modifyUserInfo(PatchUserInfoReq patchUserInfoReq, int userId) {
+        userDao.modifyUserInfo(patchUserInfoReq, userId);
+    }
 }

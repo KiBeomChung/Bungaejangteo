@@ -98,5 +98,15 @@ public class UserProvider {
         }
     }
 
+    public GetUserInfoRes getUserInfoRes(int userId) throws BaseException {
+
+        if(userDao.checkUserState(userId) == 1) {
+            GetUserInfoRes getUserInfoRes = userDao.getUserInfo(userId);
+            return getUserInfoRes;
+        } else {
+            throw new BaseException(NOT_AVALIABLE_GET_USER_STATE);
+        }
+    }
+
 
 }

@@ -159,12 +159,13 @@ public class UserController {
 
     /**
      * 상점 정보 수정 전 정보 가져오는 API
+     *
      * @param id
      * @return
      */
     @ResponseBody
     @GetMapping("modify/stores/{id}")
-    public BaseResponse<GetUserStoreInfoRes> getUserStoreInfoRes(@PathVariable("id") int id){
+    public BaseResponse<GetUserStoreInfoRes> getUserStoreInfoRes(@PathVariable("id") int id) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
@@ -183,6 +184,7 @@ public class UserController {
 
     /**
      * 상점 정보 수정 API
+     *
      * @param patchUserStoreInfoReq
      * @param id
      * @return
@@ -198,40 +200,40 @@ public class UserController {
             if (id != userIdxByJwt) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            if(patchUserStoreInfoReq.getStoreName() == null){
+            if (patchUserStoreInfoReq.getStoreName() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_STORENAME);
             }
-            if(patchUserStoreInfoReq.getStoreName().length() > 10){
+            if (patchUserStoreInfoReq.getStoreName().length() > 10) {
                 return new BaseResponse<>(PATCH_USERS_LONG_STORENAME);
             }
-            if(patchUserStoreInfoReq.getShopUrl() == null){
+            if (patchUserStoreInfoReq.getShopUrl() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_SHOPURL);
             }
-            if(patchUserStoreInfoReq.getShopUrl().length() > 50){
+            if (patchUserStoreInfoReq.getShopUrl().length() > 50) {
                 return new BaseResponse<>(PATCH_USERS_LONG_SHOPURL);
             }
             if (!isRegexLangType(patchUserStoreInfoReq.getStoreName())) {
                 return new BaseResponse<>(INCORRECT_TYPEOF_STORENAME);
             }
-            if(patchUserStoreInfoReq.getContactTime() == null){
+            if (patchUserStoreInfoReq.getContactTime() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_CONTACTTIME);
             }
-            if(patchUserStoreInfoReq.getDescription() == null){
+            if (patchUserStoreInfoReq.getDescription() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_DESCRIPTION);
             }
-            if(patchUserStoreInfoReq.getDescription().length() > 1000){
+            if (patchUserStoreInfoReq.getDescription().length() > 1000) {
                 return new BaseResponse<>(PATCH_USERS_LONG_DESCRIPTION);
             }
-            if(patchUserStoreInfoReq.getPolicy() == null){
+            if (patchUserStoreInfoReq.getPolicy() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_POLICY);
             }
-            if(patchUserStoreInfoReq.getPolicy().length() > 1000){
+            if (patchUserStoreInfoReq.getPolicy().length() > 1000) {
                 return new BaseResponse<>(PATCH_USERS_LONG_POLICY);
             }
-            if(patchUserStoreInfoReq.getPrecautions() == null){
+            if (patchUserStoreInfoReq.getPrecautions() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_PRECAUTIONS);
             }
-            if(patchUserStoreInfoReq.getPrecautions().length() > 1000){
+            if (patchUserStoreInfoReq.getPrecautions().length() > 1000) {
                 return new BaseResponse<>(PATCH_USERS_LONG_PRECAUTIONS);
             }
 
@@ -246,6 +248,7 @@ public class UserController {
 
     /**
      * 내 상점 상품 상태 변경 API
+     *
      * @param patchProductStateReq
      * @param userId
      * @param productsId
@@ -256,7 +259,6 @@ public class UserController {
     public BaseResponse<String> modifyProductState(@RequestBody PatchProductStateReq patchProductStateReq,
                                                    @PathVariable("userId") int userId,
                                                    @PathVariable("productsId") int productsId) {
-
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
@@ -269,8 +271,71 @@ public class UserController {
             String result = "상태 변경되었습니다.";
 
             return new BaseResponse<>(result);
-            } catch (BaseException exception) {
-                return new BaseResponse<>(exception.getStatus());
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/{userId}/settings")
+    public BaseResponse<String> modifyUserInfo(@RequestBody PatchUserInfoReq patchUserInfoReq,
+                                                @PathVariable("userId") int userId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
             }
+
+            //성별 입력 x
+            if(patchUserInfoReq.getGender() == null) {
+                return new BaseResponse<>(PATCH_USERS_EMPTY_GENDER);
+            }
+            if(!(patchUserInfoReq.getGender().equals("남") || patchUserInfoReq.getGender().equals("여"))) {
+                return new BaseResponse<>(PATCH_USERS_CORRECT_GENDER);
+            }
+            if(patchUserInfoReq.getPhoneNum() == null) {
+                return new BaseResponse<>(PATCH_USERS_EMPTY_PHONENUM);
+            }
+            if (!isRegexPhonNum(patchUserInfoReq.getPhoneNum())) {
+                return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
+            }
+            if(patchUserInfoReq.getBirth() == null) {
+                return new BaseResponse<>(PATCH_USERS_EMPTY_BIRTH);
+            }
+            if(!isRegexBirth(patchUserInfoReq.getBirth())) {
+                return new BaseResponse<>(INCORRECT_SHAPEOF_BIRTH);
+            }
+            userService.modifyUserInfo(patchUserInfoReq, userId);
+            String result = "정보 변경하였습니다.";
+
+            return new BaseResponse<>(result);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 계정 설정 전 기존 정보를 가져오는 API
+     * @param userId
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/{userId}/settings")
+    public BaseResponse<GetUserInfoRes> getUserInfoRes(@PathVariable("userId") int userId) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            GetUserInfoRes getUserInfoRes = userProvider.getUserInfoRes(userId);
+            return new BaseResponse<>(getUserInfoRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }

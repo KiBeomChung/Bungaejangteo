@@ -179,5 +179,34 @@ public class UserDao {
         int checkProductStateDeleteParam = productsId;
         return this.jdbcTemplate.queryForObject(checkProductStateDeleteQuery, int.class, checkProductStateDeleteParam);
     }
+
+    public GetUserInfoRes getUserInfo(int userId) {
+        String getUserInfoQuery = "select Users.gender, Users.birth, Users.phoneNum, Users.authMethod\n" +
+                "from Users\n" +
+                "where Users.status = 'NORMAL' and Users.id = ?";
+        int getUserInfoParam = userId;
+        return this.jdbcTemplate.queryForObject(getUserInfoQuery,
+                (rs, rowNum) -> new GetUserInfoRes(
+                        rs.getString("gender"),
+                        rs.getString("birth"),
+                        rs.getString("phoneNum"),
+                        rs.getString("authMethod")
+                ), getUserInfoParam);
+    }
+
+    public int checkUserState(int userId) {
+        String checkUserStateQuery = "select exists(select id from Users where id = ? and status ='NORMAL')";
+        int checkUserStateParam = userId;
+        return this.jdbcTemplate.queryForObject(checkUserStateQuery, int.class, checkUserStateParam);
+    }
+
+    public int modifyUserInfo(PatchUserInfoReq patchUserInfoReq, int userId) {
+
+        String modifyUserInfoQuery = "update Users set gender = ?, birth = ?, phoneNum = ? where id = ?\n";
+        Object[] modifyUserInfoParams = new Object[]{patchUserInfoReq.getGender(), patchUserInfoReq.getBirth(),
+        patchUserInfoReq.getPhoneNum(), userId};
+
+        return this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
+    }
 }
 
