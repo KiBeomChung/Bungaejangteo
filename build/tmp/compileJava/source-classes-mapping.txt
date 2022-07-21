@@ -102,3 +102,5 @@ com/example/demo/src/user/model/GetUserStoreInfoRes.java
  com.example.demo.src.user.model.GetUserStoreInfoRes
 com/example/demo/src/review/ReviewService.java
  com.example.demo.src.review.ReviewService
+com/example/demo/src/like/model/PostCollectionProductReq.java
+ com.example.demo.src.like.model.PostCollectionProductReq
