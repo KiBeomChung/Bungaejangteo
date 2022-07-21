@@ -2,6 +2,8 @@ com/example/demo/src/like/LikeProvider.java
  com.example.demo.src.like.LikeProvider
 com/example/demo/src/like/model/PostCollectionReq.java
  com.example.demo.src.like.model.PostCollectionReq
+com/example/demo/src/favorite/model/GetParamRes.java
+ com.example.demo.src.favorite.model.GetParamRes
 com/example/demo/src/review/model/GetReviewRes.java
  com.example.demo.src.review.model.GetReviewRes
 com/example/demo/config/Constant.java
@@ -10,6 +12,10 @@ com/example/demo/src/review/ReviewDao.java
  com.example.demo.src.review.ReviewDao
 com/example/demo/src/product/ProductService.java
  com.example.demo.src.product.ProductService
+com/example/demo/src/user/model/PatchProductStateReq.java
+ com.example.demo.src.user.model.PatchProductStateReq
+com/example/demo/src/favorite/model/GetFavoriteUserProductsDetailRes.java
+ com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/sms/SmsService.java
@@ -32,6 +38,8 @@ com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
 com/example/demo/src/like/LikeController.java
  com.example.demo.src.like.LikeController
+com/example/demo/src/favorite/model/GetFavoriteUserRes.java
+ com.example.demo.src.favorite.model.GetFavoriteUserRes
 com/example/demo/src/user/model/PatchUserStoreInfoReq.java
  com.example.demo.src.user.model.PatchUserStoreInfoReq
 com/example/demo/src/favorite/FavoriteService.java
@@ -42,6 +50,8 @@ com/example/demo/src/product/ProductController.java
  com.example.demo.src.product.ProductController
 com/example/demo/config/BaseException.java
  com.example.demo.config.BaseException
+com/example/demo/src/user/model/GetUserInfoRes.java
+ com.example.demo.src.user.model.GetUserInfoRes
 com/example/demo/src/sms/SmsDao.java
  com.example.demo.src.sms.SmsDao
 com/example/demo/src/product/ProductProvider.java
@@ -52,10 +62,12 @@ com/example/demo/src/sms/SmsController.java
  com.example.demo.src.sms.SmsController
 com/example/demo/src/favorite/FavoriteController.java
  com.example.demo.src.favorite.FavoriteController
-com/example/demo/src/favorite/model/PostFavoriteStoreReq.java
- com.example.demo.src.favorite.model.PostFavoriteStoreReq
+com/example/demo/src/user/model/PatchUserInfoReq.java
+ com.example.demo.src.user.model.PatchUserInfoReq
 com/example/demo/src/user/model/PostLoginRes.java
  com.example.demo.src.user.model.PostLoginRes
+com/example/demo/src/like/model/GetCollectionProductsRes.java
+ com.example.demo.src.like.model.GetCollectionProductsRes
 com/example/demo/src/user/UserDao.java
  com.example.demo.src.user.UserDao
 com/example/demo/utils/AES128.java
@@ -84,6 +96,8 @@ com/example/demo/src/product/model/PostProductReq.java
  com.example.demo.src.product.model.PostProductReq
 com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
+com/example/demo/src/favorite/model/GetFavoriteUserDetailRes.java
+ com.example.demo.src.favorite.model.GetFavoriteUserDetailRes
 com/example/demo/src/favorite/model/PostFavoriteStoreRes.java
  com.example.demo.src.favorite.model.PostFavoriteStoreRes
 com/example/demo/src/product/model/GetProductRes.java
