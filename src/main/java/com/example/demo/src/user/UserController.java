@@ -157,6 +157,11 @@ public class UserController {
         }
     }
 
+    /**
+     * 상점 정보 수정 전 정보 가져오는 API
+     * @param id
+     * @return
+     */
     @ResponseBody
     @GetMapping("modify/stores/{id}")
     public BaseResponse<GetUserStoreInfoRes> getUserStoreInfoRes(@PathVariable("id") int id){
@@ -237,5 +242,28 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
+
+    @ResponseBody
+    @PatchMapping("/{userId}/{productsId}/state")
+    public BaseResponse<String> modifyProductState(@RequestBody PatchProductStateReq patchProductStateReq,
+                                                   @PathVariable("userId") int userId,
+                                                   @PathVariable("productsId") int productsId) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PatchProductStateReq patchProductStateReq1 = new PatchProductStateReq(patchProductStateReq.getStatus());
+            userService.modifyProductState(patchProductStateReq1, userId, productsId);
+            String result = "상태 변경되었습니다.";
+
+            return new BaseResponse<>(result);
+            } catch (BaseException exception) {
+                return new BaseResponse<>(exception.getStatus());
+            }
     }
 }

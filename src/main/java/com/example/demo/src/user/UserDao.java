@@ -154,5 +154,15 @@ public class UserDao {
         int checkIdParam = id;
         return this.jdbcTemplate.queryForObject(checkIdQuery, int.class, checkIdParam);
     }
+
+    public int modifyProductState(PatchProductStateReq patchProductStateReq, int userId, int productsId){
+        String modifyProductStateQuery = "update Products inner join Users\n" +
+                "on Products.userId = Users.id\n" +
+                "set Products.status = ?\n" +
+                "where Users.id = ? and Products.productId = ?";
+
+        Object[] modifyProductStateParam = new Object[]{patchProductStateReq.getStatus(), userId, productsId};
+        return this.jdbcTemplate.update(modifyProductStateQuery, modifyProductStateParam);
+    }
 }
 

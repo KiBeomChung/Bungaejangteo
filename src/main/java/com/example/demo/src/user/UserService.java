@@ -70,4 +70,8 @@ public class UserService {
     public void modifyStoreInfo(PatchUserStoreInfoReq patchUserStoreInfoReq,int id){
         userDao.modifyStoreInfo(patchUserStoreInfoReq, id);
     }
+
+    public void modifyProductState(PatchProductStateReq patchProductStateReq, int userId, int productsId){
+        userDao.modifyProductState(patchProductStateReq, userId, productsId);
+    }
 }
