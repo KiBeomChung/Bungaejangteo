@@ -69,6 +69,10 @@ public enum BaseResponseStatus {
     POST_COLLECTION_EMPTY_COLLECTION_NAME(false,2090,"찜 컬렉션명을 입력해주세요"),
     POST_COLLECTION_LONG_COLLECTION_NAME(false, 2091, "찜 컬렉션명을 10자 이내로 입력해주세요."),
     POST_COLLECTION_PRODUCT_EMPTY_PRODUCTLIST(false, 2092, "찜 컬렉션에 넣을 상품 idx 리스트를 입력해주세요"),
+
+   //[PATCH] users
+    PATCH_FAIL_REPORT_USER_PRODUCT(false, 2095, "신고당한 상품입니다. 상태 변경이 불가능합니다."),
+    PATCH_FAIL_DELETE_USER_PRODUCT(false,2096, "이미 삭제한 상품입니다. 상태 변경이 불가능합니다."),
     /**
      * 3000 : Response 오류
      */

@@ -244,6 +244,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 내 상점 상품 상태 변경 API
+     * @param patchProductStateReq
+     * @param userId
+     * @param productsId
+     * @return
+     */
     @ResponseBody
     @PatchMapping("/{userId}/{productsId}/state")
     public BaseResponse<String> modifyProductState(@RequestBody PatchProductStateReq patchProductStateReq,

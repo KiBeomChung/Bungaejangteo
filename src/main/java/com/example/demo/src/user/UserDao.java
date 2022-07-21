@@ -164,5 +164,20 @@ public class UserDao {
         Object[] modifyProductStateParam = new Object[]{patchProductStateReq.getStatus(), userId, productsId};
         return this.jdbcTemplate.update(modifyProductStateQuery, modifyProductStateParam);
     }
+
+    public int checkProductStateReport(int productId){
+        String checkProductStateQuery ="select exists(select Products.productId from Products\n" +
+                "inner join ProductReports on ProductReports.productId = Products.productId\n" +
+                "and Products.productId = ?\n" +
+                "where ProductReports.status = 'COMPLETED')";
+        int checkProductStateParam = productId;
+        return this.jdbcTemplate.queryForObject(checkProductStateQuery, int.class, checkProductStateParam);
+    }
+
+    public int checkProductStateDelete(int productsId) {
+        String checkProductStateDeleteQuery = "select exists(select productId from Products where productId = ? and status ='DELETED')";
+        int checkProductStateDeleteParam = productsId;
+        return this.jdbcTemplate.queryForObject(checkProductStateDeleteQuery, int.class, checkProductStateDeleteParam);
+    }
 }
 
