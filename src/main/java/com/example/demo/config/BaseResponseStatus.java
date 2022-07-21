@@ -103,9 +103,13 @@ public enum BaseResponseStatus {
 
     //[POST] favorites
     NOT_AVALIABLE_ADD_FOLLOW(false, 3040, "해당 상점은 팔로잉 할 수 없는 상태입니다."),
+    FOLLOW_BRAND_FAIL(false, 3045, "브랜드 팔로우에 실패하였습니다."),
+
 
     //[DELETE] favorites
     FOLLOW_CANCEL_FAIL(false, 3050, "팔로위 취소 하지 못했습니다."),
+    FOLLOW_DOESNT_EXISTS(false,3047, "해당 브랜드를 팔로우한적이 없습니다."),
+
 
     //[POST] likes
     FAILED_TO_PRODUCT_LIKE(false,3051,"찜 생성에 실패하였습니다"),
@@ -119,6 +123,11 @@ public enum BaseResponseStatus {
 
     //[GET]
     NOT_AVALIABLE_GET_USER_STATE(false, 3060, "유저정보를 수정할 수 없는 상태입니다."),
+
+    //[POST] favorites
+    DUPLICATED_FOLLOW_BRAND(false, 3065, "이미 팔로우를 진행했습니다."),
+    NOT_EXISTS_BRAND(false, 3066, "존재하지 않는 브랜드 입니다."),
+    NOT_AVALIABLE_BRAND_STATUS(false, 3067, "삭제된 브랜드 입니다."),
 
     /**
      * 4000 : Database, Server 오류

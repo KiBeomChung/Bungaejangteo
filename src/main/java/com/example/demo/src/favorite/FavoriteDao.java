@@ -102,7 +102,7 @@ public class FavoriteDao {
                                 (rs1, rowNum1) -> new GetFavoriteUserProductsDetailRes(
                                         rs1.getString("imageUrl"),
                                         rs1.getInt("price"))
-                                )
+                        )
                 ),
                 getFavoriteUserDetailParam);
     }
@@ -124,5 +124,44 @@ public class FavoriteDao {
 //                        rs.getInt("price")),
 //                getFavoriteUserProductsDetailParam);
 //    }
-}
 
+    public int addFollowBrand(int userId, int brandId) {
+        String addFollowBrandQuery = "insert into BrandFollows(userId, brandId)\n" +
+                "(\n" +
+                "    select ?, Brands.id\n" +
+                "    from Brands\n" +
+                "    where Brands.status = 'NORMAL' and Brands.id = ?\n" +
+                ")";
+        Object[] addFollowBrandParams = new Object[]{userId, brandId};
+        return this.jdbcTemplate.update(addFollowBrandQuery, addFollowBrandParams);
+    }
+
+    public int duplicatedFollow(int userId, int brandId) {
+        String duplicatedFollowQuery = "select exists (select BrandFollows.id from BrandFollows where userId = ? and brandId = ?);";
+        Object[] duplicatedFollowParams = new Object[] {userId, brandId};
+
+        return this.jdbcTemplate.queryForObject(duplicatedFollowQuery, int.class, duplicatedFollowParams);
+    }
+
+    public int isExistBrand(int brandId) {
+        String isExistBrandQuery = "select exists (select Brands.id from Brands where Brands.id = ?\n)";
+        //Object[] isExistBrandParam = new Object[] {brandId, brandId};
+        int isExistBrandParam = brandId;
+
+        return this.jdbcTemplate.queryForObject(isExistBrandQuery, int.class, isExistBrandParam);
+    }
+
+    public int isDeletedBrand (int brandId) {
+        String isDeletedBrandQuery = "select exists(select Brands.id from Brands where Brands.id = ? and Brands.status = 'DELETED')";
+        int isDeletedBrandParam = brandId;
+
+        return this.jdbcTemplate.queryForObject(isDeletedBrandQuery, int.class, isDeletedBrandParam);
+    }
+
+    public int deleteFollowBrand(int userId, int brandId) {
+        String deleteFollowBrandQuery = "delete from BrandFollows where BrandFollows.userId = ? and BrandFollows.brandId = ?";
+        Object[] deleteFollowBrandParams = new Object[] {userId, brandId};
+
+        return this.jdbcTemplate.update(deleteFollowBrandQuery, deleteFollowBrandParams);
+    }
+}

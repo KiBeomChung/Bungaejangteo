@@ -59,6 +59,7 @@ public class FavoriteController {
 
     /**
      * 상점 팔로우 취소
+     *
      * @param followingId
      * @param followerId
      * @return
@@ -81,9 +82,56 @@ public class FavoriteController {
         }
     }
 
+    /**
+     * 브랜드 팔로우 API
+     * @param userId
+     * @param brandId
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("brands/{userId}/{brandId}")
+    public BaseResponse<String> addFollowBrand(@PathVariable("userId") int userId,
+                                               @PathVariable("brandId") int brandId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            String result = favoriteService.addFollowBrand(userId, brandId);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
+    /**
+     * 브랜드 팔로우 취소 API
+     * @param userId
+     * @param brandId
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/brands/{userId}/{brandId}")
+    public BaseResponse<String> deleteFollowBrand(@PathVariable("userId") int userId,
+                                                  @PathVariable("brandId") int brandId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            String result = favoriteService.deleteFollowBrand(userId, brandId);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
     @ResponseBody
     @GetMapping("{userId}/users")
-    public BaseResponse<List<GetFavoriteUserRes>> getFavoriteUserList (@PathVariable("userId") int userId) {
+    public BaseResponse<List<GetFavoriteUserRes>> getFavoriteUserList(@PathVariable("userId") int userId) {
 
         List<GetFavoriteUserRes> getFavoriteUserResList = favoriteProvider.getFavoriteUserResList(userId);
         return new BaseResponse<>(getFavoriteUserResList);
