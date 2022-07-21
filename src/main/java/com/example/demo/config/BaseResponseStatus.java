@@ -49,6 +49,11 @@ public enum BaseResponseStatus {
     PATCH_USERS_LONG_POLICY(false, 2058, "교환/반품/환불 정책을 1000자 이내로 입력하세요."),
     PATCH_USERS_EMPTY_PRECAUTIONS(false, 2059, "구매전 유의사항을 입력하세요."),
     PATCH_USERS_LONG_PRECAUTIONS(false, 2060, "구매전 유의사항은 1000자 이내로 입력하세요."),
+    PATCH_USERS_EMPTY_GENDER(false, 2061, "성별을 입력해주세요."),
+    PATCH_USERS_CORRECT_GENDER(false, 2062, "성별에 '남' 또는 '여'라고 입력하세요."),
+    PATCH_USERS_EMPTY_PHONENUM(false, 2063, "휴대폰 번호를 입력하세요."),
+    PATCH_USERS_EMPTY_BIRTH(false, 2064, "생년월일을 입력하세요."),
+    INCORRECT_SHAPEOF_BIRTH(false, 2065, "생년월일 형식을 맞춰주세요. ex)1990.05.21"),
 
     //[POST] /products
     POST_REPORT_EMPTY_PRODUCT_IDX(false,2071,"상품 idx값을 입력해주세요"),
@@ -69,6 +74,10 @@ public enum BaseResponseStatus {
     POST_COLLECTION_EMPTY_COLLECTION_NAME(false,2090,"찜 컬렉션명을 입력해주세요"),
     POST_COLLECTION_LONG_COLLECTION_NAME(false, 2091, "찜 컬렉션명을 10자 이내로 입력해주세요."),
     POST_COLLECTION_PRODUCT_EMPTY_PRODUCTLIST(false, 2092, "찜 컬렉션에 넣을 상품 idx 리스트를 입력해주세요"),
+
+   //[PATCH] users
+    PATCH_FAIL_REPORT_USER_PRODUCT(false, 2095, "신고당한 상품입니다. 상태 변경이 불가능합니다."),
+    PATCH_FAIL_DELETE_USER_PRODUCT(false,2096, "이미 삭제한 상품입니다. 상태 변경이 불가능합니다."),
     /**
      * 3000 : Response 오류
      */
@@ -105,6 +114,9 @@ public enum BaseResponseStatus {
     //[PATCH] likes/collections
     FAILED_TO_UPDATE_COLLECTION(false,3054,"찜 컬렉션 수정에 실패하였습니다"),
     FAILED_TO_CREATE_COLLECTION_PRODUCT(false,3055,"상품을 찜 컬렉션으로 이동하는 것에 실패하였습니다"),
+
+    //[GET]
+    NOT_AVALIABLE_GET_USER_STATE(false, 3060, "유저정보를 수정할 수 없는 상태입니다."),
 
     /**
      * 4000 : Database, Server 오류

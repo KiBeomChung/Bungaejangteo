@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.Random;
 
@@ -47,16 +48,16 @@ public class UserService {
             int userIdx = userDao.createUser(postUserReq);
             //jwt 발급.
             String jwt = jwtService.createJwt(userIdx);
-            return new PostUserRes(userIdx,jwt, false);
+            return new PostUserRes(userIdx, jwt, false);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public void createStoreName(int userIdx,String storeName) throws BaseException{
+    public void createStoreName(int userIdx, String storeName) throws BaseException {
         try {
-            int result = userDao.createStoreName(userIdx,storeName);
+            int result = userDao.createStoreName(userIdx, storeName);
 
             if (result == 0) {
                 throw new BaseException(MODIFY_FAIL_STORENAME);
@@ -67,7 +68,26 @@ public class UserService {
         }
     }
 
-    public void modifyStoreInfo(PatchUserStoreInfoReq patchUserStoreInfoReq,int id){
+    public void modifyStoreInfo(PatchUserStoreInfoReq patchUserStoreInfoReq, int id) {
         userDao.modifyStoreInfo(patchUserStoreInfoReq, id);
+    }
+
+    public void modifyProductState(PatchProductStateReq patchProductStateReq, int userId, int productsId) throws BaseException {
+        try {
+            if (userDao.checkProductStateReport(productsId) == 1) {
+                throw new BaseException(PATCH_FAIL_REPORT_USER_PRODUCT);
+            }
+            if (userDao.checkProductStateDelete(productsId) == 1) {
+                throw new BaseException(PATCH_FAIL_DELETE_USER_PRODUCT);
+            }
+
+            userDao.modifyProductState(patchProductStateReq, userId, productsId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void modifyUserInfo(PatchUserInfoReq patchUserInfoReq, int userId) {
+        userDao.modifyUserInfo(patchUserInfoReq, userId);
     }
 }
