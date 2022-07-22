@@ -103,4 +103,16 @@ public class LikeDao {
                 ),createCollectionParams);
     }
 
+    public int  deleteCollection(int collectionIdx) throws BaseException {
+        String deleteCollectionQuery = "update LikeCollections set status = 'DELETED' where id = ?";
+        int result = this.jdbcTemplate.update(deleteCollectionQuery, collectionIdx);
+
+        String deleteCollectionProductQuery = "update Likes set collectionId = null where collectionId = ?";
+        int result2 = this.jdbcTemplate.update(deleteCollectionProductQuery, collectionIdx);
+
+        return result + result2;
+    }
+
+
+
 }

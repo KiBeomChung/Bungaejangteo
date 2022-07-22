@@ -94,4 +94,17 @@ public class LikeService {
         }
     }
 
+    public void deleteCollection(int collectionIdx) throws BaseException {
+        try{
+            int result = likeDao.deleteCollection(collectionIdx);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_DELETE_COLLECTION);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
+
 }

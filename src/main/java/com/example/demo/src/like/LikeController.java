@@ -160,6 +160,24 @@ public class LikeController {
         }
 
 
+    /**
+     * 상품 찜 컬렉션 삭제 API
+     * [DELETE] /likes/collections/:collectionIdx
+     * @return BaseResponse<String>
+     */
+
+    @ResponseBody
+    @DeleteMapping("/collections/{collectionIdx}")
+    public BaseResponse<String> deleteCollection(@PathVariable("collectionIdx") int collectionIdx) {
+        try {
+            likeService.deleteCollection(collectionIdx);
+            return new BaseResponse<>(SUCCESS);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
 
 
 }
