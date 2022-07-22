@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -102,7 +103,7 @@ public class LikeDao {
                         rs.getString("Products.status")
                 ),createCollectionParams);
     }
-
+    @Transactional
     public int  deleteCollection(int collectionIdx) throws BaseException {
         String deleteCollectionQuery = "update LikeCollections set status = 'DELETED' where id = ?";
         int result = this.jdbcTemplate.update(deleteCollectionQuery, collectionIdx);
