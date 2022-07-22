@@ -82,6 +82,10 @@ public enum BaseResponseStatus {
     GET_COLLECTION_PRODUCTS_INVALID_STATUS(false,2097, "querystring status는 sale 또는 not-sale만 가능합니다"),
    //[GET] likes
     GET_LIKES_INVALID_ORDER(false,2098, "querystring order는 new,past,hot,low,high만 가능합니다"),
+   //[GET] brands
+    GET_BRANDS_INVALID_ORDER(false,2099, "querystring order는 korean, english만 가능합니다"),
+    GET_BRANDS_INVALID_FOLLOW(false,2100, "querystring follow는 true,false만 가능합니다"),
+
     /**
      * 3000 : Response 오류
      */
