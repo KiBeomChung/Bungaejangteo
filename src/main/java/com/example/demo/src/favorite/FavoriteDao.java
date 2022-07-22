@@ -3,6 +3,7 @@ package com.example.demo.src.favorite;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
+import com.example.demo.src.favorite.model.GetFavoriteUserRes;
 import com.example.demo.src.favorite.model.GetParamRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,8 +56,8 @@ public class FavoriteDao {
         return this.jdbcTemplate.queryForObject(checkUserStatusQuery, int.class, checkUserStatusParam);
     }
 
-    public List<GetFavoriteUserDetailRes> getFavoriteUserDetailList(int userId) {
-        String getFavoriteUserDetailQuery = "select Users.ImageUrl, Users.storeName, count(distinct Following.id) as followerNum, count(distinct Products.productId) as productsNum\n" +
+    public List<GetFavoriteUserRes> getFavoriteUserDetailList(int userId) {
+        String getFavoriteUserQuery = "select Users.id, Users.ImageUrl, Users.storeName, count(distinct Following.id) as followerNum, count(distinct Products.productId) as productsNum\n" +
                 "from Users\n" +
                 "inner join Following on Users.id = Following.followingId\n" +
                 "left join Products on Products.userId = Users.id\n" +
@@ -68,6 +69,52 @@ public class FavoriteDao {
                 "where Follow.followerId = ?\n" +
                 "      )\n" +
                 "group by storeName";
+        int getFavoirteUserParam = userId;
+        return this.jdbcTemplate.query(getFavoriteUserQuery,
+                (rs, rowNum) -> new GetFavoriteUserRes(
+                        rs.getInt("id"),
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getInt("followerNum"),
+                        rs.getInt("productsNum")),
+                getFavoirteUserParam);
+    }
+
+    public List<GetFavoriteUserProductsDetailRes> getFollowStoreImage(int id, int userId) {
+        String getFollowStoreImageQuery = "select ProductImages.imageUrl, Products.price\n" +
+                "from Products\n" +
+                "left join ProductImages on ProductImages.productId = Products.productId\n" +
+                "inner join Following on Following.followingId = Products.userId and Following.followingId = ?\n" +
+                "inner join Follow on Follow.followingId = Following.id and Follow.followerId = ?";
+        Object[] getFollowStoreImageParams = new Object[]{id, userId};
+
+        return this.jdbcTemplate.query(getFollowStoreImageQuery,
+                (rs, rowNum) -> new GetFavoriteUserProductsDetailRes(
+                        rs.getString("imageUrl"),
+                        rs.getInt("price")),
+                getFollowStoreImageParams);
+    }
+
+//    public List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailList (int userId) {
+//        String getFavoriteUserProductsDetailQuery = "";
+//        int getFavoritedUserProductsDetailParam = userId;
+//
+//
+//    }
+
+//    public List<GetFavoriteUserDetailRes> getFavoriteUserDetailList(int userId) {
+//        String getFavoriteUserDetailQuery = "select Users.ImageUrl, Users.storeName, count(distinct Following.id) as followerNum, count(distinct Products.productId) as productsNum\n" +
+//                "from Users\n" +
+//                "inner join Following on Users.id = Following.followingId\n" +
+//                "left join Products on Products.userId = Users.id\n" +
+//                "inner join Follow on Follow.FollowingId = Following.id\n" +
+//                "where Following.followingId in (\n" +
+//                "    select Following.followingId\n" +
+//                "from Following\n" +
+//                "inner join Follow on Follow.followingId = Following.id\n" +
+//                "where Follow.followerId = ?\n" +
+//                "      )\n" +
+//                "group by storeName";
 //
 //        String getParamsQuery = "select Following.followingId\n" +
 //                "from Following\n" +
@@ -84,28 +131,28 @@ public class FavoriteDao {
 //        System.out.println("!!!!!!" + getParams.get(1).getFollowingId());
 
 
-        String getFavoriteUserProductsDetailQuery = "select Products.userId, ProductImages.imageUrl, Products.price\n" +
-                "from ProductImages\n" +
-                "inner join Products on Products.productId = ProductImages.productId\n"  +
-                "inner Join Following on Following.followingId = Products.userId\n" +
-                "where Following.followingId = Products.userId\n" +
-                "group by Products.userId, Products.productId";
-        int getFavoriteUserDetailParam = userId;
-        int getFavoriteUserProductsDetailParam = userId;
-        return this.jdbcTemplate.query(getFavoriteUserDetailQuery,
-                (rs, rowNum) -> new GetFavoriteUserDetailRes(
-                        rs.getString("imageUrl"),
-                        rs.getString("storeName"),
-                        rs.getInt("followerNum"),
-                        rs.getInt("productsNum"),
-                        this.jdbcTemplate.query(getFavoriteUserProductsDetailQuery,
-                                (rs1, rowNum1) -> new GetFavoriteUserProductsDetailRes(
-                                        rs1.getString("imageUrl"),
-                                        rs1.getInt("price"))
-                        )
-                ),
-                getFavoriteUserDetailParam);
-    }
+//        String getFavoriteUserProductsDetailQuery = "select Products.userId, ProductImages.imageUrl, Products.price\n" +
+//                "from ProductImages\n" +
+//                "inner join Products on Products.productId = ProductImages.productId\n"  +
+//                "inner Join Following on Following.followingId = Products.userId\n" +
+//                "where Following.followingId = Products.userId\n" +
+//                "group by Products.userId, Products.productId";
+//        int getFavoriteUserDetailParam = userId;
+//        int getFavoriteUserProductsDetailParam = userId;
+//        return this.jdbcTemplate.query(getFavoriteUserDetailQuery,
+//                (rs, rowNum) -> new GetFavoriteUserDetailRes(
+//                        rs.getString("imageUrl"),
+//                        rs.getString("storeName"),
+//                        rs.getInt("followerNum"),
+//                        rs.getInt("productsNum"),
+//                        this.jdbcTemplate.query(getFavoriteUserProductsDetailQuery,
+//                                (rs1, rowNum1) -> new GetFavoriteUserProductsDetailRes(
+//                                        rs1.getString("imageUrl"),
+//                                        rs1.getInt("price"))
+//                        )
+//                ),
+//                getFavoriteUserDetailParam);
+//    }
 
 //    public List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailList(int userId) {
 //        String getFavoriteUserProductsDetailQuery = "select distinct ProductImages.imageUrl, Products.price\n" +
@@ -138,7 +185,7 @@ public class FavoriteDao {
 
     public int duplicatedFollow(int userId, int brandId) {
         String duplicatedFollowQuery = "select exists (select BrandFollows.id from BrandFollows where userId = ? and brandId = ?);";
-        Object[] duplicatedFollowParams = new Object[] {userId, brandId};
+        Object[] duplicatedFollowParams = new Object[]{userId, brandId};
 
         return this.jdbcTemplate.queryForObject(duplicatedFollowQuery, int.class, duplicatedFollowParams);
     }
@@ -151,7 +198,7 @@ public class FavoriteDao {
         return this.jdbcTemplate.queryForObject(isExistBrandQuery, int.class, isExistBrandParam);
     }
 
-    public int isDeletedBrand (int brandId) {
+    public int isDeletedBrand(int brandId) {
         String isDeletedBrandQuery = "select exists(select Brands.id from Brands where Brands.id = ? and Brands.status = 'DELETED')";
         int isDeletedBrandParam = brandId;
 
@@ -160,7 +207,7 @@ public class FavoriteDao {
 
     public int deleteFollowBrand(int userId, int brandId) {
         String deleteFollowBrandQuery = "delete from BrandFollows where BrandFollows.userId = ? and BrandFollows.brandId = ?";
-        Object[] deleteFollowBrandParams = new Object[] {userId, brandId};
+        Object[] deleteFollowBrandParams = new Object[]{userId, brandId};
 
         return this.jdbcTemplate.update(deleteFollowBrandQuery, deleteFollowBrandParams);
     }
