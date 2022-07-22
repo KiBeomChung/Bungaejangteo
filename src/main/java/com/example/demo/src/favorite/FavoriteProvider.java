@@ -26,17 +26,41 @@ public class FavoriteProvider {
         this.jwtService = jwtService;
     }
 
-    public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) {
+//    public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) {
+//
+//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
+////        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList =
+////                favoriteDao.getFavoriteUserProductsDetailList(userId);
+//
+//        List<GetFavoriteUserRes> getFavoriteUserRes = new ArrayList<>();
+//
+//        GetFavoriteUserRes getFavoriteUserRes1 = new GetFavoriteUserRes(getFavoriteUserDetailResList);
+//        getFavoriteUserRes.add(getFavoriteUserRes1);
+//
+//        return getFavoriteUserRes;
+//    }
 
-        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
-//        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList =
-//                favoriteDao.getFavoriteUserProductsDetailList(userId);
+//    public List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList(int userId) {
+//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
+//
+//        return getFavoriteUserDetailResList;
+//    }
+//
+//    public List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList(int userId) {
+//        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList
+//                = favoriteDao.getFavoriteUserProductsDetailList(userId);
+//
+//        return getFavoriteUserProductsDetailResList;
+//    }
 
-        List<GetFavoriteUserRes> getFavoriteUserRes = new ArrayList<>();
+        public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) {
 
-        GetFavoriteUserRes getFavoriteUserRes1 = new GetFavoriteUserRes(getFavoriteUserDetailResList);
-        getFavoriteUserRes.add(getFavoriteUserRes1);
+        List<GetFavoriteUserRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
 
-        return getFavoriteUserRes;
+        for(GetFavoriteUserRes following : getFavoriteUserDetailResList){
+            following.setGetFavoriteUserProductsDetailResList(favoriteDao.getFollowStoreImage(following.getId(), userId));
+        }
+
+        return getFavoriteUserDetailResList;
     }
 }

@@ -2,6 +2,8 @@ package com.example.demo.src.favorite;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
+import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserRes;
 import com.example.demo.src.favorite.model.PostFavoriteStoreRes;
 import com.example.demo.utils.JwtService;
@@ -136,4 +138,28 @@ public class FavoriteController {
         List<GetFavoriteUserRes> getFavoriteUserResList = favoriteProvider.getFavoriteUserResList(userId);
         return new BaseResponse<>(getFavoriteUserResList);
     }
+
+//    /**
+//     * 내가 팔로우 하는 상점들 정보 API (대표 상점 이미지, 상점 이미지, 상품 수, 팔로워 수)
+//     * @param userId
+//     * @return
+//     */
+//    @ResponseBody
+//    @GetMapping("{userId}/users/store-info")
+//    public BaseResponse<List<GetFavoriteUserDetailRes>> getFavoriteUserDetailRes (@PathVariable("userId") int userId) {
+//
+//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteProvider.getFavoriteUserDetailResList(userId);
+//
+//        return new BaseResponse<>(getFavoriteUserDetailResList);
+//    }
+//
+//    @ResponseBody
+//    @GetMapping("{userId}/users/store-product-info")
+//    public BaseResponse<List<GetFavoriteUserProductsDetailRes>> getFavoriteUserProductsDetailRes(@PathVariable("userId") int userId) {
+//
+//        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList
+//                = favoriteProvider.getFavoriteUserProductsDetailResList(userId);
+//
+//        return new BaseResponse<>(getFavoriteUserProductsDetailResList);
+//    }
 }

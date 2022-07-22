@@ -15,8 +15,11 @@ public class GetFavoriteUserDetailRes {
     private String storeName;
     private int productsNum;
     private int followerNum;
-    private List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList;
+    //private List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList;
 
-    public GetFavoriteUserDetailRes(String imageUrl, String storeName, int productsNum, int followerNum, Object getFavoriteUserProductsDetailResList, Class<List> listClass) {
-    }
+//    public GetFavoriteUserDetailRes(String imageUrl, String storeName, int productsNum, int followerNum, Object getFavoriteUserProductsDetailResList, Class<List> listClass) {
+//    }
+
+//        public GetFavoriteUserDetailRes(String imageUrl, String storeName, int productsNum, int followerNum) {
+//    }
 }

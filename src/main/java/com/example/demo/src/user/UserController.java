@@ -276,6 +276,12 @@ public class UserController {
         }
     }
 
+    /**
+     * 계정 정보 수정 API
+     * @param patchUserInfoReq
+     * @param userId
+     * @return
+     */
     @ResponseBody
     @PatchMapping("/{userId}/settings")
     public BaseResponse<String> modifyUserInfo(@RequestBody PatchUserInfoReq patchUserInfoReq,

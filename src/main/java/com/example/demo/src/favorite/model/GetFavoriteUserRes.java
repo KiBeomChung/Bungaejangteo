@@ -1,15 +1,20 @@
 package com.example.demo.src.favorite.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
+
 public class GetFavoriteUserRes {
 
-    private List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList;
+    @NonNull private int id;
+    @NonNull private String imageUrl;
+    @NonNull private String storeName;
+    @NonNull private int productsNum;
+    @NonNull private int followerNum;
+    private List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList;
+    //private List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList;
 }
