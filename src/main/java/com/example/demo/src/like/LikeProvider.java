@@ -35,4 +35,14 @@ public class LikeProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public GetLikesRes getLikes(int userIdx, String order, String status) throws BaseException {
+        try {
+            GetLikesRes getLikesRes = likeDao.getLikes(userIdx,order,status);
+            return getLikesRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

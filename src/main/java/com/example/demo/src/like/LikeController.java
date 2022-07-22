@@ -160,22 +160,45 @@ public class LikeController {
         }
 
 
-    /**
-     * 상품 찜 컬렉션 삭제 API
-     * [DELETE] /likes/collections/:collectionIdx
-     * @return BaseResponse<String>
-     */
+        /**
+         * 상품 찜 컬렉션 삭제 API
+         * [DELETE] /likes/collections/:collectionIdx
+         * @return BaseResponse<String>
+         */
 
-    @ResponseBody
-    @DeleteMapping("/collections/{collectionIdx}")
-    public BaseResponse<String> deleteCollection(@PathVariable("collectionIdx") int collectionIdx) {
-        try {
-            likeService.deleteCollection(collectionIdx);
-            return new BaseResponse<>(SUCCESS);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
+        @ResponseBody
+        @DeleteMapping("/collections/{collectionIdx}")
+        public BaseResponse<String> deleteCollection(@PathVariable("collectionIdx") int collectionIdx) {
+            try {
+                likeService.deleteCollection(collectionIdx);
+                return new BaseResponse<>(SUCCESS);
+            } catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
         }
-    }
+
+        /**
+         * 내 찜 목록 조회/필터링조회 API
+         * [GET] /app/likes?order=&status=
+         * @return BaseResponse<String>
+         */
+        @GetMapping("")
+        public BaseResponse<GetLikesRes>  getLikes(@RequestParam(value = "order") String order,@RequestParam(value = "status") String status) {
+            if(!(order.equals("new") || order.equals("not-past") || order.equals("high") || order.equals("hot") || order.equals("low") || order.equals(""))){
+                return new BaseResponse<>(GET_LIKES_INVALID_ORDER);
+            }
+            if(!(status.equals("sale") || status.equals("not-sale")|| status.equals(""))){
+                return new BaseResponse<>(GET_COLLECTION_PRODUCTS_INVALID_STATUS);
+            }
+            try {
+                int userIdxByJwt = jwtService.getUserIdx();
+                GetLikesRes result = likeProvider.getLikes(userIdxByJwt,order,status);
+                return new BaseResponse<>(result);
+            } catch(BaseException exception){
+                return new BaseResponse<>((exception.getStatus()));
+            }
+
+        }
 
 
 

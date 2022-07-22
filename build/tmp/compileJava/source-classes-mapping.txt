@@ -24,6 +24,8 @@ com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
 com/example/demo/src/review/ReviewController.java
  com.example.demo.src.review.ReviewController
+com/example/demo/src/like/model/GetLikesRes.java
+ com.example.demo.src.like.model.GetLikesRes
 com/example/demo/src/favorite/FavoriteProvider.java
  com.example.demo.src.favorite.FavoriteProvider
 com/example/demo/src/product/ProductDao.java
@@ -50,6 +52,8 @@ com/example/demo/src/product/ProductController.java
  com.example.demo.src.product.ProductController
 com/example/demo/config/BaseException.java
  com.example.demo.config.BaseException
+com/example/demo/src/like/model/GetCollectionRes.java
+ com.example.demo.src.like.model.GetCollectionRes
 com/example/demo/src/user/model/GetUserInfoRes.java
  com.example.demo.src.user.model.GetUserInfoRes
 com/example/demo/src/sms/SmsDao.java

@@ -80,6 +80,8 @@ public enum BaseResponseStatus {
     PATCH_FAIL_DELETE_USER_PRODUCT(false,2096, "이미 삭제한 상품입니다. 상태 변경이 불가능합니다."),
     //[GET] likes/collections
     GET_COLLECTION_PRODUCTS_INVALID_STATUS(false,2097, "querystring status는 sale 또는 not-sale만 가능합니다"),
+   //[GET] likes
+    GET_LIKES_INVALID_ORDER(false,2098, "querystring order는 new,past,hot,low,high만 가능합니다"),
     /**
      * 3000 : Response 오류
      */

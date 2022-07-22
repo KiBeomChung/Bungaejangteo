@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class PostCollectionProductReq {
     private List<Integer> productIdxList;
 }
