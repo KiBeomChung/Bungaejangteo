@@ -46,4 +46,22 @@ public class SearchDao {
         int result = this.jdbcTemplate.update(deleteAllSearchsQuery, userIdx);
         return result;
     }
+
+    public int  deleteSearch(int userIdx,int searchIdx) throws BaseException {
+        String deleteAllSearchsQuery = "update Searches set status = 'DELETED' where userIdx = ? and id = ?";
+        int result = this.jdbcTemplate.update(deleteAllSearchsQuery, new Object[]{userIdx,searchIdx});
+        return result;
+    }
+
+    public int isCorrenctUser(int searchIdx)throws BaseException {
+        String isCorrenctUserQuery = "select userIdx from Searches where id = ?";
+        return this.jdbcTemplate.queryForObject(isCorrenctUserQuery,
+                (rs, rowNum) -> new Integer(
+                        rs.getInt("userIdx")
+                ),searchIdx);
+    }
+
+    public int isExistSearchIdx(int searchIdx)throws BaseException {
+        return this.jdbcTemplate.queryForObject( "select exists(select * from Searches where id = ? and status not in ('DELETED'))",int.class,searchIdx );
+    }
 }

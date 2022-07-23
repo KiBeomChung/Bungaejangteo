@@ -27,8 +27,29 @@ public class SearchService {
     }
 
     public void deleteAllSearchs(int userIdx) throws BaseException {
+
         try{
             int result = searchDao.deleteAllSearchs(userIdx);
+            System.out.println(result);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_DELETE_ALL_SEARCHES);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
+
+    public void deleteSearch(int userIdx, int searchIdx) throws BaseException {
+        if(searchProvider.isExistSearchIdx(searchIdx) != 1){
+            throw new BaseException(NOT_EXISTS_SEARCH_IDX);
+        }
+        if(searchProvider.isCorrenctUser(searchIdx) != userIdx){
+            throw new BaseException(INCORRENT_USER_OF_SEARCHIDX);
+        }
+        try{
+            int result = searchDao.deleteSearch(userIdx,searchIdx);
             if(result == 0){
                 throw new BaseException(FAILED_TO_DELETE_ALL_SEARCHES);
             }

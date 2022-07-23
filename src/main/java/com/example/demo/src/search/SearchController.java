@@ -34,10 +34,10 @@ public class SearchController {
 
     /**
      *검색 - 최근 검색어/요즘 많이 찾는 검색어 조회 API
-     * [GET] /app/searchs?type=
+     * [GET] /app/searchs/searchword?type=
      * @return BaseResponse<List<GetBrandListRes>>
      */
-    @GetMapping("")
+    @GetMapping("/searchword")
     public BaseResponse<List<GetSearchWordRes>> getSearchWord(@RequestParam(value = "type") String type) {
         if(!(type.equals("recent") || type.equals("hot"))){
             return new BaseResponse<>(GET_SEARCHWORD_INVALID_TYPE);
@@ -53,7 +53,7 @@ public class SearchController {
 
     /**
      * 검색어 전체 삭제 API
-     * [DELETE] /app/searches
+     * [DELETE] /app/searchs
      * @return BaseResponse<String>
      */
 
@@ -63,6 +63,23 @@ public class SearchController {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             searchService.deleteAllSearchs(userIdxByJwt);
+            return new BaseResponse<>(SUCCESS);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 특정 검색기록 삭제 API
+     * [DELETE] /app/searches/:searchIdx
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @DeleteMapping("/{searchIdx}")
+    public BaseResponse<String> deleteSearch(@PathVariable("searchIdx") int searchIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            searchService.deleteSearch(userIdxByJwt,searchIdx);
             return new BaseResponse<>(SUCCESS);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

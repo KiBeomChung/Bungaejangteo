@@ -80,7 +80,6 @@ public class UserService {
             if (userDao.checkProductStateDelete(productsId) == 1) {
                 throw new BaseException(PATCH_FAIL_DELETE_USER_PRODUCT);
             }
-
             userDao.modifyProductState(patchProductStateReq, userId, productsId);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

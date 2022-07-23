@@ -147,6 +147,8 @@ public enum BaseResponseStatus {
 
     //[DELETE] searches
     FAILED_TO_DELETE_ALL_SEARCHES(false, 3069, "삭제할 검색어가 없습니다"),
+    INCORRENT_USER_OF_SEARCHIDX(false, 3070, "본인의 검색어만 삭제할 수 있습니다"),
+    NOT_EXISTS_SEARCH_IDX(false, 3071, "삭제되었거나 존재하지 않는 searchIdx 입니다."),
 
     /**
      * 4000 : Database, Server 오류

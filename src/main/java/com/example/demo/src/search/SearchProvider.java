@@ -35,4 +35,22 @@ public class SearchProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int isCorrenctUser(int searchIdx) throws BaseException {
+        try {
+            return searchDao.isCorrenctUser(searchIdx);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isExistSearchIdx(int searchIdx) throws BaseException {
+        try {
+            return searchDao.isExistSearchIdx(searchIdx);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

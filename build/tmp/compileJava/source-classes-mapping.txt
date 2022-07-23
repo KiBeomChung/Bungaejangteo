@@ -4,6 +4,8 @@ com/example/demo/src/like/model/PostCollectionReq.java
  com.example.demo.src.like.model.PostCollectionReq
 com/example/demo/src/brand/BrandProvider.java
  com.example.demo.src.brand.BrandProvider
+com/example/demo/src/favorite/model/GetFollowingUserRes.java
+ com.example.demo.src.favorite.model.GetFollowingUserRes
 com/example/demo/src/favorite/model/GetParamRes.java
  com.example.demo.src.favorite.model.GetParamRes
 com/example/demo/src/review/model/GetReviewRes.java
@@ -28,10 +30,14 @@ com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
 com/example/demo/src/review/ReviewController.java
  com.example.demo.src.review.ReviewController
+com/example/demo/src/search/model/GetSearchWordRes.java
+ com.example.demo.src.search.model.GetSearchWordRes
 com/example/demo/src/like/model/GetLikesRes.java
  com.example.demo.src.like.model.GetLikesRes
 com/example/demo/src/favorite/FavoriteProvider.java
  com.example.demo.src.favorite.FavoriteProvider
+com/example/demo/src/user/model/PostUserInquiryReq.java
+ com.example.demo.src.user.model.PostUserInquiryReq
 com/example/demo/src/product/ProductDao.java
  com.example.demo.src.product.ProductDao
 com/example/demo/config/secret/Secret.java
@@ -68,6 +74,8 @@ com/example/demo/src/product/ProductProvider.java
  com.example.demo.src.product.ProductProvider
 com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
+com/example/demo/src/search/SearchService.java
+ com.example.demo.src.search.SearchService
 com/example/demo/src/sms/SmsController.java
  com.example.demo.src.sms.SmsController
 com/example/demo/src/favorite/FavoriteController.java
@@ -76,6 +84,8 @@ com/example/demo/src/user/model/PatchUserInfoReq.java
  com.example.demo.src.user.model.PatchUserInfoReq
 com/example/demo/src/user/model/PostLoginRes.java
  com.example.demo.src.user.model.PostLoginRes
+com/example/demo/src/search/SearchProvider.java
+ com.example.demo.src.search.SearchProvider
 com/example/demo/src/like/model/GetCollectionProductsRes.java
  com.example.demo.src.like.model.GetCollectionProductsRes
 com/example/demo/src/brand/BrandController.java
@@ -98,6 +108,8 @@ com/example/demo/src/product/model/PostReportReq.java
  com.example.demo.src.product.model.PostReportReq
 com/example/demo/src/sms/model/PostSMSReq.java
  com.example.demo.src.sms.model.PostSMSReq
+com/example/demo/src/search/SearchDao.java
+ com.example.demo.src.search.SearchDao
 com/example/demo/src/sms/SmsProvider.java
  com.example.demo.src.sms.SmsProvider
 com/example/demo/src/review/ReviewProvider.java
@@ -106,10 +118,14 @@ com/example/demo/src/brand/model/getFollowBrandRes.java
  com.example.demo.src.brand.model.getFollowBrandRes
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
+com/example/demo/src/user/model/GetUserInquiringRes.java
+ com.example.demo.src.user.model.GetUserInquiringRes
 com/example/demo/src/product/model/PostProductReq.java
  com.example.demo.src.product.model.PostProductReq
 com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
+com/example/demo/src/search/SearchController.java
+ com.example.demo.src.search.SearchController
 com/example/demo/src/favorite/model/PostFavoriteStoreRes.java
  com.example.demo.src.favorite.model.PostFavoriteStoreRes
 com/example/demo/src/favorite/model/GetFavoriteUserDetailRes.java
