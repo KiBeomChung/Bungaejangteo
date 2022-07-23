@@ -99,8 +99,7 @@ public class UserService {
         if(userDao.checkUserState(inquiredId) == 0) {
             throw new BaseException(FAILED_TO_INQUIRED);
         }
-        // 내가 문의를 작성할 수 없는 상태인 경우
-        // 문의하려는 상점이 문의를 받을 수 없는 상태인 경우
+
         try {
             String lastInsertIdStr = userDao.addInquiring(inquiringId, postUserInquiryReq);
             int connectId = Integer.parseInt(lastInsertIdStr);

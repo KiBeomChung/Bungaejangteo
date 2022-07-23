@@ -153,6 +153,11 @@ public class FavoriteController {
         }
     }
 
+    /**
+     * 나를 팔로우 하는 유저 조회 API
+     * @param userId
+     * @return
+     */
     @ResponseBody
     @GetMapping("{userId}/favorites")
     public BaseResponse<List<GetFollowingUserRes>> getFollowingUserList(@PathVariable("userId") int userId) {
