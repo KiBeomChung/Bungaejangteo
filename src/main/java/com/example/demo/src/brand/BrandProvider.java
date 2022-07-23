@@ -35,4 +35,24 @@ public class BrandProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<GetBrandListRes> getSearchBrandList(int userIdx,String searchWord) throws BaseException {
+        try {
+            List<GetBrandListRes> getBrandListRes = brandeDao.getSearchBrandList(userIdx,searchWord);
+            return getBrandListRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<getFollowBrandRes> getFollowedBrandList(int userIdx) throws BaseException {
+        try {
+            List<getFollowBrandRes> getBrandListRes = brandeDao.getFollowedBrandList(userIdx);
+            return getBrandListRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

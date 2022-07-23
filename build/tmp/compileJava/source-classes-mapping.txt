@@ -102,6 +102,8 @@ com/example/demo/src/sms/SmsProvider.java
  com.example.demo.src.sms.SmsProvider
 com/example/demo/src/review/ReviewProvider.java
  com.example.demo.src.review.ReviewProvider
+com/example/demo/src/brand/model/getFollowBrandRes.java
+ com.example.demo.src.brand.model.getFollowBrandRes
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
 com/example/demo/src/product/model/PostProductReq.java

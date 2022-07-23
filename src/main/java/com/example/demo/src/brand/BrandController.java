@@ -36,7 +36,7 @@ public class BrandController {
 
     /**
      * 전체메뉴- 브랜드 리스트 조회/정렬API
-     * [GET] /app/brands?order=
+     * [GET] /app/brands?order=&follow=
      * @return BaseResponse<List<GetBrandListRes>>
      */
     @GetMapping("")
@@ -50,6 +50,38 @@ public class BrandController {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             List<GetBrandListRes> result = brandProvider.getBrandList(userIdxByJwt,order,follow);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     *전체메뉴- 브랜드 검색 API
+     * [GET] /app/brands/search?searchword=
+     * @return BaseResponse<List<GetBrandListRes>>
+     */
+    @GetMapping("/search")
+    public BaseResponse<List<GetBrandListRes>> getSearchBrandList(@RequestParam(value = "searchword") String searchWord) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            List<GetBrandListRes> result = brandProvider.getSearchBrandList(userIdxByJwt,searchWord);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     *홈- 팔로우한 브랜드 조회
+     * [GET] /app/brands/follow
+     * @return BaseResponse<List<GetBrandListRes>>
+     */
+    @GetMapping("/follow")
+    public BaseResponse<List<getFollowBrandRes>> getFollowedBrandList() {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            List<getFollowBrandRes> result = brandProvider.getFollowedBrandList(userIdxByJwt);
             return new BaseResponse<>(result);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
