@@ -1,6 +1,6 @@
 package com.example.demo.src.search;
 
-//import com.example.demo.src.search.model.*;
+import com.example.demo.src.search.model.*;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.brand.model.GetBrandListRes;
 import com.example.demo.src.search.SearchService;
@@ -26,9 +26,9 @@ public class SearchProvider {
         this.jwtService = jwtService;
     }
 
-    public List<String> getSearchWord(int userIdx, String type) throws BaseException {
+    public List<GetSearchWordRes> getSearchWord(int userIdx, String type) throws BaseException {
         try {
-            List<String> getBrandListRes = searchDao.getSearchWord(userIdx,type);
+            List<GetSearchWordRes> getBrandListRes = searchDao.getSearchWord(userIdx,type);
             return getBrandListRes;
         } catch (Exception exception) {
             System.out.println(exception);
