@@ -80,7 +80,7 @@ public class BrandDao {
                 "from Brands left outer join BrandFollows on Brands.id = BrandFollows.brandId \n" +
                 "left outer join (select tag,count(*)as productNum\n" +
                 "from ProductTags group by tag)b on name = tag or englishName = tag\n" +
-                "group by name having isExist = 1 order by (case name when name between '가' and '힣' then 2 else 1 end)asc, name asc" ;
+                "group by name having isExist = 1 order by BrandFollows.createdAt desc" ;
 
         String GetProductQuery = "SELECT Products.productId,name,price,region,isSafePayment," +
                 "case" +
