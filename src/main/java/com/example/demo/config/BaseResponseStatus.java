@@ -87,6 +87,7 @@ public enum BaseResponseStatus {
    //[GET] brands
     GET_BRANDS_INVALID_ORDER(false,2099, "querystring order는 korean, english만 가능합니다"),
     GET_BRANDS_INVALID_FOLLOW(false,2100, "querystring follow는 true,false만 가능합니다"),
+    GET_SEARCHWORD_INVALID_TYPE(false,2101, "querystring tyoe는 recent,hot만 가능합니다"),
 
     /**
      * 3000 : Response 오류
