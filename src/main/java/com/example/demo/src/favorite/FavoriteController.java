@@ -131,35 +131,28 @@ public class FavoriteController {
         }
     }
 
+    /**
+     * 내가 팔로우 하는 상점 조회 API
+     * @param userId
+     * @return
+     */
     @ResponseBody
     @GetMapping("{userId}/users")
     public BaseResponse<List<GetFavoriteUserRes>> getFavoriteUserList(@PathVariable("userId") int userId) {
 
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
         List<GetFavoriteUserRes> getFavoriteUserResList = favoriteProvider.getFavoriteUserResList(userId);
         return new BaseResponse<>(getFavoriteUserResList);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
-//    /**
-//     * 내가 팔로우 하는 상점들 정보 API (대표 상점 이미지, 상점 이미지, 상품 수, 팔로워 수)
-//     * @param userId
-//     * @return
-//     */
-//    @ResponseBody
-//    @GetMapping("{userId}/users/store-info")
-//    public BaseResponse<List<GetFavoriteUserDetailRes>> getFavoriteUserDetailRes (@PathVariable("userId") int userId) {
-//
-//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteProvider.getFavoriteUserDetailResList(userId);
-//
-//        return new BaseResponse<>(getFavoriteUserDetailResList);
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("{userId}/users/store-product-info")
-//    public BaseResponse<List<GetFavoriteUserProductsDetailRes>> getFavoriteUserProductsDetailRes(@PathVariable("userId") int userId) {
-//
-//        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList
-//                = favoriteProvider.getFavoriteUserProductsDetailResList(userId);
-//
-//        return new BaseResponse<>(getFavoriteUserProductsDetailResList);
-//    }
+
 }

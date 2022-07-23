@@ -344,4 +344,30 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @ResponseBody
+    @PostMapping("/{inquiringId}/inquiring/{inquiredId}")
+    public BaseResponse<String> addInquiring(@PathVariable("inquiringId") int inquiringId,
+                                             @PathVariable("inquiredId") int inquiredId,
+                                             @RequestBody PostUserInquiryReq postUserInquiryReq) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (inquiringId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            if(postUserInquiryReq.getText() == null ) {
+                return new BaseResponse<>(POST_USERS_EMPTY_INQUIRING);
+            }
+            if(postUserInquiryReq.getText().length() > 100) {
+                return new BaseResponse<>(POST_USERS_LONG_INQUIRING);
+            }
+
+            userService.addInquiring(inquiringId, inquiredId, postUserInquiryReq);
+            String result = postUserInquiryReq.getText();
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }

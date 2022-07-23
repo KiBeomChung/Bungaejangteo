@@ -36,6 +36,8 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_STORENAME(false,2022,"상점 이름을 입력해주세요"),
     POST_USERS_LONG_STORENAME(false,2023,"상점 이름은 10자 이내로 설정해주세요"),
     INCORRECT_TYPEOF_STORENAME(false,2024,"상점 이름은 한국어,영어,숫자만 사용가능합니다"),
+    POST_USERS_LONG_INQUIRING(false,2025, "문의 내용이 너무 깁니다. 100자 이내로 작성하세요."),
+    POST_USERS_EMPTY_INQUIRING(false, 2026, "문의하시려면 문의 내용을 작성해주세요."),
 
     // [PATCH] /users
     PATCH_USERS_EMPTY_STORENAME(false,2050,"상점 이름을 입력해주세요."),
@@ -96,6 +98,9 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
     POST_USERS_EXISTS_STORENAME(false, 3015, "이미 존재하는 상점 이름입니다"),
+    FAILED_TO_INQUIRING (false, 3010 , "문의할 수 없는 상태입니다."),
+    FAILED_TO_INQUIRED (false, 3011, "해당 상점은 현재 문의가 불가능 합니다."),
+    FAILED_TO_WRITE_INQUIRY (false, 3012, "문의 작성에 실패하였습니다."),
 
     // sms
     FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),

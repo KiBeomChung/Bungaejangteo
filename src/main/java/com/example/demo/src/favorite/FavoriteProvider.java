@@ -1,5 +1,6 @@
 package com.example.demo.src.favorite;
 
+import com.example.demo.config.BaseException;
 import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserRes;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
 public class FavoriteProvider {
@@ -26,41 +29,17 @@ public class FavoriteProvider {
         this.jwtService = jwtService;
     }
 
-//    public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) {
-//
-//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
-////        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList =
-////                favoriteDao.getFavoriteUserProductsDetailList(userId);
-//
-//        List<GetFavoriteUserRes> getFavoriteUserRes = new ArrayList<>();
-//
-//        GetFavoriteUserRes getFavoriteUserRes1 = new GetFavoriteUserRes(getFavoriteUserDetailResList);
-//        getFavoriteUserRes.add(getFavoriteUserRes1);
-//
-//        return getFavoriteUserRes;
-//    }
+        public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) throws BaseException {
 
-//    public List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList(int userId) {
-//        List<GetFavoriteUserDetailRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
-//
-//        return getFavoriteUserDetailResList;
-//    }
-//
-//    public List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList(int userId) {
-//        List<GetFavoriteUserProductsDetailRes> getFavoriteUserProductsDetailResList
-//                = favoriteDao.getFavoriteUserProductsDetailList(userId);
-//
-//        return getFavoriteUserProductsDetailResList;
-//    }
+        try {
+            List<GetFavoriteUserRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
 
-        public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) {
-
-        List<GetFavoriteUserRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
-
-        for(GetFavoriteUserRes following : getFavoriteUserDetailResList){
-            following.setGetFavoriteUserProductsDetailResList(favoriteDao.getFollowStoreImage(following.getId(), userId));
+            for (GetFavoriteUserRes following : getFavoriteUserDetailResList) {
+                following.setGetFavoriteUserProductsDetailResList(favoriteDao.getFollowStoreImage(following.getId(), userId));
+            }
+            return getFavoriteUserDetailResList;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
         }
-
-        return getFavoriteUserDetailResList;
     }
 }

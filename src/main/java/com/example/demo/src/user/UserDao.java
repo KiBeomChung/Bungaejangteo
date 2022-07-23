@@ -208,5 +208,22 @@ public class UserDao {
 
         return this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
     }
+
+    public String addInquiring(int inquiringId, PostUserInquiryReq postUserInquiryReq) {
+        String addInquiringQuery = "insert into Inquiring(inquiringId, text) values (?, ?)";
+        Object[] addInquiringParams = new Object[]{inquiringId, postUserInquiryReq.getText()};
+
+        this.jdbcTemplate.update(addInquiringQuery, addInquiringParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, String.class);
+    }
+
+    public int addInquired(int inquiredId, int connectId) {
+        String addInquiredQuery = "insert into Inquired(inquiredId, connectId) values(?, ?)";
+        Object[] addInquiredParams = new Object[] {inquiredId, connectId};
+
+        return this.jdbcTemplate.update(addInquiredQuery, addInquiredParams);
+    }
 }
 

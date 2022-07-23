@@ -90,4 +90,27 @@ public class UserService {
     public void modifyUserInfo(PatchUserInfoReq patchUserInfoReq, int userId) {
         userDao.modifyUserInfo(patchUserInfoReq, userId);
     }
+
+    public void addInquiring(int inquiringId, int inquiredId, PostUserInquiryReq postUserInquiryReq) throws BaseException {
+
+        if(userDao.checkUserState(inquiringId) == 0) {
+            throw new BaseException(FAILED_TO_INQUIRING);
+        }
+        if(userDao.checkUserState(inquiredId) == 0) {
+            throw new BaseException(FAILED_TO_INQUIRED);
+        }
+        // 내가 문의를 작성할 수 없는 상태인 경우
+        // 문의하려는 상점이 문의를 받을 수 없는 상태인 경우
+        try {
+            String lastInsertIdStr = userDao.addInquiring(inquiringId, postUserInquiryReq);
+            int connectId = Integer.parseInt(lastInsertIdStr);
+            int result = userDao.addInquired(inquiredId, connectId);
+
+            if(result != 1) {
+                throw new BaseException(FAILED_TO_WRITE_INQUIRY);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
