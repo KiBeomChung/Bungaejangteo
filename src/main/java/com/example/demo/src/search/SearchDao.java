@@ -1,10 +1,13 @@
 package com.example.demo.src.search;
 
+import com.example.demo.config.BaseException;
 import com.example.demo.src.brand.model.GetBrandListRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
+
 import com.example.demo.src.search.model.*;
 import java.util.List;
 
@@ -29,14 +32,18 @@ public class SearchDao {
                     ),userIdx);
 
         }else{
-            getSearchWordQuery = "select id,searchWord,count(*) from Searches where Searches.status = 'NORMAL' group by searchWord order by count(*) desc limit 10";
+            getSearchWordQuery = "select id,searchWord,count(*) from Searches group by searchWord order by count(*) desc limit 10";
             return this.jdbcTemplate.query(getSearchWordQuery,
                     (rs, rowNum) -> new GetSearchWordRes(
                             rs.getInt("id"),
                             rs.getString("searchWord")
                     ));
         }
+    }
 
-
+    public int  deleteAllSearchs(int userIdx) throws BaseException {
+        String deleteAllSearchsQuery = "update Searches set status = 'DELETED' where userIdx = ?";
+        int result = this.jdbcTemplate.update(deleteAllSearchsQuery, userIdx);
+        return result;
     }
 }

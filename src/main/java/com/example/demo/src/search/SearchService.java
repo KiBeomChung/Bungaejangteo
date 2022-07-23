@@ -25,4 +25,17 @@ public class SearchService {
         this.searchProvider = searchProvider;
         this.jwtService = jwtService;
     }
+
+    public void deleteAllSearchs(int userIdx) throws BaseException {
+        try{
+            int result = searchDao.deleteAllSearchs(userIdx);
+            if(result == 0){
+                throw new BaseException(FAILED_TO_DELETE_ALL_SEARCHES);
+            }
+        } catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+
+        }
+    }
 }

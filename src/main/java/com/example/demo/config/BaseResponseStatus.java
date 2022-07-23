@@ -142,8 +142,11 @@ public enum BaseResponseStatus {
     NOT_EXISTS_BRAND(false, 3066, "존재하지 않는 브랜드 입니다."),
     NOT_AVALIABLE_BRAND_STATUS(false, 3067, "삭제된 브랜드 입니다."),
 
-    //[DELETE]
+    //[DELETE] likes
     FAILED_TO_DELETE_COLLECTION(false, 3068, "찜 컬렉션 삭제에 실패했습니다"),
+
+    //[DELETE] searches
+    FAILED_TO_DELETE_ALL_SEARCHES(false, 3069, "삭제할 검색어가 없습니다"),
 
     /**
      * 4000 : Database, Server 오류

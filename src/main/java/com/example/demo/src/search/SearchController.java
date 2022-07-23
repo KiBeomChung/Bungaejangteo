@@ -10,10 +10,8 @@ import static com.example.demo.utils.ValidationRegex.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -48,6 +46,24 @@ public class SearchController {
             int userIdxByJwt = jwtService.getUserIdx();
             List<GetSearchWordRes> result = searchProvider.getSearchWord(userIdxByJwt,type);
             return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 검색어 전체 삭제 API
+     * [DELETE] /app/searches
+     * @return BaseResponse<String>
+     */
+
+    @ResponseBody
+    @DeleteMapping("")
+    public BaseResponse<String> deleteAllSearchs() {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            searchService.deleteAllSearchs(userIdxByJwt);
+            return new BaseResponse<>(SUCCESS);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
