@@ -101,6 +101,7 @@ public enum BaseResponseStatus {
     FAILED_TO_INQUIRING (false, 3010 , "문의할 수 없는 상태입니다."),
     FAILED_TO_INQUIRED (false, 3011, "해당 상점은 현재 문의가 불가능 합니다."),
     FAILED_TO_WRITE_INQUIRY (false, 3012, "문의 작성에 실패하였습니다."),
+    FAILED_TO_LOAD_INQUIRY(false,3013, "상품 문의를 조회할 수 없는 상태입니다"),
 
     // sms
     FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),

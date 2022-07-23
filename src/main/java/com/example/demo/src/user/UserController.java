@@ -345,6 +345,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 상품 문의 작성 API
+     * @param inquiringId
+     * @param inquiredId
+     * @param postUserInquiryReq
+     * @return
+     */
     @ResponseBody
     @PostMapping("/{inquiringId}/inquiring/{inquiredId}")
     public BaseResponse<String> addInquiring(@PathVariable("inquiringId") int inquiringId,
@@ -369,5 +376,14 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
+    
+    @ResponseBody
+    @GetMapping("{userId}/inquiring")
+    public BaseResponse<List<GetUserInquiringRes>> getUserInquiringRes(@PathVariable("userId") int userId) throws BaseException {
+
+        List<GetUserInquiringRes> getUserInquiringResList = userProvider.getUserInquiringList(userId);
+
+        return new BaseResponse<>(getUserInquiringResList);
     }
 }

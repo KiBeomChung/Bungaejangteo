@@ -225,5 +225,28 @@ public class UserDao {
 
         return this.jdbcTemplate.update(addInquiredQuery, addInquiredParams);
     }
+
+    public List<GetUserInquiringRes> getUserInquiring(int userId) {
+        String getUserInquiringQuery = "select Users.imageUrl, Users.storeName, Inquiring.text , case when timestampdiff(second, Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                then concat(timestampdiff(second,Inquiring.createdAt, current_timestamp), ' 초 전')\n" +
+                "            when timestampdiff(minute, Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                then concat(timestampdiff(minute,Inquiring.createdAt, current_timestamp), ' 분 전')\n" +
+                "            when timestampdiff(hour, Inquiring.createdAt, current_timestamp) < 24\n" +
+                "                then concat(timestampdiff(hour, Inquiring.createdAt, current_timestamp), ' 시간 전')\n" +
+                "            else concat(datediff(current_timestamp, Inquiring.createdAt), ' 일 전')\n" +
+                "           end as 'createdAt'\n" +
+                "from Users\n" +
+                "inner join Inquiring on Inquiring.inquiringId = Users.id\n" +
+                "where Users.status = 'NORMAL' and Users.id = ?";
+        int getUserInquiringParam = userId;
+
+        return this.jdbcTemplate.query(getUserInquiringQuery,
+                (rs, rowNum) -> new GetUserInquiringRes(
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getString("text"),
+                        rs.getString("createdAt")),
+                getUserInquiringParam);
+    }
 }
 

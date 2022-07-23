@@ -108,5 +108,18 @@ public class UserProvider {
         }
     }
 
+    public List<GetUserInquiringRes> getUserInquiringList(int userId) throws BaseException {
+
+        if(userDao.checkUserState(userId) == 0) {
+            throw new BaseException(FAILED_TO_LOAD_INQUIRY);
+        }
+        // 상점 신고 받았는지 or 삭제되지는 않았는지
+
+        List<GetUserInquiringRes> getUserInquiringResList = userDao.getUserInquiring(userId);
+
+        return getUserInquiringResList;
+
+    }
+
 
 }
