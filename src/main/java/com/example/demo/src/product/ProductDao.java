@@ -42,6 +42,7 @@ public class ProductDao {
                 " )as imageTable" +
                 " on imageTable.productId = Products.productId)" +
                 " left outer join (select productId,count(*) as likeCount from Likes group by productId)as c" +
+                " where Products.status='SALE'"+
                 " on Products.productId =  c.productId order by rand()" ;
 
         return this.jdbcTemplate.query(GetProductQuery,
