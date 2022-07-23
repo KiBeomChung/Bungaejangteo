@@ -65,4 +65,14 @@ public class BrandProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<GetBrandListRes> getSearchRecommendBrandList(int userIdx) throws BaseException {
+        try {
+            List<GetBrandListRes> getBrandListRes = brandeDao.getSearchRecommendBrandList(userIdx);
+            return getBrandListRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

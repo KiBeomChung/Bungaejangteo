@@ -104,5 +104,21 @@ public class BrandController {
         }
     }
 
+    /**
+     *검색- 추천 브랜드 조회
+     * [GET] /app/brands/searches/recommend
+     * @return BaseResponse<List<GetBrandListRes>>
+     */
+    @GetMapping("/searches/recommend")
+    public BaseResponse<List<GetBrandListRes>> getSearchRecommendBrandList() {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            List<GetBrandListRes> result = brandProvider.getSearchRecommendBrandList(userIdxByJwt);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
 }

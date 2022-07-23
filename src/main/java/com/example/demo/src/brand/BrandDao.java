@@ -184,6 +184,24 @@ public class BrandDao {
 
     }
 
+    public List<GetBrandListRes> getSearchRecommendBrandList(int userIdx) {
+        String getBrandQuery = "select Brands.id,name,englishName,imageUrl,userId,exists(select * from BrandFollows where userId = ? and brandId = Brands.id)as isExist,productNum\n" +
+                "from Brands left outer join BrandFollows on Brands.id = BrandFollows.brandId \n" +
+                "left outer join (select tag,count(*)as productNum\n" +
+                "from ProductTags group by tag)b on name = tag or englishName = tag\n" +
+                "group by name order by rand() limit 5" ;
+
+        return this.jdbcTemplate.query(getBrandQuery,
+                (rs, rowNum) -> new GetBrandListRes(
+                        rs.getInt("Brands.id"),
+                        rs.getString("name"),
+                        rs.getString("englishName"),
+                        rs.getInt("productNum"),
+                        rs.getBoolean("isExist"),
+                        rs.getString("imageUrl")
+                ),userIdx);
+    }
+
 
 
 }
