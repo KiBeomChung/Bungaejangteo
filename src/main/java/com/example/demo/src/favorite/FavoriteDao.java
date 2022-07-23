@@ -1,10 +1,7 @@
 package com.example.demo.src.favorite;
 
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
-import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
-import com.example.demo.src.favorite.model.GetFavoriteUserRes;
-import com.example.demo.src.favorite.model.GetParamRes;
+import com.example.demo.src.favorite.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -133,5 +130,25 @@ public class FavoriteDao {
         Object[] deleteFollowBrandParams = new Object[]{userId, brandId};
 
         return this.jdbcTemplate.update(deleteFollowBrandQuery, deleteFollowBrandParams);
+    }
+
+    public List<GetFollowingUserRes> getFollowingUserList(int userId) {
+        String getFollowingUserQuery = "select Users.id, Users.imageUrl, Users.storeName, count(distinct Products.productId) as productNum, (select count(Following.followingId)\n" +
+                "from Following\n" +
+                "where followingId = Users.id) as followingNum\n" +
+                "from Users\n" +
+                "left join Products on Products.userId = Users.id\n" +
+                "inner join Follow on Follow.followerId = Users.id\n" +
+                "inner join Following on Following.id = Follow.followingId and Following.followingId = ?\n" +
+                "group by Users.storeName";
+        int getFollowingUserParam = userId;
+
+        return this.jdbcTemplate.query(getFollowingUserQuery,
+                (rs, rowNum) -> new GetFollowingUserRes(
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getInt("productNum"),
+                        rs.getInt("followingNum")),
+                getFollowingUserParam);
     }
 }

@@ -2,10 +2,7 @@ package com.example.demo.src.favorite;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
-import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
-import com.example.demo.src.favorite.model.GetFavoriteUserRes;
-import com.example.demo.src.favorite.model.PostFavoriteStoreRes;
+import com.example.demo.src.favorite.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +83,7 @@ public class FavoriteController {
 
     /**
      * 브랜드 팔로우 API
+     *
      * @param userId
      * @param brandId
      * @return
@@ -110,6 +108,7 @@ public class FavoriteController {
 
     /**
      * 브랜드 팔로우 취소 API
+     *
      * @param userId
      * @param brandId
      * @return
@@ -133,6 +132,7 @@ public class FavoriteController {
 
     /**
      * 내가 팔로우 하는 상점 조회 API
+     *
      * @param userId
      * @return
      */
@@ -146,9 +146,24 @@ public class FavoriteController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-        List<GetFavoriteUserRes> getFavoriteUserResList = favoriteProvider.getFavoriteUserResList(userId);
-        return new BaseResponse<>(getFavoriteUserResList);
+            List<GetFavoriteUserRes> getFavoriteUserResList = favoriteProvider.getFavoriteUserResList(userId);
+            return new BaseResponse<>(getFavoriteUserResList);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
+    @ResponseBody
+    @GetMapping("{userId}/favorites")
+    public BaseResponse<List<GetFollowingUserRes>> getFollowingUserList(@PathVariable("userId") int userId) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetFollowingUserRes> getFollowingUserResList = favoriteProvider.getFollowingUserResList(userId);
+            return new BaseResponse<>(getFollowingUserResList);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

@@ -1,0 +1,16 @@
+package com.example.demo.src.favorite.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class GetFollowingUserRes {
+
+    private String imageUrl;
+    private String storeName;
+    private int productNum;
+    private int followingNum;
+}

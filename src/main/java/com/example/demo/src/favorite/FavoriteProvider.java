@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.favorite.model.GetFavoriteUserDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes;
 import com.example.demo.src.favorite.model.GetFavoriteUserRes;
+import com.example.demo.src.favorite.model.GetFollowingUserRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class FavoriteProvider {
         this.jwtService = jwtService;
     }
 
-        public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) throws BaseException {
+    public List<GetFavoriteUserRes> getFavoriteUserResList(int userId) throws BaseException {
 
         try {
             List<GetFavoriteUserRes> getFavoriteUserDetailResList = favoriteDao.getFavoriteUserDetailList(userId);
@@ -42,4 +43,11 @@ public class FavoriteProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<GetFollowingUserRes> getFollowingUserResList(int userId) {
+
+        List<GetFollowingUserRes> getFollowingUser = favoriteDao.getFollowingUserList(userId);
+        return getFollowingUser;
+    }
+
 }
