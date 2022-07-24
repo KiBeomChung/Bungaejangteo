@@ -389,7 +389,7 @@ public class UserController {
      * @throws BaseException
      */
     @ResponseBody
-    @GetMapping("{userId}/inquiring")
+    @GetMapping("{userId}/store-info/inquiring")
     public BaseResponse<List<GetUserInquiringRes>> getUserInquiringRes(@PathVariable("userId") int userId) throws BaseException {
 
         List<GetUserInquiringRes> getUserInquiringResList = userProvider.getUserInquiringList(userId);
@@ -397,18 +397,53 @@ public class UserController {
         return new BaseResponse<>(getUserInquiringResList);
     }
 
+    /**
+     * 상점 문의 삭제 API
+     * @param inquiredId
+     * @param inquiringId
+     * @param patchUserDeleteInqReq
+     * @return
+     */
     @ResponseBody
-    @GetMapping(value = "{myId}/{userId}/store-text-info")
-    public BaseResponse<GetAnotherUserStoreInfoRes> getAnotherUserStoreInfoResBaseResponse(@PathVariable("myId") int myId
-            , @PathVariable("userId") int userId) {
-        try {
-            int myIdByJwt = jwtService.getUserIdx();
+    @PatchMapping("{inquiredId}/inquiring/{inquiringId}")
+    public BaseResponse<String> deleteInquiring(@PathVariable("inquiredId") int inquiredId,
+                                                @PathVariable("inquiringId") int inquiringId,
+                                                @RequestBody PatchUserDeleteInqReq patchUserDeleteInqReq) {
 
-            if (myId != myIdByJwt) {
+        try {
+            int inquiredIdxByJwt = jwtService.getUserIdx();
+
+            if (inquiredId != inquiredIdxByJwt) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            GetAnotherUserStoreInfoRes getAnotherUserStoreInfoRes = userProvider.getAnotherUserStoreInfo(myId, userId);
+            String result = userService.deleteInquiring(inquiredId, inquiringId, patchUserDeleteInqReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+
+    }
+
+
+    /**
+     * 타인의 상점 조회 API
+     * @param userId
+     * @param targetId
+     * @return
+     */
+    @ResponseBody
+    @GetMapping(value = "{userId}/{targetId}/store-info")
+    public BaseResponse<GetAnotherUserStoreInfoRes> getAnotherUserStoreInfoResBaseResponse(@PathVariable("userId") int userId
+            , @PathVariable("targetId") int targetId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            GetAnotherUserStoreInfoRes getAnotherUserStoreInfoRes = userProvider.getAnotherUserStoreInfo(userId, targetId);
             return new BaseResponse<>(getAnotherUserStoreInfoRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

@@ -92,10 +92,10 @@ public class UserService {
 
     public void addInquiring(int inquiringId, int inquiredId, PostUserInquiryReq postUserInquiryReq) throws BaseException {
 
-        if(userDao.checkUserState(inquiringId) == 0) {
+        if (userDao.checkUserState(inquiringId) == 0) {
             throw new BaseException(FAILED_TO_INQUIRING);
         }
-        if(userDao.checkUserState(inquiredId) == 0) {
+        if (userDao.checkUserState(inquiredId) == 0) {
             throw new BaseException(FAILED_TO_INQUIRED);
         }
 
@@ -104,11 +104,34 @@ public class UserService {
             int connectId = Integer.parseInt(lastInsertIdStr);
             int result = userDao.addInquired(inquiredId, connectId);
 
-            if(result != 1) {
+            if (result != 1) {
                 throw new BaseException(FAILED_TO_WRITE_INQUIRY);
             }
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String deleteInquiring(int inquiredId, int inquiringId, PatchUserDeleteInqReq patchUserDeleteInqReq) throws BaseException {
+
+        //이미 삭제 했을경우
+        //문의를 남기지 않았을 경우
+        //status 값이 null 인 경우
+        //status 값이 inactive가 아닌경우
+
+        try {
+            int deleteInquiring = userDao.deleteInquiring(inquiredId, inquiringId, patchUserDeleteInqReq);
+            System.out.println("del" + deleteInquiring);
+            String result = "";
+
+            if (deleteInquiring == 2) {
+                result = "해당 브랜드 팔로우를 취소하였습니다.";
+            } else {
+                throw new BaseException(FOLLOW_DOESNT_EXISTS);
+            }
+            return result;
+        } catch (Exception exception) {
+            throw new BaseException(FOLLOW_DOESNT_EXISTS);
         }
     }
 }

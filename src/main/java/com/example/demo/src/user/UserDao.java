@@ -245,7 +245,8 @@ public class UserDao {
                 "           END AS 'createdAt'\n" +
                 "from Users\n" +
                 "inner join Inquiring on Inquiring.inquiringId = Users.id\n" +
-                "where Users.status = 'NORMAL' and Users.id = ?";
+                "inner join Inquired on Inquired.connectId = Inquiring.id\n" +
+                "where Inquired.inquiredId = ? and Users.status = 'NORMAL'";
         int getUserInquiringParam = userId;
 
         return this.jdbcTemplate.query(getUserInquiringQuery,
@@ -264,7 +265,7 @@ public class UserDao {
         return this.jdbcTemplate.update(addVisitNumQuery, addVisitNumParam);
     }
 
-    public GetAnotherUserStoreInfoRes getAnotherUserStoreInfo(int myId, int userId) {
+    public GetAnotherUserStoreInfoRes getAnotherUserStoreInfo(int userId, int targetId) {
 
         String getAnotherUserStoreProductInfoQuery = "select Products.productId, ProductImages.imageUrl, Products.price, Products.name\n" +
                 "from Products inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt)a GROUP BY productId) ProductImages on Products.productId = ProductImages.productId\n" +
@@ -282,7 +283,7 @@ public class UserDao {
                 "       Users.contactTime, Users.description, Users.policy, exists(select * from Follow inner join Following on Follow.followingId = Following.id and Following.followingId = ? and Follow.followerId = ?) as isFollow\n" +
                 "from Users\n" +
                 "where Users.id = ? limit 10";
-        Object[] getAnotherUserStoreInfoParams = new Object[] {userId,userId,userId,userId,userId,userId,userId, userId ,myId, userId};
+        Object[] getAnotherUserStoreInfoParams = new Object[] {targetId,targetId,targetId,targetId,targetId,targetId,targetId, targetId ,userId, targetId};
 
         return this.jdbcTemplate.queryForObject(getAnotherUserStoreInfoQuery,
                 (rs, rowNum) -> new GetAnotherUserStoreInfoRes(
@@ -309,8 +310,18 @@ public class UserDao {
                                        this.jdbcTemplate.queryForObject("select exists(select * from Likes where userId = ? AND productId = ? and status = 'NORMAL') as b",
                                                (rs3, rowNum3) -> new Integer(
                                                        rs3.getInt("b")),
-                                                       userId, rs2.getInt("productId"))
-                               ), userId), rs.getInt("isFollow"))
+                                                       targetId, rs2.getInt("productId"))
+                               ), targetId), rs.getInt("isFollow"))
                 , getAnotherUserStoreInfoParams);
+    }
+
+    public int deleteInquiring(int inquiredId, int inquiringId, PatchUserDeleteInqReq patchUserDeleteInqReq) {
+        String deleteInquiringQuery = "update Inquiring a inner join Inquired b on a.id = b.connectId\n" +
+                "set a.status = ?, b.status = ?\n" +
+                "where a.inquiringId = ? and b.inquiredId = ?";
+
+        Object[] deleteInquiringParams = new Object[] {patchUserDeleteInqReq.getStatus(), patchUserDeleteInqReq.getStatus(), inquiringId, inquiredId};
+
+        return this.jdbcTemplate.update(deleteInquiringQuery, deleteInquiringParams);
     }
 }
