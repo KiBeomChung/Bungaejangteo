@@ -18,5 +18,5 @@ public class GetReviewRes {
     private String bungaePay;
     private String reviewText;
     private String name; //상품 명
-    private Timestamp createdAt;
+    private String createdAt;
 }

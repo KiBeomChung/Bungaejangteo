@@ -119,8 +119,8 @@ public class UserDao {
                 "where id = ?";
         int modifyStoreIdParam = id;
         Object[] modifyStoreInfoParams = new Object[]{patchUserStoreInfoReq.getStoreName(), patchUserStoreInfoReq.getShopUrl(),
-        patchUserStoreInfoReq.getContactTime(), patchUserStoreInfoReq.getDescription(), patchUserStoreInfoReq.getPolicy(),
-        patchUserStoreInfoReq.getPrecautions(), modifyStoreIdParam};
+                patchUserStoreInfoReq.getContactTime(), patchUserStoreInfoReq.getDescription(), patchUserStoreInfoReq.getPolicy(),
+                patchUserStoreInfoReq.getPrecautions(), modifyStoreIdParam};
 
         return this.jdbcTemplate.update(modifyStroeInfoQuery, modifyStoreInfoParams);
 
@@ -204,7 +204,7 @@ public class UserDao {
 
         String modifyUserInfoQuery = "update Users set gender = ?, birth = ?, phoneNum = ? where id = ?\n";
         Object[] modifyUserInfoParams = new Object[]{patchUserInfoReq.getGender(), patchUserInfoReq.getBirth(),
-        patchUserInfoReq.getPhoneNum(), userId};
+                patchUserInfoReq.getPhoneNum(), userId};
 
         return this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
     }
@@ -227,14 +227,22 @@ public class UserDao {
     }
 
     public List<GetUserInquiringRes> getUserInquiring(int userId) {
-        String getUserInquiringQuery = "select Users.imageUrl, Users.storeName, Inquiring.text , case when timestampdiff(second, Inquiring.createdAt, current_timestamp) < 60\n" +
-                "                then concat(timestampdiff(second,Inquiring.createdAt, current_timestamp), ' 초 전')\n" +
-                "            when timestampdiff(minute, Inquiring.createdAt, current_timestamp) < 60\n" +
-                "                then concat(timestampdiff(minute,Inquiring.createdAt, current_timestamp), ' 분 전')\n" +
-                "            when timestampdiff(hour, Inquiring.createdAt, current_timestamp) < 24\n" +
-                "                then concat(timestampdiff(hour, Inquiring.createdAt, current_timestamp), ' 시간 전')\n" +
-                "            else concat(datediff(current_timestamp, Inquiring.createdAt), ' 일 전')\n" +
-                "           end as 'createdAt'\n" +
+        String getUserInquiringQuery = "select Users.imageUrl, Users.storeName, Inquiring.text \n," +
+                "CASE WHEN timestampdiff(second,Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                THEN concat(timestampdiff(second,Inquiring.createdAt, current_timestamp), ' 초 전')\n" +
+                "            WHEN timestampdiff(minute, Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                THEN concat(timestampdiff(minute, Inquiring.createdAt, current_timestamp), ' 분 전')\n" +
+                "            WHEN timestampdiff(hour,Inquiring.createdAt, current_timestamp) < 24\n" +
+                "                THEN concat(timestampdiff(hour,Inquiring.createdAt, current_timestamp), ' 시간 전')\n" +
+                "            WHEN timestampdiff(day,Inquiring.createdAt, current_timestamp) < 7\n" +
+                "                THEN concat(timestampdiff(day,Inquiring.createdAt, current_timestamp), ' 일 전')\n" +
+                "            WHEN timestampdiff(week,Inquiring.createdAt, current_timestamp) < 4\n" +
+                "                THEN concat(timestampdiff(week,Inquiring.createdAt, current_timestamp), ' 주 전')\n" +
+                "            WHEN timestampdiff(month,Inquiring.createdAt, current_timestamp) < 12\n" +
+                "                THEN concat(timestampdiff(month,Inquiring.createdAt, current_timestamp), ' 달 전')\n" +
+                "            WHEN timestampdiff(year,Inquiring.createdAt, current_timestamp) < 1000\n" +
+                "                THEN concat(timestampdiff(year,Inquiring.createdAt, current_timestamp), ' 년 전')\n" +
+                "           END AS 'createdAt'\n" +
                 "from Users\n" +
                 "inner join Inquiring on Inquiring.inquiringId = Users.id\n" +
                 "where Users.status = 'NORMAL' and Users.id = ?";
@@ -249,4 +257,3 @@ public class UserDao {
                 getUserInquiringParam);
     }
 }
-
