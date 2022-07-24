@@ -256,4 +256,61 @@ public class UserDao {
                         rs.getString("createdAt")),
                 getUserInquiringParam);
     }
+
+    public int addVisitNum(int userId) {
+        String addVisitNumQuery = "update Users set Users.visitNum = visitNum + 1 where Users.id = ? and Users.status = 'NORMAL'";
+        int addVisitNumParam = userId;
+
+        return this.jdbcTemplate.update(addVisitNumQuery, addVisitNumParam);
+    }
+
+    public GetAnotherUserStoreInfoRes getAnotherUserStoreInfo(int myId, int userId) {
+
+        String getAnotherUserStoreProductInfoQuery = "select Products.productId, ProductImages.imageUrl, Products.price, Products.name\n" +
+                "from Products inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt)a GROUP BY productId) ProductImages on Products.productId = ProductImages.productId\n" +
+                "where Products.userId = ?";
+
+        String getAnotherUserStoreInfoQuery = "select Users.imageUrl, Users.storeName, (select round(avg(Review.reviewScore), 2) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewAvg,\n" +
+                "(select count(Review.reviewId) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewNum,\n" +
+                "       timestampdiff(day, Users.createdAt, current_timestamp) as openDate,\n" +
+                "       Users.visitNum, (select count(Products.productId) from Products where Products.userId = ?) as productNum,\n" +
+                "       (select count(Review.reviewId) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewNum2,\n" +
+                "       (select count(Follow.id) from Follow inner join Following on Follow.followingId = Following.id and Follow.followerId = ?) as followNum,\n" +
+                "       (select count(Following.id) from Following inner join Follow on Follow.followingId = Following.id and Following.followingId = ?) as followingNum,\n" +
+                "       Users.isCertified,\n" +
+                "       (select count(Sell.sellId) from Sell inner join Users on Users.id = Sell.id and Users.id = ?) as sellNum,\n" +
+                "       Users.contactTime, Users.description, Users.policy, exists(select * from Follow inner join Following on Follow.followingId = Following.id and Following.followingId = ? and Follow.followerId = ?) as isFollow\n" +
+                "from Users\n" +
+                "where Users.id = ? limit 10";
+        Object[] getAnotherUserStoreInfoParams = new Object[] {userId,userId,userId,userId,userId,userId,userId, userId ,myId, userId};
+
+        return this.jdbcTemplate.queryForObject(getAnotherUserStoreInfoQuery,
+                (rs, rowNum) -> new GetAnotherUserStoreInfoRes(
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getDouble("reviewAvg"),
+                        rs.getInt("openDate"),
+                        rs.getInt("visitNum"),
+                        rs.getInt("productNum"),
+                        rs.getInt("reviewNum2"),
+                        rs.getInt("followNum"),
+                        rs.getInt("followingNum"),
+                        rs.getInt("isCertified"),
+                        rs.getInt("sellNum"),
+                        rs.getString("contactTime"),
+                        rs.getString("description"),
+                        rs.getString("policy"),
+                        this.jdbcTemplate.query(getAnotherUserStoreProductInfoQuery,
+                               (rs2, rowNum2) -> new GetAnotherUserStoreProductInfoRes(
+                                       rs2.getInt("productId"),
+                                       rs2.getString("imageUrl"),
+                                       rs2.getInt("price"),
+                                       rs2.getString("name"),
+                                       this.jdbcTemplate.queryForObject("select exists(select * from Likes where userId = ? AND productId = ? and status = 'NORMAL') as b",
+                                               (rs3, rowNum3) -> new Integer(
+                                                       rs3.getInt("b")),
+                                                       userId, rs2.getInt("productId"))
+                               ), userId), rs.getInt("isFollow"))
+                , getAnotherUserStoreInfoParams);
+    }
 }

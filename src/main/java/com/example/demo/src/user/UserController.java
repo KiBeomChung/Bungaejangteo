@@ -278,6 +278,7 @@ public class UserController {
 
     /**
      * 계정 정보 수정 API
+     *
      * @param patchUserInfoReq
      * @param userId
      * @return
@@ -285,7 +286,7 @@ public class UserController {
     @ResponseBody
     @PatchMapping("/{userId}/settings")
     public BaseResponse<String> modifyUserInfo(@RequestBody PatchUserInfoReq patchUserInfoReq,
-                                                @PathVariable("userId") int userId) {
+                                               @PathVariable("userId") int userId) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
@@ -294,22 +295,22 @@ public class UserController {
             }
 
             //성별 입력 x
-            if(patchUserInfoReq.getGender() == null) {
+            if (patchUserInfoReq.getGender() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_GENDER);
             }
-            if(!(patchUserInfoReq.getGender().equals("남") || patchUserInfoReq.getGender().equals("여"))) {
+            if (!(patchUserInfoReq.getGender().equals("남") || patchUserInfoReq.getGender().equals("여"))) {
                 return new BaseResponse<>(PATCH_USERS_CORRECT_GENDER);
             }
-            if(patchUserInfoReq.getPhoneNum() == null) {
+            if (patchUserInfoReq.getPhoneNum() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_PHONENUM);
             }
             if (!isRegexPhonNum(patchUserInfoReq.getPhoneNum())) {
                 return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
             }
-            if(patchUserInfoReq.getBirth() == null) {
+            if (patchUserInfoReq.getBirth() == null) {
                 return new BaseResponse<>(PATCH_USERS_EMPTY_BIRTH);
             }
-            if(!isRegexBirth(patchUserInfoReq.getBirth())) {
+            if (!isRegexBirth(patchUserInfoReq.getBirth())) {
                 return new BaseResponse<>(INCORRECT_SHAPEOF_BIRTH);
             }
             userService.modifyUserInfo(patchUserInfoReq, userId);
@@ -324,6 +325,7 @@ public class UserController {
 
     /**
      * 계정 설정 전 기존 정보를 가져오는 API
+     *
      * @param userId
      * @return
      */
@@ -347,6 +349,7 @@ public class UserController {
 
     /**
      * 상품 문의 작성 API
+     *
      * @param inquiringId
      * @param inquiredId
      * @param postUserInquiryReq
@@ -363,10 +366,10 @@ public class UserController {
             if (inquiringId != userIdxByJwt) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            if(postUserInquiryReq.getText() == null ) {
+            if (postUserInquiryReq.getText() == null) {
                 return new BaseResponse<>(POST_USERS_EMPTY_INQUIRING);
             }
-            if(postUserInquiryReq.getText().length() > 100) {
+            if (postUserInquiryReq.getText().length() > 100) {
                 return new BaseResponse<>(POST_USERS_LONG_INQUIRING);
             }
 
@@ -377,7 +380,14 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-    
+
+    /**
+     * 나의 상점/ 남의 상점 문의 내용 조회 API
+     *
+     * @param userId
+     * @return
+     * @throws BaseException
+     */
     @ResponseBody
     @GetMapping("{userId}/inquiring")
     public BaseResponse<List<GetUserInquiringRes>> getUserInquiringRes(@PathVariable("userId") int userId) throws BaseException {
@@ -385,5 +395,23 @@ public class UserController {
         List<GetUserInquiringRes> getUserInquiringResList = userProvider.getUserInquiringList(userId);
 
         return new BaseResponse<>(getUserInquiringResList);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "{myId}/{userId}/store-text-info")
+    public BaseResponse<GetAnotherUserStoreInfoRes> getAnotherUserStoreInfoResBaseResponse(@PathVariable("myId") int myId
+            , @PathVariable("userId") int userId) {
+        try {
+            int myIdByJwt = jwtService.getUserIdx();
+
+            if (myId != myIdByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            GetAnotherUserStoreInfoRes getAnotherUserStoreInfoRes = userProvider.getAnotherUserStoreInfo(myId, userId);
+            return new BaseResponse<>(getAnotherUserStoreInfoRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 }

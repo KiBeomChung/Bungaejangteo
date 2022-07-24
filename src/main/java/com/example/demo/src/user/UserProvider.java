@@ -121,5 +121,16 @@ public class UserProvider {
 
     }
 
+    public GetAnotherUserStoreInfoRes getAnotherUserStoreInfo(int myId, int userId) {
+
+        // visitNum 먼저 +1
+        int stepOne = userDao.addVisitNum(userId);
+
+        // 그 후 상점 조회
+        GetAnotherUserStoreInfoRes getAnotherUserStoreInfoRes = userDao.getAnotherUserStoreInfo(myId, userId);
+
+        return getAnotherUserStoreInfoRes;
+    }
+
 
 }
