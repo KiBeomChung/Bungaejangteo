@@ -1,6 +1,7 @@
 package com.example.demo.src.user;
 
 
+import com.example.demo.src.product.model.GetProductRes;
 import com.example.demo.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -323,5 +324,49 @@ public class UserDao {
         Object[] deleteInquiringParams = new Object[] {patchUserDeleteInqReq.getStatus(), patchUserDeleteInqReq.getStatus(), inquiringId, inquiredId};
 
         return this.jdbcTemplate.update(deleteInquiringQuery, deleteInquiringParams);
+    }
+
+    public List<GetProductRes> getMyPageProducts(int userIdx, String status) {
+        String GetProductQuery = "SELECT Products.productId,name,price,region,isSafePayment,\n" +
+                "case \n" +
+                "    when (TIMESTAMPDIFF(WEEK,createdAt,NOW()) >= 1)  then CONCAT(TIMESTAMPDIFF(WEEK,createdAt,NOW()), '주전') \n" +
+                "\twhen (TIMESTAMPDIFF(DAY,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(WEEK,createdAt,NOW()) < 1)  then CONCAT(TIMESTAMPDIFF(DAY,createdAt,NOW()), '일전') \n" +
+                "\twhen (TIMESTAMPDIFF(HOUR,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(HOUR,createdAt,NOW()), '시간전') \n" +
+                "    when (TIMESTAMPDIFF(MINUTE,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(MINUTE,createdAt,NOW()), '분전') \n" +
+                "END AS elapsedTime,\n" +
+                "case \n" +
+                "    when (likeCount is null) then 0\n" +
+                "    when (likeCount is not null) then likeCount\n" +
+                "end as likeCount, exists(select * from Likes where userId = 1 AND productId = Products.productId) as isExist,imageUrl\n" +
+                "from (Products left outer join (SELECT imageUrl, productId\n" +
+                "                FROM (SELECT *\n" +
+                "                       FROM ProductImages\n" +
+                "                       ORDER BY createdAt)b\n" +
+                "                 GROUP BY productId\n" +
+                "                 )as imageTable\n" +
+                "                 on imageTable.productId = Products.productId)\n" +
+                "left outer join (select productId,count(*) as likeCount from Likes group by productId)as c\n" +
+                "on Products.productId =  c.productId\n" +
+                "where Products.userId = ? " ;
+        if(status.equals("sale")){
+            GetProductQuery += " and Products.status = 'SALE' order by Products.createdAt desc";
+        }else if(status.equals("reserve")){
+            GetProductQuery += " and Products.status = 'RESERVE' order by Products.createdAt desc";
+        }else{//sold-out
+            GetProductQuery += " and Products.status = 'SOLDOUT' order by Products.createdAt desc";
+        }
+
+        return this.jdbcTemplate.query(GetProductQuery,
+                (rs, rowNum) -> new GetProductRes(
+                        rs.getInt("Products.productId"),
+                        rs.getString("imageUrl"),
+                        rs.getInt("isExist"),
+                        rs.getInt("price"),
+                        rs.getString("name"),
+                        rs.getString("region"),
+                        rs.getString("elapsedTime"),
+                        rs.getInt("isSafePayment"),
+                        rs.getInt("likeCount")
+                ),userIdx);
     }
 }

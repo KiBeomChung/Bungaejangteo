@@ -3,6 +3,7 @@ package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.secret.Secret;
+import com.example.demo.src.product.model.GetProductRes;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.AES128;
 import com.example.demo.utils.JwtService;
@@ -130,6 +131,16 @@ public class UserProvider {
         GetAnotherUserStoreInfoRes getAnotherUserStoreInfoRes = userDao.getAnotherUserStoreInfo(userId, targetId);
 
         return getAnotherUserStoreInfoRes;
+    }
+
+    public List<GetProductRes> getMyPageProducts(int userIdx,String status) throws BaseException {
+        try {
+            List<GetProductRes> getProductRes = userDao.getMyPageProducts(userIdx,status);
+            return getProductRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 

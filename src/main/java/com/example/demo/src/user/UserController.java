@@ -1,5 +1,6 @@
 package com.example.demo.src.user;
 
+import com.example.demo.src.product.model.GetProductRes;
 import com.example.demo.src.sms.model.PostSMSReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -448,5 +449,27 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
+    }
+
+    /**
+     * 마이페이지 - 판매중/예약중/판매완료 조회 API
+     * [GET] /app/users/mypage/products?status=
+     * @return BaseResponse<GetProductRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/mypage/products") //
+    public BaseResponse<List<GetProductRes>> getMyPageProducts(@RequestParam(value = "status") String status) {
+        if(!(status.equals("sale") || status.equals("reserve") || status.equals("sold-out"))){
+            return new BaseResponse<>(GET_MYPAGE_PRODUCT_INVALID_ORDER);
+        }
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            List<GetProductRes> getProductRes = userProvider.getMyPageProducts(userIdxByJwt,status);
+            return new BaseResponse<>(getProductRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 }
