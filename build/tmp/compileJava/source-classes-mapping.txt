@@ -130,6 +130,8 @@ com/example/demo/src/brand/model/getFollowBrandRes.java
  com.example.demo.src.brand.model.getFollowBrandRes
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
+com/example/demo/src/search/model/GetProductInfo.java
+ com.example.demo.src.search.model.GetProductInfo
 com/example/demo/src/user/model/GetUserInquiringRes.java
  com.example.demo.src.user.model.GetUserInquiringRes
 com/example/demo/src/product/model/PostProductReq.java
@@ -142,6 +144,8 @@ com/example/demo/src/favorite/model/PostFavoriteStoreRes.java
  com.example.demo.src.favorite.model.PostFavoriteStoreRes
 com/example/demo/src/favorite/model/GetFavoriteUserDetailRes.java
  com.example.demo.src.favorite.model.GetFavoriteUserDetailRes
+com/example/demo/src/search/model/GetSearchBrandRes.java
+ com.example.demo.src.search.model.GetSearchBrandRes
 com/example/demo/src/product/model/GetProductRes.java
  com.example.demo.src.product.model.GetProductRes
 com/example/demo/src/product/model/GetDetailProductRes.java

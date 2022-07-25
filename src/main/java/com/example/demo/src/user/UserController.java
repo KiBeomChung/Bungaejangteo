@@ -60,6 +60,9 @@ public class UserController {
             return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
         }
         try {
+            if(userProvider.isDeletedUser(postUserReq.getPhoneNum()) == 1){
+                return new BaseResponse<>(DELETED_USER);
+            }
             if (userProvider.checkExisttUser(postUserReq.getPhoneNum()) == 1) {
                 System.out.println(22222);
                 PostUserRes postUserRes = userProvider.logIn(postUserReq);

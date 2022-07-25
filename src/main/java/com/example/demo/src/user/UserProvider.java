@@ -138,5 +138,15 @@ public class UserProvider {
         }
     }
 
+    public int isDeletedUser(String phoneNUm) throws BaseException {
+        try {
+            int result = userDao.isDeletedUser(phoneNUm);
+            System.out.println(result);
+            return userDao.isDeletedUser(phoneNUm);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
 }

@@ -342,6 +342,11 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
     }
 
+    public int isDeletedUser(String phoneNum) {
+        String isDeletedUserQuery = "select exists(select * from Users where phoneNum = ? and status ='DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, phoneNum);
+    }
+
     public int deleteUser(int userIdx,DeleteUserReq deleteUserReq) {
         String reason = "";
         String deleteInquiringQuery = "update Users set status ='DELETED',withdrawReason = ?  where id = ?";
