@@ -2,6 +2,7 @@ package com.example.demo.src.payment;
 
 import com.example.demo.src.payment.model.GetPaymentUserInfoRes;
 import com.example.demo.src.payment.model.GetProductInfoRes;
+import com.example.demo.src.payment.model.PostOrderInfoReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ public class PaymentDao {
                 "                on Products.productId = ProductImages.productId and Products.productId = ?\n" +
                 "where Users.id = ?";
 
-        Object[] getProductInfoParams = new Object[] {productId, userId};
+        Object[] getProductInfoParams = new Object[]{productId, userId};
 
         return this.jdbcTemplate.queryForObject(getProductInfoQuery,
                 (rs, rowNum) -> new GetProductInfoRes(
@@ -87,9 +88,39 @@ public class PaymentDao {
                 "from Users, Products\n" +
                 "where Users.id = ? and Products.productId = ?";
 
-        Object[] getFinalSumParams = new Object[] {userId, productId};
+        Object[] getFinalSumParams = new Object[]{userId, productId};
 
         return this.jdbcTemplate.queryForObject(getFinalSumQuery, String.class, getFinalSumParams);
+
+    }
+
+    public int storeOrderInfo(int userId, int productId, PostOrderInfoReq postOrderInfoReq) {
+        String storeOrderInfoQuery = "insert into OrderInfo(id, productId, dealCategory, productName, finalPrice, bungaePay, payMethod, isAgree)\n" +
+                "values(?,?,?,?,?,?,?,?)";
+
+        Object[] storeOrderInfoParams = new Object[]{userId, productId, postOrderInfoReq.getDealCategory(), postOrderInfoReq.getProductName(),
+                postOrderInfoReq.getFinalPrice(), postOrderInfoReq.getBungaePay(), postOrderInfoReq.getPayMethod(), postOrderInfoReq.getIsAgree()};
+
+        return this.jdbcTemplate.update(storeOrderInfoQuery, storeOrderInfoParams);
+    }
+
+    public int changeProductState(int productId) {
+        String changeProductStateQuery = "update Products set Products.status = 'SOLDOUT' where Products.productId = ?\n";
+        return this.jdbcTemplate.update(changeProductStateQuery, productId);
+    }
+
+    public int storeBuySellInfo(int userId, int productId) {
+
+        String storeSellInfoQuery = "insert into Sell(id) select Products.userId from Products where Products.productId = ?";
+        this.jdbcTemplate.update(storeSellInfoQuery, productId);
+
+        String lastInsertIdStr = "select last_insert_id()";
+        String result = this.jdbcTemplate.queryForObject(lastInsertIdStr, String.class);
+        int lastInsertId = Integer.parseInt(result);
+
+        String storeBuyInfoQuery = "insert into Buy(id, connectId) value (?, ?)";
+        Object[] storeBuyInfoParams = new Object[] {userId, lastInsertId};
+        return this.jdbcTemplate.update(storeBuyInfoQuery, storeBuyInfoParams);
 
     }
 }

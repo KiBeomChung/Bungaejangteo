@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.payment.model.GetPaymentUserInfoRes;
 import com.example.demo.src.payment.model.GetProductInfoRes;
+import com.example.demo.src.payment.model.PostOrderInfoReq;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,13 @@ public class PaymentController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * 결제 기본 정보 조회 API
+     * @param productId
+     * @return
+     */
     @ResponseBody
-    @GetMapping("/{productId}/product-info")
+    @GetMapping("/{productId}")
     public BaseResponse<GetProductInfoRes> getProductInfoRes(@PathVariable("productId") int productId) {
 
         try {
@@ -38,6 +44,22 @@ public class PaymentController {
 
             GetProductInfoRes getProductInfoRes = paymentProvider.getProductInfoRes(productId, userIdxByJwt);
             return new BaseResponse<>(getProductInfoRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("order/{productId}")
+    public BaseResponse<String> storeOrderInfo(@PathVariable("productId") int productId,
+                                               @RequestBody PostOrderInfoReq postOrderInfoReq) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            String result = paymentService.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq);
+            return new BaseResponse<>(result);
+
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
