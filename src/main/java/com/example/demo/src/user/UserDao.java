@@ -366,5 +366,11 @@ public class UserDao {
         return this.jdbcTemplate.update(deleteInquiringQuery,reason, userIdx);
     }
 
+    public int checkInquiringStatus(int inquiredId, int inquiringId) {
+        String checkInquiringQuery = "select exists(select Inquired.* from Inquired inner join Inquiring on Inquiring.id = Inquired.connectId and Inquiring.status = 'inactive' and Inquired.status = 'inactive'\n" +
+                "where Inquiring.inquiringId = ? and Inquired.inquiredId = ? )";
+        Object [] checkInquiringParams = new Object[] {inquiringId, inquiredId};
 
+        return this.jdbcTemplate.queryForObject(checkInquiringQuery, int.class, checkInquiringParams);
+    }
 }

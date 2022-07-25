@@ -56,6 +56,10 @@ public enum BaseResponseStatus {
     PATCH_USERS_EMPTY_PHONENUM(false, 2063, "휴대폰 번호를 입력하세요."),
     PATCH_USERS_EMPTY_BIRTH(false, 2064, "생년월일을 입력하세요."),
     INCORRECT_SHAPEOF_BIRTH(false, 2065, "생년월일 형식을 맞춰주세요. ex)1990.05.21"),
+    EMPTY_INQUIRING_TEXT(false,2066, "status 에 inactive 값을 넣어주세요"),
+    INCORECT_INQUIRING_TEXT(false, 2067, "status에 잘못된 값이 들어왔습니다. 다시 확인해주세요"),
+    INQUIRING_ALREADY_DELETED(false, 2068, "이미 삭제된 문의 입니다."),
+    INQUIRING_DOESNT_EXISTS(false, 2069, "작성된 적 없는 문의 입니다."),
 
     //[POST] /products
     POST_REPORT_EMPTY_PRODUCT_IDX(false,2071,"상품 idx값을 입력해주세요"),

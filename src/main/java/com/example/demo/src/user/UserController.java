@@ -376,7 +376,12 @@ public class UserController {
             if (inquiredId != inquiredIdxByJwt) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-
+            if(patchUserDeleteInqReq.getStatus() == null) {
+                return new BaseResponse<>(EMPTY_INQUIRING_TEXT);
+            }
+            if(!(patchUserDeleteInqReq.getStatus().equals("inactive"))){
+                return new BaseResponse<>(INCORECT_INQUIRING_TEXT);
+            }
             String result = userService.deleteInquiring(inquiredId, inquiringId, patchUserDeleteInqReq);
             return new BaseResponse<>(result);
         } catch (BaseException exception) {

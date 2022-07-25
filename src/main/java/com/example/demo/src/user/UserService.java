@@ -118,26 +118,27 @@ public class UserService {
 
     public String deleteInquiring(int inquiredId, int inquiringId, PatchUserDeleteInqReq patchUserDeleteInqReq) throws BaseException {
 
-        //이미 삭제 했을경우
         //문의를 남기지 않았을 경우
-        //status 값이 null 인 경우
-        //status 값이 inactive가 아닌경우
+
+        if(userDao.checkInquiringStatus(inquiredId, inquiringId) == 1) {
+            throw new BaseException(INQUIRING_ALREADY_DELETED);
+        }
+        int deleteInquiring = userDao.deleteInquiring(inquiredId, inquiringId, patchUserDeleteInqReq);
+        System.out.println("del" + deleteInquiring);
+        String result = "";
 
         try {
-            int deleteInquiring = userDao.deleteInquiring(inquiredId, inquiringId, patchUserDeleteInqReq);
-            System.out.println("del" + deleteInquiring);
-            String result = "";
-
             if (deleteInquiring == 2) {
-                result = "해당 브랜드 팔로우를 취소하였습니다.";
-            } else {
-                throw new BaseException(FOLLOW_DOESNT_EXISTS);
+                result = "해당 문의를 삭제하였습니다.";
+            } else if (deleteInquiring == 0){
+                throw new BaseException(INQUIRING_DOESNT_EXISTS);
             }
             return result;
         } catch (Exception exception) {
-            throw new BaseException(FOLLOW_DOESNT_EXISTS);
+            throw new BaseException(DATABASE_ERROR);
         }
     }
+
 
     public void deleteUser(int userIdx,DeleteUserReq deleteUserReq) throws BaseException {
         if (userProvider.isDeletedUser(userIdx) == 1){
