@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class BrandProvider {
@@ -27,7 +27,11 @@ public class BrandProvider {
     }
 
     public List<GetBrandListRes> getBrandList(int userIdx,String order,String follow) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
+
             List<GetBrandListRes> getBrandListRes = brandeDao.getBrandList(userIdx,order,follow);
             return getBrandListRes;
         } catch (Exception exception) {
@@ -37,6 +41,9 @@ public class BrandProvider {
     }
 
     public List<GetBrandListRes> getSearchBrandList(int userIdx,String searchWord) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<GetBrandListRes> getBrandListRes = brandeDao.getSearchBrandList(userIdx,searchWord);
             return getBrandListRes;
@@ -47,6 +54,9 @@ public class BrandProvider {
     }
 
     public List<getFollowBrandRes> getFollowedBrandList(int userIdx) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<getFollowBrandRes> getBrandListRes = brandeDao.getFollowedBrandList(userIdx);
             return getBrandListRes;
@@ -57,6 +67,9 @@ public class BrandProvider {
     }
 
     public List<getFollowBrandRes> getRecommendBrandList(int userIdx) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<getFollowBrandRes> getBrandListRes = brandeDao.getRecommendBrandList(userIdx);
             return getBrandListRes;
@@ -67,11 +80,24 @@ public class BrandProvider {
     }
 
     public List<GetBrandListRes> getSearchRecommendBrandList(int userIdx) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<GetBrandListRes> getBrandListRes = brandeDao.getSearchRecommendBrandList(userIdx);
             return getBrandListRes;
         } catch (Exception exception) {
             System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isDeletedUser(int userIdx) throws BaseException {
+        try {
+            int result = brandeDao.isDeletedUser(userIdx);
+            System.out.println(result);
+            return brandeDao.isDeletedUser(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

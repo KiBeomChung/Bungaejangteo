@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.DELETED_USER;
 
 @Service
 public class LikeProvider {
@@ -27,6 +28,9 @@ public class LikeProvider {
     }
 
     public List<GetCollectionProductsRes> getCollectionProducts(int userIdx, int collectionIdx, String status) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<GetCollectionProductsRes> getProductRes = likeDao.getCollectionProducts(userIdx,collectionIdx,status);
             return getProductRes;
@@ -37,11 +41,24 @@ public class LikeProvider {
     }
 
     public GetLikesRes getLikes(int userIdx, String order, String status) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             GetLikesRes getLikesRes = likeDao.getLikes(userIdx,order,status);
             return getLikesRes;
         } catch (Exception exception) {
             System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isDeletedUser(int userIdx) throws BaseException {
+        try {
+            int result = likeDao.isDeletedUser(userIdx);
+            System.out.println(result);
+            return likeDao.isDeletedUser(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

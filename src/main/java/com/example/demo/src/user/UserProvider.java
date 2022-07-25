@@ -32,34 +32,6 @@ public class UserProvider {
         this.jwtService = jwtService;
     }
 
-    public List<GetUserRes> getUsers() throws BaseException {
-        try {
-            List<GetUserRes> getUserRes = userDao.getUsers();
-            return getUserRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public List<GetUserRes> getUsersByEmail(String email) throws BaseException {
-        try {
-            List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
-            return getUsersRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-
-    public GetUserRes getUser(int userIdx) throws BaseException {
-        try {
-            GetUserRes getUserRes = userDao.getUser(userIdx);
-            return getUserRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
     public int checkExisttUser(String phoneNum) throws BaseException {
         try {
             return userDao.checkExisttUser(phoneNum);
@@ -134,11 +106,34 @@ public class UserProvider {
     }
 
     public List<GetProductRes> getMyPageProducts(int userIdx,String status) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<GetProductRes> getProductRes = userDao.getMyPageProducts(userIdx,status);
             return getProductRes;
         } catch (Exception exception) {
             System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isRemovableUser(int userIdx) throws BaseException {
+        try {
+            int result = userDao.isRemovableUser(userIdx);
+            System.out.println(result);
+            return userDao.isRemovableUser(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isDeletedUser(int userIdx) throws BaseException {
+        try {
+            int result = userDao.isDeletedUser(userIdx);
+            System.out.println(result);
+            return userDao.isDeletedUser(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

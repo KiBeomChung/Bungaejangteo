@@ -20,44 +20,6 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetUserRes> getUsers() {
-        String getUsersQuery = "select * from UserInfo";
-        return this.jdbcTemplate.query(getUsersQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password"))
-        );
-    }
-
-    public List<GetUserRes> getUsersByEmail(String email) {
-        String getUsersByEmailQuery = "select * from UserInfo where email =?";
-        String getUsersByEmailParams = email;
-        return this.jdbcTemplate.query(getUsersByEmailQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password")),
-                getUsersByEmailParams);
-    }
-
-    public GetUserRes getUser(int userIdx) {
-        String getUserQuery = "select * from UserInfo where userIdx = ?";
-        int getUserParams = userIdx;
-        return this.jdbcTemplate.queryForObject(getUserQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
-                        rs.getString("userName"),
-                        rs.getString("ID"),
-                        rs.getString("Email"),
-                        rs.getString("password")),
-                getUserParams);
-    }
-
 
     public int createUser(PostUserReq postUserReq) {
         String createUserQuery = "insert into Users (name, isCertified, phoneNum) VALUES (?,?,?)";
@@ -369,4 +331,35 @@ public class UserDao {
                         rs.getInt("likeCount")
                 ),userIdx);
     }
+
+    public int isRemovableUser(int userIdx) {
+        String isRemovableUserQuery = "select exists(select * from Products where userId = ? and status ='SALE')";
+        return this.jdbcTemplate.queryForObject(isRemovableUserQuery, int.class, userIdx);
+    }
+
+    public int isDeletedUser(int userIdx) {
+        String isDeletedUserQuery = "select exists(select * from Users where id = ? and status ='DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
+    }
+
+    public int deleteUser(int userIdx,DeleteUserReq deleteUserReq) {
+        String reason = "";
+        String deleteInquiringQuery = "update Users set status ='DELETED',withdrawReason = ?  where id = ?";
+        if(deleteUserReq.getReasonCategory().equals(1)){
+            reason = "찾는 물품이 없어요";
+        }else if(deleteUserReq.getReasonCategory().equals(2)){
+            reason = "물품이 안팔려요";
+        }else if(deleteUserReq.getReasonCategory().equals(3)){
+            reason = "비매너 사용자를 만났어요";
+        }else if(deleteUserReq.getReasonCategory().equals(4)){
+            reason = "새 상점을 만들고 싶어요";
+        }else if(deleteUserReq.getReasonCategory().equals(5)){
+            reason = "개인정보를 삭제하고 싶어요";
+        }else if(deleteUserReq.getReasonCategory().equals(6)){
+            reason = deleteUserReq.getReasonText();
+        }
+        return this.jdbcTemplate.update(deleteInquiringQuery,reason, userIdx);
+    }
+
+
 }

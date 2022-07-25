@@ -90,6 +90,14 @@ public enum BaseResponseStatus {
     GET_SEARCHWORD_INVALID_TYPE(false,2101, "querystring tyoe는 recent,hot만 가능합니다"),
     GET_MYPAGE_PRODUCT_INVALID_ORDER(false,2102, "querystring status는 sale,reserve,sold-out만 가능합니다"),
 
+    //[Delete] users
+    DELETE_USER_EMPTY_REASON_CATEGORY(false,2103, "탈퇴 이유 카테고리를 입력해주세요"),
+    DELETE_USER_INVALID_REASON_CATEGORY(false,2104, "탈퇴 이유 카테고리는 1~6사이로 입력해주세요"),
+    DELETE_USER_NOT_REMOVABLE_USER(false,2105, "판매중인 상품이 있는 경우 탈퇴가 불가능합니다. 삭제 또는 상태변경후 진행해주세요"),
+    DELETE_USER_ALREADY_DELETED_USER(false,2106, "이미 삭제된 유저입니다"),
+    DELETE_USER_EMPTY_REASON_TEST(false,2107, "기타의 경우 삭제이유를 10자이상 작성해주세요"),
+
+    DELETED_USER(false,2108, "회원탈퇴한 유저입니다"),
     /**
      * 3000 : Response 오류
      */

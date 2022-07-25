@@ -64,4 +64,9 @@ public class SearchDao {
     public int isExistSearchIdx(int searchIdx)throws BaseException {
         return this.jdbcTemplate.queryForObject( "select exists(select * from Searches where id = ? and status not in ('DELETED'))",int.class,searchIdx );
     }
+
+    public int isDeletedUser(int userIdx) {
+        String isDeletedUserQuery = "select exists(select * from Users where id = ? and status ='DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
+    }
 }

@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.DELETED_USER;
+
 import java.util.List;
 
 @Service
@@ -41,6 +43,9 @@ public class ProductProvider {
     }
 
     public int getReport(int userIdx,int productIdx) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             return productDao.getReport(userIdx,productIdx);
         } catch (Exception exception) {
@@ -50,11 +55,24 @@ public class ProductProvider {
     }
 
     public GetDetailProductRes getDetailProduct(int userIdx,int productIdx) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             GetDetailProductRes getProductRes = productDao.getDetailProduct(userIdx,productIdx);
             return getProductRes;
         } catch (Exception exception) {
             System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isDeletedUser(int userIdx) throws BaseException {
+        try {
+            int result = productDao.isDeletedUser(userIdx);
+            System.out.println(result);
+            return productDao.isDeletedUser(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

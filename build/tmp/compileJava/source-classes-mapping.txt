@@ -32,6 +32,8 @@ com/example/demo/src/brand/BrandService.java
  com.example.demo.src.brand.BrandService
 com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
+com/example/demo/src/user/model/DeleteUserReq.java
+ com.example.demo.src.user.model.DeleteUserReq
 com/example/demo/src/review/ReviewController.java
  com.example.demo.src.review.ReviewController
 com/example/demo/src/search/model/GetSearchWordRes.java

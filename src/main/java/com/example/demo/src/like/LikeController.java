@@ -114,7 +114,8 @@ public class LikeController {
                 return new BaseResponse<>(POST_COLLECTION_LONG_COLLECTION_NAME);
             }
             try {
-                likeService.updateCollection(collectionIdx,postCollectionReq.getName());
+                int userIdxByJwt = jwtService.getUserIdx();
+                likeService.updateCollection(userIdxByJwt,collectionIdx,postCollectionReq.getName());
                 return new BaseResponse<>(SUCCESS);
             } catch(BaseException exception){
                 return new BaseResponse<>((exception.getStatus()));
@@ -170,7 +171,8 @@ public class LikeController {
         @DeleteMapping("/collections/{collectionIdx}")
         public BaseResponse<String> deleteCollection(@PathVariable("collectionIdx") int collectionIdx) {
             try {
-                likeService.deleteCollection(collectionIdx);
+                int userIdxByJwt = jwtService.getUserIdx();
+                likeService.deleteCollection(userIdxByJwt,collectionIdx);
                 return new BaseResponse<>(SUCCESS);
             } catch(BaseException exception){
                 return new BaseResponse<>((exception.getStatus()));

@@ -27,7 +27,9 @@ public class SearchService {
     }
 
     public void deleteAllSearchs(int userIdx) throws BaseException {
-
+        if (searchProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = searchDao.deleteAllSearchs(userIdx);
             System.out.println(result);
@@ -42,6 +44,9 @@ public class SearchService {
     }
 
     public void deleteSearch(int userIdx, int searchIdx) throws BaseException {
+        if (searchProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         if(searchProvider.isExistSearchIdx(searchIdx) != 1){
             throw new BaseException(NOT_EXISTS_SEARCH_IDX);
         }

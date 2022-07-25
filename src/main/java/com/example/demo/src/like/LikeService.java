@@ -31,6 +31,9 @@ public class LikeService {
     }
 
     public void createLike(int userIdx,int productIdx) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.createLike(userIdx,productIdx);
             if(result == 0){
@@ -44,6 +47,9 @@ public class LikeService {
     }
 
     public void cancelLike(int userIdx,int productIdx) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.cancelLike(userIdx, productIdx);
             if(result == 0){
@@ -57,6 +63,9 @@ public class LikeService {
     }
 
     public void createCollection(int userIdx,String collectionName) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.createCollection(userIdx,collectionName);
             if(result == 0){
@@ -69,7 +78,10 @@ public class LikeService {
         }
     }
 
-    public void updateCollection(int collectionIdx,String collectionName) throws BaseException {
+    public void updateCollection(int userIdx,int collectionIdx,String collectionName) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.updateCollection(collectionIdx,collectionName);
             if(result == 0){
@@ -82,6 +94,9 @@ public class LikeService {
         }
     }
     public void createCollectionProduct(int userIdx,int collectionIdx, List<Integer> productIdxList) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.createCollectionProduct(userIdx,collectionIdx,productIdxList);
             if(result == 0){
@@ -94,7 +109,10 @@ public class LikeService {
         }
     }
 
-    public void deleteCollection(int collectionIdx) throws BaseException {
+    public void deleteCollection(int userIdx,int collectionIdx) throws BaseException {
+        if (likeProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try{
             int result = likeDao.deleteCollection(collectionIdx);
             if(result == 0){

@@ -202,6 +202,11 @@ public class BrandDao {
                 ),userIdx);
     }
 
+    public int isDeletedUser(int userIdx) {
+        String isDeletedUserQuery = "select exists(select * from Users where id = ? and status ='DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
+    }
+
 
 
 }

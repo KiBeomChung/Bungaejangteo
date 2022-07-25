@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.sql.DataSource;
 
@@ -56,6 +57,9 @@ public class UserService {
     }
 
     public void createStoreName(int userIdx, String storeName) throws BaseException {
+        if (userProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             int result = userDao.createStoreName(userIdx, storeName);
 
@@ -132,6 +136,22 @@ public class UserService {
             return result;
         } catch (Exception exception) {
             throw new BaseException(FOLLOW_DOESNT_EXISTS);
+        }
+    }
+
+    public void deleteUser(int userIdx,DeleteUserReq deleteUserReq) throws BaseException {
+        if (userProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETE_USER_ALREADY_DELETED_USER);
+        }
+        if (userProvider.isRemovableUser(userIdx) == 1){
+            throw new BaseException(DELETE_USER_NOT_REMOVABLE_USER);
+        }
+
+        try {
+            userDao.deleteUser(userIdx,deleteUserReq);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
         }
     }
 }

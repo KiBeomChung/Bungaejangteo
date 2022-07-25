@@ -27,6 +27,9 @@ public class SearchProvider {
     }
 
     public List<GetSearchWordRes> getSearchWord(int userIdx, String type) throws BaseException {
+        if (isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             List<GetSearchWordRes> getBrandListRes = searchDao.getSearchWord(userIdx,type);
             return getBrandListRes;
@@ -50,6 +53,16 @@ public class SearchProvider {
             return searchDao.isExistSearchIdx(searchIdx);
         } catch (Exception exception) {
             System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isDeletedUser(int userIdx) throws BaseException {
+        try {
+            int result = searchDao.isDeletedUser(userIdx);
+            System.out.println(result);
+            return searchDao.isDeletedUser(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

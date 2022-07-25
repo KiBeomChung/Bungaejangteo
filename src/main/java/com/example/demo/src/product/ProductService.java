@@ -30,8 +30,11 @@ public class ProductService {
     }
 
     public void createReport(int userIdx,Integer productIdx,PostReportReq postReportReq) throws BaseException {
+        if (productProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         if (productProvider.getReport(userIdx,productIdx) == 1){
-            throw new BaseException(POST_REPORT_EXIST_REPORT);
+            throw new BaseException(DELETE_USER_NOT_REMOVABLE_USER);
         }
         try {
             productDao.createReport(userIdx,productIdx,postReportReq);
@@ -42,6 +45,9 @@ public class ProductService {
     }
     @Transactional
     public int createProduct(int userIdx, PostProductReq postProductReq) throws BaseException {
+        if (productProvider.isDeletedUser(userIdx) == 1){
+            throw new BaseException(DELETED_USER);
+        }
         try {
             int productIdx = productDao.createProduct(userIdx,postProductReq);
             productDao.createProductImages(productIdx,postProductReq.getImages());
