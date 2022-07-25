@@ -53,4 +53,9 @@ public class SearchProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<GetSearchBrandRes> getSearchBrandList(int userId, int brandId) {
+        List<GetSearchBrandRes> getSearchBrandResList = searchDao.getSearchBrandList(userId, brandId);
+        return getSearchBrandResList;
+    }
 }

@@ -1,12 +1,11 @@
 package com.example.demo.src.search;
 
 import com.example.demo.src.search.model.*;
-import com.example.demo.src.brand.model.getFollowBrandRes;
 import com.example.demo.utils.JwtService;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +85,22 @@ public class SearchController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("{userId}/{brandId}")
+    public BaseResponse<List<GetSearchBrandRes>> getSearchBrandRes(@PathVariable("userId") int userId,
+                                                                   @PathVariable("brandId") int brandId) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userId != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            List<GetSearchBrandRes> getSearchBrandResList = searchProvider.getSearchBrandList(userId, brandId);
+            return new BaseResponse<>(getSearchBrandResList);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }
