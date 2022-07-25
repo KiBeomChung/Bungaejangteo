@@ -48,5 +48,15 @@ public class ProductProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public GetDetailProductRes getDetailProduct(int userIdx,int productIdx) throws BaseException {
+        try {
+            GetDetailProductRes getProductRes = productDao.getDetailProduct(userIdx,productIdx);
+            return getProductRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
 

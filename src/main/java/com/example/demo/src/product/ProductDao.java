@@ -2,9 +2,7 @@ package com.example.demo.src.product;
 
 //import com.example.demo.src.product.model*
 import com.example.demo.config.BaseException;
-import com.example.demo.src.product.model.GetProductRes;
-import com.example.demo.src.product.model.PostProductReq;
-import com.example.demo.src.product.model.PostReportReq;
+import com.example.demo.src.product.model.*;
 import com.example.demo.src.user.model.GetUserRes;
 import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +107,142 @@ public class ProductDao {
             result += this.jdbcTemplate.update(createProductTagsQuery, createProductTagsParams);
         }
         return result;
+    }
+
+    public GetDetailProductRes getDetailProduct(int userIdx,int productIdx) {
+        String GetProductQuery = "SELECT Products.productId,name,price,region,isSafePayment,isDeliveryIncluded,isOld,isExchangeAvailable,count,\n" +
+                "case \n" +
+                "    when (TIMESTAMPDIFF(WEEK,createdAt,NOW()) >= 1)  then CONCAT(TIMESTAMPDIFF(WEEK,createdAt,NOW()), '주전') \n" +
+                "\twhen (TIMESTAMPDIFF(DAY,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(WEEK,createdAt,NOW()) < 1)  then CONCAT(TIMESTAMPDIFF(DAY,createdAt,NOW()), '일전') \n" +
+                "\twhen (TIMESTAMPDIFF(HOUR,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(HOUR,createdAt,NOW()), '시간전') \n" +
+                "    when (TIMESTAMPDIFF(MINUTE,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(MINUTE,createdAt,NOW()), '분전') \n" +
+                "END AS elapsedTime,\n" +
+                "case \n" +
+                "    when (likeCount is null) then 0\n" +
+                "    when (likeCount is not null) then likeCount\n" +
+                "end as likeCount, exists(select * from Likes where userId = ? AND productId = Products.productId) as isExist,description,Products.status\n" +
+                "from Products\n" +
+                "left outer join (select productId,count(*) as likeCount from Likes group by productId)as c\n" +
+                "on Products.productId =  c.productId where Products.productId = ?" ;
+
+        return this.jdbcTemplate.queryForObject(GetProductQuery,
+                (rs, rowNum) -> new GetDetailProductRes(
+                        rs.getInt("Products.productId"),
+                        rs.getInt("price"),
+                        rs.getString("name"),
+                        rs.getInt("isExist"),
+                        rs.getString("region"),
+                        rs.getString("elapsedTime"),
+                        rs.getInt("isDeliveryIncluded"),
+                        rs.getInt("count"),
+                        rs.getInt("isOld"),
+                        rs.getInt("isExchangeAvailable"),
+                        rs.getString("description"),
+                        rs.getInt("isSafePayment"),
+                        rs.getInt("likeCount"),
+                        this.jdbcTemplate.query("select imageUrl from ProductImages where productId = ?",
+                                (rs2,rosNum2) -> new String(
+                                        rs2.getString("imageUrl")
+                                ), rs.getInt("Products.productId")),
+                        this.jdbcTemplate.query("select tag from ProductTags where productId = ?",
+                                (rs3,rosNum3) -> new String(
+                                        rs3.getString("tag")
+                                ), rs.getInt("Products.productId")),
+                        rs.getString("status"),
+                        //상점
+                        this.jdbcTemplate.queryForObject("select Users.id,storeName,imageUrl,AverageRatings,ProductNum,followerNum,exists(select * from Following inner join Follow on Follow.followingId = Following.id where Following.followingId = 1 and followerId = 2)as followed,ProductNum\n" +
+                                        "from Users inner join (select round(avg(Review.reviewScore), 2) as averageRatings from Review where productId in (select productId from Products where userId = ?))as b\n" +
+                                        "inner join (select count(*) as ProductNum from Products where userId = ?)as c \n" +
+                                        "inner join (select count(*) as followerNum from Following inner join Follow on Follow.followingId = Following.id where Following.followingId = ?)as d\n" +
+                                        "where id in (select userId from Products where Products.productId = ?)",
+                                (rs4,rosNum4) -> new storeInfo(
+                                        rs4.getInt("Users.id"),
+                                        rs4.getString("imageUrl"),
+                                        rs4.getString("storeName"),
+                                        rs4.getDouble("AverageRatings"),
+                                        rs4.getInt("followerNum"),
+                                        rs4.getBoolean("followed"),
+                                        rs4.getInt("ProductNum"),
+                                        this.jdbcTemplate.query("SELECT Products.productId,name,price,region,isSafePayment,\n" +
+                                                        "case \n" +
+                                                        "    when (TIMESTAMPDIFF(WEEK,createdAt,NOW()) >= 1)  then CONCAT(TIMESTAMPDIFF(WEEK,createdAt,NOW()), '주전') \n" +
+                                                        "\twhen (TIMESTAMPDIFF(DAY,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(WEEK,createdAt,NOW()) < 1)  then CONCAT(TIMESTAMPDIFF(DAY,createdAt,NOW()), '일전') \n" +
+                                                        "\twhen (TIMESTAMPDIFF(HOUR,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(HOUR,createdAt,NOW()), '시간전') \n" +
+                                                        "    when (TIMESTAMPDIFF(MINUTE,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(MINUTE,createdAt,NOW()), '분전') \n" +
+                                                        "END AS elapsedTime,\n" +
+                                                        "case \n" +
+                                                        "    when (likeCount is null) then 0\n" +
+                                                        "    when (likeCount is not null) then likeCount\n" +
+                                                        "end as likeCount, exists(select * from Likes where userId = ? AND productId = Products.productId) as isExist,imageUrl\n" +
+                                                        "from (Products left outer join (SELECT imageUrl, productId\n" +
+                                                        "FROM (SELECT *\n" +
+                                                        "      FROM ProductImages\n" +
+                                                        "      ORDER BY createdAt)b\n" +
+                                                        "GROUP BY productId )as imageTable \n" +
+                                                        "on imageTable.productId = Products.productId) \n" +
+                                                        "left outer join (select productId,count(*) as likeCount from Likes group by productId)as c\n" +
+                                                        "on Products.productId =  c.productId\n" +
+                                                        "where Products.userId = ? and Products.status = 'SALE' limit 6",
+                                                (rs5,rosNum5) -> new GetProductRes(
+                                                        rs5.getInt("Products.productId"),
+                                                        rs5.getString("imageUrl"),
+                                                        rs5.getInt("isExist"),
+                                                        rs5.getInt("price"),
+                                                        rs5.getString("name"),
+                                                        rs5.getString("region"),
+                                                        rs5.getString("elapsedTime"),
+                                                        rs5.getInt("isSafePayment"),
+                                                        rs5.getInt("likeCount")
+                                                ), userIdx,userIdx)
+                                ), userIdx,userIdx,userIdx,rs.getInt("Products.productId")),
+                        this.jdbcTemplate.queryForObject("select count(*) as reviewNum\n" +
+                                        "from Review\n" +
+                                        "inner join Buy on Review.reviewId = Buy.reviewId\n" +
+                                        "inner join Users on Buy.id = Users.id\n" +
+                                        "inner join Sell on Sell.reviewId = Review.reviewId\n" +
+                                        "and Sell.id = ?\n" +
+                                        "where Review.status = 'active'",
+                                (rs6, rowNum6) -> new Integer(
+                                        rs6.getInt("reviewNum")),
+                                userIdx),
+                        this.jdbcTemplate.query("select Review.reviewId,Users.storeName, reviewScore, reviewText,\n" +
+                                        "                CASE WHEN timestampdiff(second, Review.createdAt, current_timestamp) < 60\n" +
+                                        "                THEN concat(timestampdiff(second,Review.createdAt, current_timestamp), ' 초 전')\n" +
+                                        "                WHEN timestampdiff(minute, Review.createdAt, current_timestamp) < 60\n" +
+                                        "                THEN concat(timestampdiff(minute, Review.createdAt, current_timestamp), ' 분 전')\n" +
+                                        "                WHEN timestampdiff(hour,Review.createdAt, current_timestamp) < 24\n" +
+                                        "                THEN concat(timestampdiff(hour,Review.createdAt, current_timestamp), ' 시간 전')\n" +
+                                        "                WHEN timestampdiff(day,Review.createdAt, current_timestamp) < 7\n" +
+                                        "                THEN concat(timestampdiff(day,Review.createdAt, current_timestamp), ' 일 전')\n" +
+                                        "                WHEN timestampdiff(week,Review.createdAt, current_timestamp) < 4\n" +
+                                        "                THEN concat(timestampdiff(week,Review.createdAt, current_timestamp), ' 주 전')\n" +
+                                        "                WHEN timestampdiff(month,Review.createdAt, current_timestamp) < 12\n" +
+                                        "                THEN concat(timestampdiff(month,Review.createdAt, current_timestamp), ' 달 전')\n" +
+                                        "                WHEN timestampdiff(year,Review.createdAt, current_timestamp) < 1000\n" +
+                                        "                THEN concat(timestampdiff(year,Review.createdAt, current_timestamp), ' 년 전')\n" +
+                                        "                END AS createdAt\n" +
+                                        "                from Review\n" +
+                                        "                inner join Buy on Review.reviewId = Buy.reviewId\n" +
+                                        "                inner join Users on Buy.id = Users.id\n" +
+                                        "                inner join Products on Products.productId = Review.productId\n" +
+                                        "                inner join Sell on Sell.reviewId = Review.reviewId\n" +
+                                        "                and Sell.id = ?\n" +
+                                        "                where Review.status = 'active'\n" +
+                                        "                limit 2",
+                                (rs7, rowNum7) -> new ReviewInfo(
+                                        rs7.getString("Users.storeName"),
+                                        rs7.getDouble("reviewScore"),
+                                        rs7.getString("reviewText"),
+                                        rs7.getString("createdAt")
+                                ), userIdx),
+                        this.jdbcTemplate.queryForObject("select count(*) from Inquiring where inquiringId = ?",
+                                (rs8, rowNum8) -> new Integer(
+                                        rs8.getInt("count(*)")),
+                                userIdx)
+
+                ),userIdx,productIdx);
+
+
     }
 
 

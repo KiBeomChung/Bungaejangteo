@@ -20,6 +20,8 @@ com/example/demo/src/user/model/PatchProductStateReq.java
  com.example.demo.src.user.model.PatchProductStateReq
 com/example/demo/src/favorite/model/GetFavoriteUserProductsDetailRes.java
  com.example.demo.src.favorite.model.GetFavoriteUserProductsDetailRes
+com/example/demo/src/product/model/ReviewInfo.java
+ com.example.demo.src.product.model.ReviewInfo
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
 com/example/demo/src/sms/SmsService.java
@@ -108,6 +110,8 @@ com/example/demo/src/product/model/PostReportReq.java
  com.example.demo.src.product.model.PostReportReq
 com/example/demo/src/sms/model/PostSMSReq.java
  com.example.demo.src.sms.model.PostSMSReq
+com/example/demo/src/product/model/storeInfo.java
+ com.example.demo.src.product.model.storeInfo
 com/example/demo/src/search/SearchDao.java
  com.example.demo.src.search.SearchDao
 com/example/demo/src/sms/SmsProvider.java
@@ -132,6 +136,8 @@ com/example/demo/src/favorite/model/GetFavoriteUserDetailRes.java
  com.example.demo.src.favorite.model.GetFavoriteUserDetailRes
 com/example/demo/src/product/model/GetProductRes.java
  com.example.demo.src.product.model.GetProductRes
+com/example/demo/src/product/model/GetDetailProductRes.java
+ com.example.demo.src.product.model.GetDetailProductRes
 com/example/demo/src/brand/model/GetBrandListRes.java
  com.example.demo.src.brand.model.GetBrandListRes
 com/example/demo/src/like/LikeService.java

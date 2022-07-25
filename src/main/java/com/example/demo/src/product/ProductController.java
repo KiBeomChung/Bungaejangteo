@@ -142,4 +142,23 @@ public class ProductController {
         }
     }
 
+    /**
+     * 특정 상품 상세 정보 조회 API
+     * [GET] /app/products/:productIdx
+     * @return BaseResponse<GetDetailProductRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/{productIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
+    public BaseResponse<GetDetailProductRes> getDetailProduct(@PathVariable("productIdx") Integer productIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            GetDetailProductRes getProductRes = productProvider.getDetailProduct(userIdxByJwt,productIdx);
+            return new BaseResponse<>(getProductRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
 }
