@@ -119,8 +119,8 @@ public class UserDao {
                 "where id = ?";
         int modifyStoreIdParam = id;
         Object[] modifyStoreInfoParams = new Object[]{patchUserStoreInfoReq.getStoreName(), patchUserStoreInfoReq.getShopUrl(),
-        patchUserStoreInfoReq.getContactTime(), patchUserStoreInfoReq.getDescription(), patchUserStoreInfoReq.getPolicy(),
-        patchUserStoreInfoReq.getPrecautions(), modifyStoreIdParam};
+                patchUserStoreInfoReq.getContactTime(), patchUserStoreInfoReq.getDescription(), patchUserStoreInfoReq.getPolicy(),
+                patchUserStoreInfoReq.getPrecautions(), modifyStoreIdParam};
 
         return this.jdbcTemplate.update(modifyStroeInfoQuery, modifyStoreInfoParams);
 
@@ -204,7 +204,7 @@ public class UserDao {
 
         String modifyUserInfoQuery = "update Users set gender = ?, birth = ?, phoneNum = ? where id = ?\n";
         Object[] modifyUserInfoParams = new Object[]{patchUserInfoReq.getGender(), patchUserInfoReq.getBirth(),
-        patchUserInfoReq.getPhoneNum(), userId};
+                patchUserInfoReq.getPhoneNum(), userId};
 
         return this.jdbcTemplate.update(modifyUserInfoQuery, modifyUserInfoParams);
     }
@@ -227,17 +227,26 @@ public class UserDao {
     }
 
     public List<GetUserInquiringRes> getUserInquiring(int userId) {
-        String getUserInquiringQuery = "select Users.imageUrl, Users.storeName, Inquiring.text , case when timestampdiff(second, Inquiring.createdAt, current_timestamp) < 60\n" +
-                "                then concat(timestampdiff(second,Inquiring.createdAt, current_timestamp), ' 초 전')\n" +
-                "            when timestampdiff(minute, Inquiring.createdAt, current_timestamp) < 60\n" +
-                "                then concat(timestampdiff(minute,Inquiring.createdAt, current_timestamp), ' 분 전')\n" +
-                "            when timestampdiff(hour, Inquiring.createdAt, current_timestamp) < 24\n" +
-                "                then concat(timestampdiff(hour, Inquiring.createdAt, current_timestamp), ' 시간 전')\n" +
-                "            else concat(datediff(current_timestamp, Inquiring.createdAt), ' 일 전')\n" +
-                "           end as 'createdAt'\n" +
+        String getUserInquiringQuery = "select Users.imageUrl, Users.storeName, Inquiring.text \n," +
+                "CASE WHEN timestampdiff(second,Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                THEN concat(timestampdiff(second,Inquiring.createdAt, current_timestamp), ' 초 전')\n" +
+                "            WHEN timestampdiff(minute, Inquiring.createdAt, current_timestamp) < 60\n" +
+                "                THEN concat(timestampdiff(minute, Inquiring.createdAt, current_timestamp), ' 분 전')\n" +
+                "            WHEN timestampdiff(hour,Inquiring.createdAt, current_timestamp) < 24\n" +
+                "                THEN concat(timestampdiff(hour,Inquiring.createdAt, current_timestamp), ' 시간 전')\n" +
+                "            WHEN timestampdiff(day,Inquiring.createdAt, current_timestamp) < 7\n" +
+                "                THEN concat(timestampdiff(day,Inquiring.createdAt, current_timestamp), ' 일 전')\n" +
+                "            WHEN timestampdiff(week,Inquiring.createdAt, current_timestamp) < 4\n" +
+                "                THEN concat(timestampdiff(week,Inquiring.createdAt, current_timestamp), ' 주 전')\n" +
+                "            WHEN timestampdiff(month,Inquiring.createdAt, current_timestamp) < 12\n" +
+                "                THEN concat(timestampdiff(month,Inquiring.createdAt, current_timestamp), ' 달 전')\n" +
+                "            WHEN timestampdiff(year,Inquiring.createdAt, current_timestamp) < 1000\n" +
+                "                THEN concat(timestampdiff(year,Inquiring.createdAt, current_timestamp), ' 년 전')\n" +
+                "           END AS 'createdAt'\n" +
                 "from Users\n" +
                 "inner join Inquiring on Inquiring.inquiringId = Users.id\n" +
-                "where Users.status = 'NORMAL' and Users.id = ?";
+                "inner join Inquired on Inquired.connectId = Inquiring.id\n" +
+                "where Inquired.inquiredId = ? and Users.status = 'NORMAL'";
         int getUserInquiringParam = userId;
 
         return this.jdbcTemplate.query(getUserInquiringQuery,
@@ -248,5 +257,71 @@ public class UserDao {
                         rs.getString("createdAt")),
                 getUserInquiringParam);
     }
-}
 
+    public int addVisitNum(int userId) {
+        String addVisitNumQuery = "update Users set Users.visitNum = visitNum + 1 where Users.id = ? and Users.status = 'NORMAL'";
+        int addVisitNumParam = userId;
+
+        return this.jdbcTemplate.update(addVisitNumQuery, addVisitNumParam);
+    }
+
+    public GetAnotherUserStoreInfoRes getAnotherUserStoreInfo(int userId, int targetId) {
+
+        String getAnotherUserStoreProductInfoQuery = "select Products.productId, ProductImages.imageUrl, Products.price, Products.name\n" +
+                "from Products inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt)a GROUP BY productId) ProductImages on Products.productId = ProductImages.productId\n" +
+                "where Products.userId = ?";
+
+        String getAnotherUserStoreInfoQuery = "select Users.imageUrl, Users.storeName, (select round(avg(Review.reviewScore), 2) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewAvg,\n" +
+                "(select count(Review.reviewId) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewNum,\n" +
+                "       timestampdiff(day, Users.createdAt, current_timestamp) as openDate,\n" +
+                "       Users.visitNum, (select count(Products.productId) from Products where Products.userId = ?) as productNum,\n" +
+                "       (select count(Review.reviewId) from Review inner join Sell on Sell.reviewId = Review.reviewId and Sell.id = ?) as reviewNum2,\n" +
+                "       (select count(Follow.id) from Follow inner join Following on Follow.followingId = Following.id and Follow.followerId = ?) as followNum,\n" +
+                "       (select count(Following.id) from Following inner join Follow on Follow.followingId = Following.id and Following.followingId = ?) as followingNum,\n" +
+                "       Users.isCertified,\n" +
+                "       (select count(Sell.sellId) from Sell inner join Users on Users.id = Sell.id and Users.id = ?) as sellNum,\n" +
+                "       Users.contactTime, Users.description, Users.policy, exists(select * from Follow inner join Following on Follow.followingId = Following.id and Following.followingId = ? and Follow.followerId = ?) as isFollow\n" +
+                "from Users\n" +
+                "where Users.id = ? limit 10";
+        Object[] getAnotherUserStoreInfoParams = new Object[] {targetId,targetId,targetId,targetId,targetId,targetId,targetId, targetId ,userId, targetId};
+
+        return this.jdbcTemplate.queryForObject(getAnotherUserStoreInfoQuery,
+                (rs, rowNum) -> new GetAnotherUserStoreInfoRes(
+                        rs.getString("imageUrl"),
+                        rs.getString("storeName"),
+                        rs.getDouble("reviewAvg"),
+                        rs.getInt("openDate"),
+                        rs.getInt("visitNum"),
+                        rs.getInt("productNum"),
+                        rs.getInt("reviewNum2"),
+                        rs.getInt("followNum"),
+                        rs.getInt("followingNum"),
+                        rs.getInt("isCertified"),
+                        rs.getInt("sellNum"),
+                        rs.getString("contactTime"),
+                        rs.getString("description"),
+                        rs.getString("policy"),
+                        this.jdbcTemplate.query(getAnotherUserStoreProductInfoQuery,
+                               (rs2, rowNum2) -> new GetAnotherUserStoreProductInfoRes(
+                                       rs2.getInt("productId"),
+                                       rs2.getString("imageUrl"),
+                                       rs2.getInt("price"),
+                                       rs2.getString("name"),
+                                       this.jdbcTemplate.queryForObject("select exists(select * from Likes where userId = ? AND productId = ? and status = 'NORMAL') as b",
+                                               (rs3, rowNum3) -> new Integer(
+                                                       rs3.getInt("b")),
+                                                       targetId, rs2.getInt("productId"))
+                               ), targetId), rs.getInt("isFollow"))
+                , getAnotherUserStoreInfoParams);
+    }
+
+    public int deleteInquiring(int inquiredId, int inquiringId, PatchUserDeleteInqReq patchUserDeleteInqReq) {
+        String deleteInquiringQuery = "update Inquiring a inner join Inquired b on a.id = b.connectId\n" +
+                "set a.status = ?, b.status = ?\n" +
+                "where a.inquiringId = ? and b.inquiredId = ?";
+
+        Object[] deleteInquiringParams = new Object[] {patchUserDeleteInqReq.getStatus(), patchUserDeleteInqReq.getStatus(), inquiringId, inquiredId};
+
+        return this.jdbcTemplate.update(deleteInquiringQuery, deleteInquiringParams);
+    }
+}
