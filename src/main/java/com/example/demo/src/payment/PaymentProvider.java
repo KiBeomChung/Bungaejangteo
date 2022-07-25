@@ -24,7 +24,7 @@ public class PaymentProvider {
 
     public GetProductInfoRes getProductInfoRes(int productId, int userIdxByJwt) {
 
-        GetProductInfoRes getProductInfo = paymentDao.getProductInfo(productId);
+        GetProductInfoRes getProductInfo = paymentDao.getProductInfo(productId, userIdxByJwt);
 
         String ProductPrice = paymentDao.getProductPrice(productId);
         String ProductTax = paymentDao.getProductTax(productId);
@@ -32,13 +32,13 @@ public class PaymentProvider {
         String usedPoint = paymentDao.getUsedPoint(userIdxByJwt);
         String finalSum = paymentDao.getFinalSum(productId, userIdxByJwt);
 
-        GetPaymentUserInfoRes getPaymentUserInfo = paymentDao.getPaymentUserInfo(productId, userIdxByJwt);
+        GetPaymentUserInfoRes getPaymentUserInfo = new GetPaymentUserInfoRes(ProductPrice, ProductTax, sum, usedPoint, finalSum);
 
-        getPaymentUserInfo.setPrice(ProductPrice);
-        getPaymentUserInfo.setTax(ProductTax);
-        getPaymentUserInfo.setSum(sum);
-        getPaymentUserInfo.setUsedPoint(usedPoint);
-        getPaymentUserInfo.setTotalPrice(finalSum);
+//        getPaymentUserInfo.setPrice(ProductPrice);
+//        getPaymentUserInfo.setTax(ProductTax);
+//        getPaymentUserInfo.setSum(sum);
+//        getPaymentUserInfo.setUsedPoint(usedPoint);
+//        getPaymentUserInfo.setTotalPrice(finalSum);
 
         getProductInfo.setGetPaymentUserInfoRes(getPaymentUserInfo);
 

@@ -19,32 +19,36 @@ public class PaymentDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public GetProductInfoRes getProductInfo(int productId) {
-        String GetProductInfoQuery = "select ProductImages.imageUrl, Products.price, Products.name\n" +
-                "from Products inner join (SELECT * FROM  (SELECT * FROM ProductImages ORDER BY createdAt) a GROUP BY productId) ProductImages\n" +
-                "on Products.productId = ProductImages.productId and Products.productId = ?";
+    public GetProductInfoRes getProductInfo(int productId, int userId) {
+        String getProductInfoQuery = "select ProductImages.imageUrl, Products.price, Products.name, Users.bungaePoint, UserPayInfo.payMethod, UserPayInfo.isAgree\n" +
+                "                from Users, UserPayInfo, Products inner join (SELECT * FROM  (SELECT * FROM ProductImages ORDER BY createdAt) a GROUP BY productId) ProductImages\n" +
+                "                on Products.productId = ProductImages.productId and Products.productId = ?\n" +
+                "where Users.id = ?";
 
-        int GetProductInfoParam = productId;
+        Object[] getProductInfoParams = new Object[] {productId, userId};
 
-        return this.jdbcTemplate.queryForObject(GetProductInfoQuery,
+        return this.jdbcTemplate.queryForObject(getProductInfoQuery,
                 (rs, rowNum) -> new GetProductInfoRes(
                         rs.getString("imageUrl"),
                         rs.getInt("price"),
-                        rs.getString("name")
-                ), GetProductInfoParam);
-    }
-
-    public GetPaymentUserInfoRes getPaymentUserInfo(int productId, int userId) {
-        String GetPaymentUserInfoQuery = "select Users.bungaePoint, UserPayInfo.payMethod, UserPayInfo.isAgree from Users inner join UserPayInfo on UserPayInfo.id = Users.id where Users.id = ?";
-
-        return this.jdbcTemplate.queryForObject(GetPaymentUserInfoQuery,
-                (rs, rowNum) -> new GetPaymentUserInfoRes(
+                        rs.getString("name"),
                         rs.getInt("bungaePoint"),
                         rs.getString("payMethod"),
                         rs.getString("isAgree")
-                ), userId);
-
+                ), getProductInfoParams);
     }
+
+//    public GetPaymentUserInfoRes getPaymentUserInfo(int productId, int userId) {
+//        String GetPaymentUserInfoQuery = "select Users.bungaePoint, UserPayInfo.payMethod, UserPayInfo.isAgree from Users inner join UserPayInfo on UserPayInfo.id = Users.id where Users.id = ?";
+//
+//        return this.jdbcTemplate.queryForObject(GetPaymentUserInfoQuery,
+//                (rs, rowNum) -> new GetPaymentUserInfoRes(
+//                        rs.getInt("bungaePoint"),
+//                        rs.getString("payMethod"),
+//                        rs.getString("isAgree")
+//                ), userId);
+//
+//    }
 
     public String getProductPrice(int productId) {
         String getProductPriceQuery = "select concat(format(Products.price, 0), '원') as sum\n" +

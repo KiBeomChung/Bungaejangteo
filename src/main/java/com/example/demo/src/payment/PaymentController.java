@@ -43,17 +43,4 @@ public class PaymentController {
         }
     }
 
-//    @ResponseBody
-//    @GetMapping("/{productId}/store-info")
-//    public BaseResponse<GetPaymentUserInfoRes> getPaymentUserInfoRes(@PathVariable("productId") int productId) {
-//        try {
-//            int userIdxByJwt = jwtService.getUserIdx();
-//
-//            GetPaymentUserInfoRes getPaymentUserInfoRes = paymentProvider.getPaymentUserInfo(productId, userIdxByJwt);
-//            return new BaseResponse<>(getPaymentUserInfoRes);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//
-//    }
 }
