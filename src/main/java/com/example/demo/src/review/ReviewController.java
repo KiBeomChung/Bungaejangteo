@@ -3,6 +3,7 @@ package com.example.demo.src.review;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PostRegisterReviewReq;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,20 @@ public class ReviewController {
         this.reviewProvider = reviewProvider;
         this.reviewService = reviewService;
         this.jwtService = jwtService;
+    }
+
+    @ResponseBody
+    @PostMapping("")
+    public BaseResponse<String> registerReview(@RequestBody PostRegisterReviewReq postRegisterReviewReq) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            String result = reviewService.registerReview(userIdxByJwt, postRegisterReviewReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
 

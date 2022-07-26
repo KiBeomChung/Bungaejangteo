@@ -1,6 +1,7 @@
 package com.example.demo.src.review;
 
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PostRegisterReviewReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -58,20 +59,27 @@ public class ReviewDao {
                 ), getReviewListParam);
     }
 
-//    public List<GetDateRes> getCreatedDate(int id){
-//        String getCreatedDateQuery = "select Review.createdAt\n" +
-//                "from Review\n" +
-//                "inner join Buy on Review.reviewId = Buy.reviewId\n" +
-//                "inner join Users on Buy.id = Users.id\n" +
-//                "inner join Products on Products.productId = Review.productId\n" +
-//                "inner join PayResult on Buy.buyId = PayResult.buyId\n" +
-//                "inner join Sell on Sell.reviewId = Review.reviewId\n" +
-//                "and Sell.id = ?\n" +
-//                "where Review.status = 'active'";
-//                int getCreatedDateParam = id;
-//        return this.jdbcTemplate.query(getCreatedDateQuery,
-//                (rs, rowNum) -> new GetDateRes(
-//                        rs.getTimestamp("createdAt")
-//                ), getCreatedDateParam);
-//    }
+    public int registerReview(PostRegisterReviewReq postRegisterReviewReq) {
+
+        String registerReviewQuery = "insert into Review(reviewText, reviewScore, productId) values(?,?,?)";
+        Object[] registerReviewParams = new Object[] {postRegisterReviewReq.getReviewText(), postRegisterReviewReq.getReviewScore(), postRegisterReviewReq.getProductId()};
+
+        this.jdbcTemplate.update(registerReviewQuery, registerReviewParams);
+
+        String lastInsertIdStr = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdStr, int.class);
+    }
+
+    public int registerReviewImg(int lastInsertId, List<String> imageUrl) {
+
+    int registerImgNum = 0;
+
+        for(String url : imageUrl) {
+            String registerReviewImgQuery = "insert into ReviewImage(reviewId, reviewImageUrl) values(?,?)";
+            Object[] registerReviewImgParams = new Object[]{lastInsertId, url};
+            this.jdbcTemplate.update(registerReviewImgQuery, registerReviewImgParams);
+            registerImgNum++;
+        }
+        return registerImgNum;
+    }
 }
