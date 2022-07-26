@@ -1,6 +1,7 @@
 package com.example.demo.src.review;
 
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -103,5 +104,26 @@ public class ReviewDao {
         String isAlreadyWritingQuery = "select exists(select * from Review where Review.productId = ?)";
 
         return this.jdbcTemplate.queryForObject(isAlreadyWritingQuery, int.class, productId);
+    }
+
+    public int updateBuySell(int userId, int lastInsertId, PostRegisterReviewReq postRegisterReviewReq) {
+        String updateBuySellQuery = "update Buy as b, Sell as s\n" +
+                "set b.reviewId = ?,\n" +
+                "    s.reviewId = ?\n" +
+                "where b.connectId = s.sellId and b.id = ? and s.id = (select Products.userId from Products where Products.productId = ?)\n" +
+                "and s.orderId = (select OrderInfo.orderId from OrderInfo where OrderInfo.id = ? and OrderInfo.productId = ?)";
+        Object[] updateBuySellParams = new Object[]{lastInsertId, lastInsertId, userId, postRegisterReviewReq.getProductId(), userId, postRegisterReviewReq.getProductId()};
+        return this.jdbcTemplate.update(updateBuySellQuery, updateBuySellParams);
+    }
+
+    public int modifyReview(PatchModifyReviewReq patchModifyReviewReq) {
+        String modifyReviewQuery = "update Review\n" +
+                "set reviewText = ?,\n" +
+                "    reviewScore = ?\n" +
+                "where Review.reviewId = (select tmp.reviewId from (select Review.reviewId from Review where Review.reviewId = ?) as tmp)";
+        Object[] modifyReviewParams = new Object[] {patchModifyReviewReq.getReviewText(), patchModifyReviewReq.getReviewScore(),
+        patchModifyReviewReq.getReviewId()};
+
+        return this.jdbcTemplate.update(modifyReviewQuery, modifyReviewParams);
     }
 }

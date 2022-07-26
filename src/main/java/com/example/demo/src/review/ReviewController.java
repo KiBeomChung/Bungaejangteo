@@ -3,6 +3,7 @@ package com.example.demo.src.review;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.review.model.GetReviewRes;
+import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -75,9 +76,22 @@ public class ReviewController {
     @ResponseBody
     public BaseResponse<List<GetReviewRes>> getReviewResBaseResponse(@PathVariable("id") int id) throws BaseException {
 
-        Timestamp dateNow = new Timestamp(System.currentTimeMillis());
-
         List<GetReviewRes> getReviewRes = reviewProvider.getReviewRes(id);
         return new BaseResponse<>(getReviewRes);
+    }
+
+    @ResponseBody
+    @PatchMapping("")
+    public BaseResponse<String> modifyReview(@RequestBody PatchModifyReviewReq patchModifyReviewReq) {
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            String result = reviewService.modifyReview(userIdxByJwt, patchModifyReviewReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -47,11 +48,23 @@ public class ReviewService {
             int lastInsertId = reviewDao.registerReview(postRegisterReviewReq);
             if (postRegisterReviewReq.getImageUrl().get(0) != null) {
                 reviewDao.registerReviewImg(lastInsertId, postRegisterReviewReq.getImageUrl());
+
+                reviewDao.updateBuySell(userId, lastInsertId, postRegisterReviewReq); // buy, sell 테이블에 정보 저장
             }
             result = "리뷰 작성 완료 하였습니다.";
             return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public String modifyReview(int userId, PatchModifyReviewReq patchModifyReviewReq) {
+
+        int result = reviewDao.modifyReview(patchModifyReviewReq);
+
+        if(result == 1){
+            return "수정 완료 하였습니다.";
+        }
+        else return "수정 실패하였습니다.";
     }
 }

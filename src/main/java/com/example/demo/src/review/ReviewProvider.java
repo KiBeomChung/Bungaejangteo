@@ -30,18 +30,6 @@ public class ReviewProvider {
         return getReviewResList;
     }
 
-//    public List<GetDateRes> getDateRes (int id, Timestamp dateNow){
-//
-//         List<GetDateRes> getCreatedDate = reviewDao.getCreatedDate(id); //디비에 저장된 시간을 가져옴
-
-//         Timestamp getDate = getCreatedDate;
-
-//         System.out.println("getDate :" + getDate);
-//         System.out.println("현재 시간 :" + dateNow);
-
-//         return getCreatedDate;
 
     }
-
-//}
 
