@@ -115,7 +115,7 @@ public enum BaseResponseStatus {
     INVALID_REVIEW_SCORE(false, 2132, "리뷰 별점은 0 ~ 5점 사이로 줘야 합니다."),
     ALREADY_WRITING_REVIEW(false, 2133, "이미 해당 상품에 대한 리뷰를 작성했습니다."),
 
-    DELETED_USER(false,2108, "회원탈퇴한 유저입니다"),
+
     /**
      * 3000 : Response 오류
      */
@@ -189,7 +189,8 @@ public enum BaseResponseStatus {
     EXPIRED_REVIEW_WRITE(false, 3110, "리뷰 작성 기한이 지났습니다."),
     NOT_AVALIABLE_WRITE_SELLER_STATUS(false, 3111, "해당 상점이 리뷰를 작성할 수 있는 상태가 아닙니다."),
 
-
+    //[Delete] Users
+    DELETED_USER(false,3120, "회원탈퇴한 유저입니다"),
 
     /**
      * 4000 : Database, Server 오류
