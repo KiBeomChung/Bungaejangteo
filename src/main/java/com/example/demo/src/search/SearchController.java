@@ -85,6 +85,12 @@ public class SearchController {
         }
     }
 
+    /**
+     * 특정 브랜드 상세 조회 API
+     * @param userId
+     * @param brandId
+     * @return
+     */
     @ResponseBody
     @GetMapping("{userId}/{brandId}")
     public BaseResponse<List<GetSearchBrandRes>> getSearchBrandRes(@PathVariable("userId") int userId,

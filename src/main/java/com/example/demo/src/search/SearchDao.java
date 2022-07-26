@@ -114,6 +114,17 @@ public class SearchDao {
         String isDeletedUserQuery = "select exists(select * from Users where id = ? and status ='DELETED')";
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
     }
+
+    public int isExistBrand(int brandId) {
+        String isExistBrandQuery = "select exists(select * from Brands where Brands.id = ?)";
+        return this.jdbcTemplate.queryForObject(isExistBrandQuery, int.class, brandId);
+
+    }
+
+    public int checkBrandStatus(int brandId) {
+        String checkBrandStatusQuery = "select exists(select * from Brands where Brands.id = ? and Brands.status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(checkBrandStatusQuery, int.class, brandId);
+    }
 }
 
 

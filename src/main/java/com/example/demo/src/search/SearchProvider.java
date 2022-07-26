@@ -67,9 +67,20 @@ public class SearchProvider {
         }
     }
 
-    public List<GetSearchBrandRes> getSearchBrandList(int userId, int brandId) {
-        List<GetSearchBrandRes> getSearchBrandResList = searchDao.getSearchBrandList(userId, brandId);
-        return getSearchBrandResList;
+    public List<GetSearchBrandRes> getSearchBrandList(int userId, int brandId) throws BaseException {
 
+        if(searchDao.isExistBrand(brandId) == 0){ //브랜드가 존재하지 않을 경우 -> 확인
+            throw new BaseException(NOT_EXISTS_BRAND);
+        }
+        if(searchDao.checkBrandStatus(brandId) == 1) {   //브랜드가 삭제 되었을 경우 -> 확인
+            throw new BaseException(NOT_AVALIABLE_BRAND_STATUS);
+        }
+
+        try {
+            List<GetSearchBrandRes> getSearchBrandResList = searchDao.getSearchBrandList(userId, brandId);
+            return getSearchBrandResList;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

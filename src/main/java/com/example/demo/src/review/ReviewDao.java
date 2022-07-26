@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -81,5 +82,26 @@ public class ReviewDao {
             registerImgNum++;
         }
         return registerImgNum;
+    }
+
+    public int checkCreatedAt(int userId) {
+        String checkCreatedAtQuery = "select timestampdiff(day, OrderInfo.createdAt, current_timestamp) from OrderInfo where OrderInfo.id = ? ";
+        return this.jdbcTemplate.queryForObject(checkCreatedAtQuery, int.class, userId);
+    }
+
+    public int checkSellerStatus(int productId) {
+        String checkSellerStatusQuery = "select exists(select * from Products inner join Users on Users.id = Products.userId where Products.productId = ? and Users.status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(checkSellerStatusQuery, int.class, productId);  //확인
+    }
+
+    public int checkBuyerStatus(int userId) {
+        String checkBuyerStatusQuery = "select exists(select * from Users where Users.id = ? and Users.status = 'DELETED')"; //확인
+        return this.jdbcTemplate.queryForObject(checkBuyerStatusQuery, int.class, userId);
+    }
+
+    public int isAlreadyWriting(int productId) {
+        String isAlreadyWritingQuery = "select exists(select * from Review where Review.productId = ?)";
+
+        return this.jdbcTemplate.queryForObject(isAlreadyWritingQuery, int.class, productId);
     }
 }

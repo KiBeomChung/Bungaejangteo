@@ -109,6 +109,11 @@ public enum BaseResponseStatus {
     POST_WRONG_PAY_METHOD(false, 2124, "이용할 수 없는 결제 수단 입니다"),
     POST_DISAGREE_PAYMENT(false, 2125, "결제 약관에 동의 하지 않았습니다. 동의 후 이용헤주세요."),
 
+    //[Post] Review
+    EMPTY_REVIEW_TEXT(false, 2130, "리뷰내용 부분을 작성하지 않으셨습니다."),
+    INVALID_REVIEW_TEXT_LENGTH(false, 2131, "리뷰 내용은 빈칸이거나 1000자를 넘으면 안됩니다."),
+    INVALID_REVIEW_SCORE(false, 2132, "리뷰 별점은 0 ~ 5점 사이로 줘야 합니다."),
+    ALREADY_WRITING_REVIEW(false, 2133, "이미 해당 상품에 대한 리뷰를 작성했습니다."),
 
     DELETED_USER(false,2108, "회원탈퇴한 유저입니다"),
     /**
@@ -179,6 +184,10 @@ public enum BaseResponseStatus {
     NOT_AVALIABLE_BUYER_STATUS(false, 3103, "현재 회원의 상태는 구매가 불가능합니다 (탈퇴 또는 정지)"),
     ALREADY_SOLD_OUT_PRODUCT(false, 3104, "이미 판매된 상품입니다."),
     USED_BUNGAE_POINTS_WRONG(false, 3105, "회원이 가지고 있는 번개 포인트보다 더 많은 포인트를 사용하였습니다."),
+
+    //[Post] Review
+    EXPIRED_REVIEW_WRITE(false, 3110, "리뷰 작성 기한이 지났습니다."),
+    NOT_AVALIABLE_WRITE_SELLER_STATUS(false, 3111, "해당 상점이 리뷰를 작성할 수 있는 상태가 아닙니다."),
 
 
 
