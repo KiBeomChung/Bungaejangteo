@@ -130,34 +130,34 @@ public class PaymentDao {
         return this.jdbcTemplate.queryForObject(checkUserStatusQuery, int.class, checkUserStatusParams);
     }
 
-    public int duplicatedOrder(int userId, int productId) {
+    public int duplicatedOrder(int userId, int productId) {  //확인
         String duplicatedOrderQuery = "select exists(select * from OrderInfo where OrderInfo.id = ? and OrderInfo.productId = ?)";
         Object [] duplicatedOrderParams = new Object[]{userId, productId};
         return this.jdbcTemplate.queryForObject(duplicatedOrderQuery, int.class, duplicatedOrderParams);
     }
 
     public int checkSellerStatus(int productId) {
-        String checkSellerStatusQuery = "select exist(select * from Products inner join Users on Users.id = Products.id where Products.productId = ? and Users.status = 'DELETED')";
-        return this.jdbcTemplate.queryForObject(checkSellerStatusQuery, int.class, productId);
+        String checkSellerStatusQuery = "select exists(select * from Products inner join Users on Users.id = Products.userId where Products.productId = ? and Users.status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(checkSellerStatusQuery, int.class, productId);  //확인
     }
 
     public int checkProductStatus(int productId) {
-        String checkProductStatusQuery = "select exists(select * from ProductReports where ProductReports.productId = ?)";
+        String checkProductStatusQuery = "select exists(select * from ProductReports where ProductReports.productId = ?)";  //확인
         return this.jdbcTemplate.queryForObject(checkProductStatusQuery, int.class, productId);
     }
 
     public int checkBuyerStatus(int userId) {
-        String checkBuyerStatusQuery = "select exists(select * from Users where Users.id = ? and Users.status = 'DELETED')";
+        String checkBuyerStatusQuery = "select exists(select * from Users where Users.id = ? and Users.status = 'DELETED')"; //확인
         return this.jdbcTemplate.queryForObject(checkBuyerStatusQuery, int.class, userId);
     }
 
     public int isAlreadySoldOut(int productId) {
-        String isAlreadySoldOutQuery = "select exists(select * from Products where Products.productId = ? and Products.status = 'SOLDOUT')" ;
+        String isAlreadySoldOutQuery = "select exists(select * from Products where Products.productId = ? and Products.status = 'SOLDOUT')" ; //확인
         return this.jdbcTemplate.queryForObject(isAlreadySoldOutQuery, int.class, productId);
     }
 
     public int checkBungaePoint(int userId, int usingBungaePoints) {
-        String checkBungaePointQuery = "select exists(select * from Users where Users.id = ? and Users.bungaePoint < usingBungaePoints)";
+        String checkBungaePointQuery = "select exists(select * from Users where Users.id = ? and Users.bungaePoint < ?)";   //확인
         Object[] checkBungaePointParams = new Object[] {userId, usingBungaePoints};
 
         return this.jdbcTemplate.queryForObject(checkBungaePointQuery, int.class, checkBungaePointParams);
@@ -167,6 +167,6 @@ public class PaymentDao {
         String updateUserBungaePointQuery = "update Users set Users.bungaePoint = Users.bungaePoint - ? where Users.id = ?";
         Object[] updateUserBungaePointParams = new Object[] {usingBungaePoints, userId};
 
-        return this.jdbcTemplate.queryForObject(updateUserBungaePointQuery, int.class, updateUserBungaePointParams);
+        return this.jdbcTemplate.update(updateUserBungaePointQuery, updateUserBungaePointParams);
     }
 }

@@ -62,25 +62,25 @@ public class PaymentController {
     public BaseResponse<String> storeOrderInfo(@PathVariable("productId") int productId,
                                                @RequestBody PostOrderInfoReq postOrderInfoReq) throws BaseException {
 
-        if(postOrderInfoReq.getDealCategory() == 0 || postOrderInfoReq.getDealCategory() == 1) {
-            throw new BaseException(POST_DEAL_CATEGORY_IS_EMPTY);    // dealCategory 값이 0 or 1 이 아닐경우
+        if(postOrderInfoReq.getDealCategory() > 1  || postOrderInfoReq.getDealCategory() < 0) {
+            return new BaseResponse<>(POST_DEAL_CATEGORY_IS_EMPTY);    // dealCategory 값이 0 or 1 이 아닐경우
         }
         if(postOrderInfoReq.getProductName() == null) {
-            throw new BaseException(POST_EMPTY_PRODUCT_NAME);   // 상품이름이 null 인 경우
+            return new BaseResponse<>(POST_EMPTY_PRODUCT_NAME);   // 상품이름이 null 인 경우
         }
         if(postOrderInfoReq.getFinalPrice() == null) {
-            throw new BaseException(POST_EMPTY_PRICE);     // 상품 가격이 null 인 경우
+            return new BaseResponse<>(POST_EMPTY_PRICE);     // 상품 가격이 null 인 경우
         }
         // 상품가격의 정규식 확인
 
         if(postOrderInfoReq.getPayMethod() == null) {
-            throw new BaseException(POST_EMPTY_PAY_METHOD);    // payMethod값이 null 인경우
+            return new BaseResponse<>(POST_EMPTY_PAY_METHOD);    // payMethod값이 null 인경우
         }
         if(!paymentService.checkPayMethod(postOrderInfoReq.getPayMethod())) {
-            throw new BaseException(POST_WRONG_PAY_METHOD);    // payMethod가 지정된 수단 이외의 경우
+            return new BaseResponse<>(POST_WRONG_PAY_METHOD);    // payMethod가 지정된 수단 이외의 경우
         }
-        if(postOrderInfoReq.getIsAgree().equals("true")) {
-            throw new BaseException(POST_DISAGREE_PAYMENT);   // isAgree 가 false 인 경우
+        if(postOrderInfoReq.getIsAgree().equals("false")) {
+            return new BaseResponse<>(POST_DISAGREE_PAYMENT);   // isAgree 가 false 인 경우
         }
 
         try {

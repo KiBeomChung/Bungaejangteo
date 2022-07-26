@@ -36,8 +36,6 @@ public class PaymentService {
 
         String result = "";
         if (postOrderInfoReq.getDealCategory() == 0) {
-            int isStored = paymentDao.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq);
-
             if(paymentDao.duplicatedOrder(userIdxByJwt, productId) == 1) {
                 throw new BaseException(ALREADY_EXIST_ORDER);// 이미 결제내역이 존재하는 경우
             }
@@ -56,6 +54,8 @@ public class PaymentService {
             if(paymentDao.checkBungaePoint(userIdxByJwt, postOrderInfoReq.getUsingBungaePoint()) == 1) {
                 throw new BaseException(USED_BUNGAE_POINTS_WRONG);    // 자신이 가지고 있는 번개포인트 보다 더 사용했을 경우
             }
+
+            int isStored = paymentDao.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq);
 
             if (isStored == 1) {
                 result = "판매내역 저장완료하였습니다.";
