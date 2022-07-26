@@ -15,6 +15,7 @@ public class PostOrderInfoReq {
     private String dealName;
     private String address;
     private String deliverRequire;
+    @NonNull private int usingBungaePoint;
     @NonNull private String finalPrice;
     @NonNull private int bungaePay;
     @NonNull private String payMethod;

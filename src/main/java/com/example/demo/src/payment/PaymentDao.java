@@ -95,10 +95,10 @@ public class PaymentDao {
     }
 
     public int storeOrderInfo(int userId, int productId, PostOrderInfoReq postOrderInfoReq) {
-        String storeOrderInfoQuery = "insert into OrderInfo(id, productId, dealCategory, productName, finalPrice, bungaePay, payMethod, isAgree)\n" +
-                "values(?,?,?,?,?,?,?,?)";
+        String storeOrderInfoQuery = "insert into OrderInfo(id, productId, dealCategory, productName, usingBungaePoint, finalPrice, bungaePay, payMethod, isAgree)\n" +
+                "values(?,?,?,?,?,?,?,?,?)";
 
-        Object[] storeOrderInfoParams = new Object[]{userId, productId, postOrderInfoReq.getDealCategory(), postOrderInfoReq.getProductName(),
+        Object[] storeOrderInfoParams = new Object[]{userId, productId, postOrderInfoReq.getDealCategory(), postOrderInfoReq.getProductName(), postOrderInfoReq.getUsingBungaePoint(),
                 postOrderInfoReq.getFinalPrice(), postOrderInfoReq.getBungaePay(), postOrderInfoReq.getPayMethod(), postOrderInfoReq.getIsAgree()};
 
         return this.jdbcTemplate.update(storeOrderInfoQuery, storeOrderInfoParams);
@@ -122,5 +122,51 @@ public class PaymentDao {
         Object[] storeBuyInfoParams = new Object[] {userId, lastInsertId};
         return this.jdbcTemplate.update(storeBuyInfoQuery, storeBuyInfoParams);
 
+    }
+
+    public int checkUserStatus(int userId) {
+        String checkUserStatusQuery = "select exists(select * from Users where id = ? and status = 'DELETED')";
+        int checkUserStatusParams = userId;
+        return this.jdbcTemplate.queryForObject(checkUserStatusQuery, int.class, checkUserStatusParams);
+    }
+
+    public int duplicatedOrder(int userId, int productId) {
+        String duplicatedOrderQuery = "select exists(select * from OrderInfo where OrderInfo.id = ? and OrderInfo.productId = ?)";
+        Object [] duplicatedOrderParams = new Object[]{userId, productId};
+        return this.jdbcTemplate.queryForObject(duplicatedOrderQuery, int.class, duplicatedOrderParams);
+    }
+
+    public int checkSellerStatus(int productId) {
+        String checkSellerStatusQuery = "select exist(select * from Products inner join Users on Users.id = Products.id where Products.productId = ? and Users.status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(checkSellerStatusQuery, int.class, productId);
+    }
+
+    public int checkProductStatus(int productId) {
+        String checkProductStatusQuery = "select exists(select * from ProductReports where ProductReports.productId = ?)";
+        return this.jdbcTemplate.queryForObject(checkProductStatusQuery, int.class, productId);
+    }
+
+    public int checkBuyerStatus(int userId) {
+        String checkBuyerStatusQuery = "select exists(select * from Users where Users.id = ? and Users.status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(checkBuyerStatusQuery, int.class, userId);
+    }
+
+    public int isAlreadySoldOut(int productId) {
+        String isAlreadySoldOutQuery = "select exists(select * from Products where Products.productId = ? and Products.status = 'SOLDOUT')" ;
+        return this.jdbcTemplate.queryForObject(isAlreadySoldOutQuery, int.class, productId);
+    }
+
+    public int checkBungaePoint(int userId, int usingBungaePoints) {
+        String checkBungaePointQuery = "select exists(select * from Users where Users.id = ? and Users.bungaePoint < usingBungaePoints)";
+        Object[] checkBungaePointParams = new Object[] {userId, usingBungaePoints};
+
+        return this.jdbcTemplate.queryForObject(checkBungaePointQuery, int.class, checkBungaePointParams);
+    }
+
+    public int updateUserBungaePoint(int userId, int usingBungaePoints) {
+        String updateUserBungaePointQuery = "update Users set Users.bungaePoint = Users.bungaePoint - ? where Users.id = ?";
+        Object[] updateUserBungaePointParams = new Object[] {usingBungaePoints, userId};
+
+        return this.jdbcTemplate.queryForObject(updateUserBungaePointQuery, int.class, updateUserBungaePointParams);
     }
 }

@@ -101,6 +101,15 @@ public enum BaseResponseStatus {
     DELETE_USER_ALREADY_DELETED_USER(false,2106, "이미 삭제된 유저입니다"),
     DELETE_USER_EMPTY_REASON_TEST(false,2107, "기타의 경우 삭제이유를 10자이상 작성해주세요"),
 
+    //[Post] payment
+    POST_DEAL_CATEGORY_IS_EMPTY(false, 2120, "deal Cateogory 값이 0 또는 1 값이 아닙니다."),
+    POST_EMPTY_PRODUCT_NAME(false,2121, "상품이름 값이 입력되지 않았습니다."),
+    POST_EMPTY_PRICE(false, 2122, "상품 가격 값이 입력되지 않았습니다."),
+    POST_EMPTY_PAY_METHOD(false, 2123, "결제수단이 입력되지 않았습니다"),
+    POST_WRONG_PAY_METHOD(false, 2124, "이용할 수 없는 결제 수단 입니다"),
+    POST_DISAGREE_PAYMENT(false, 2125, "결제 약관에 동의 하지 않았습니다. 동의 후 이용헤주세요."),
+
+
     DELETED_USER(false,2108, "회원탈퇴한 유저입니다"),
     /**
      * 3000 : Response 오류
@@ -162,6 +171,16 @@ public enum BaseResponseStatus {
     FAILED_TO_DELETE_ALL_SEARCHES(false, 3069, "삭제할 검색어가 없습니다"),
     INCORRENT_USER_OF_SEARCHIDX(false, 3070, "본인의 검색어만 삭제할 수 있습니다"),
     NOT_EXISTS_SEARCH_IDX(false, 3071, "삭제되었거나 존재하지 않는 searchIdx 입니다."),
+
+    //[Post] payment
+    ALREADY_EXIST_ORDER(false, 3100, "이미 존재하는 결제 내역입니다"),
+    NOT_AVALIABLE_SELLER_STATUS(false, 3101, "구매할 수 없는 상점입니다"),
+    PRODUCT_HAS_REPORTS(false, 3102, "해당 상품은 신고 받은 이력이 있습니다"),
+    NOT_AVALIABLE_BUYER_STATUS(false, 3103, "현재 회원의 상태는 구매가 불가능합니다 (탈퇴 또는 정지)"),
+    ALREADY_SOLD_OUT_PRODUCT(false, 3104, "이미 판매된 상품입니다."),
+    USED_BUNGAE_POINTS_WRONG(false, 3105, "회원이 가지고 있는 번개 포인트보다 더 많은 포인트를 사용하였습니다."),
+
+
 
     /**
      * 4000 : Database, Server 오류
