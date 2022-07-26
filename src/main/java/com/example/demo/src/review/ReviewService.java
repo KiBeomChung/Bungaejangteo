@@ -2,6 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.review.model.DeleteReviewReq;
 import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
 import com.example.demo.utils.JwtService;
@@ -58,13 +59,47 @@ public class ReviewService {
         }
     }
 
-    public String modifyReview(int userId, PatchModifyReviewReq patchModifyReviewReq) {
+    public String modifyReview(int userId, PatchModifyReviewReq patchModifyReviewReq) throws BaseException {
 
-        int result = reviewDao.modifyReview(patchModifyReviewReq);
-
-        if(result == 1){
-            return "수정 완료 하였습니다.";
+        if(reviewDao.isExistReview(patchModifyReviewReq) == 0) {
+            throw new BaseException(NOT_EXIST_REVIEW);   //해당 리뷰가 없을 경우
         }
-        else return "수정 실패하였습니다.";
+        if (reviewDao.checkBuyerStatus(userId) == 1) {   // 내가 탈퇴
+            throw new BaseException(DELETED_USER);
+        }
+        if (reviewDao.checkCreatedAt(userId) > 30) {  // 리뷰 기한은 30일 이내로 작성하지 않았을 경우  -> 확인
+            throw new BaseException(EXPIRED_REVIEW_WRITE);
+        }
+        int result = 0;
+        String res = "";
+        try {
+            result = reviewDao.modifyReview(patchModifyReviewReq);
+
+            if (result == 1) {
+                res = "수정 완료 하였습니다.";
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+        return res;
+    }
+
+    public String deleteReview(int userId, DeleteReviewReq deleteReviewReq) throws BaseException {
+
+        String result = "";
+
+        try {
+            reviewDao.deleteReviewImage(deleteReviewReq);
+            if (reviewDao.updateBuySell(deleteReviewReq) == 2) {
+                if (reviewDao.deleteReview(deleteReviewReq) == 1) {
+                    result = "구매한 모든 기록을 삭제했습니다.";
+                    return result;
+                }
+                throw new BaseException(DATABASE_ERROR);
+            }
+            throw new BaseException(DATABASE_ERROR);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

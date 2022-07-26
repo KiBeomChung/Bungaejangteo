@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+
 @Service
 public class ReviewProvider {
 
@@ -24,6 +26,14 @@ public class ReviewProvider {
         this.jwtService = jwtService;
     }
 
+    public int checkUserStatusByUserId(int userId) throws BaseException {
+        try {
+            return reviewDao.checkUserStatusByUserId(userId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public List<GetReviewRes> getReviewRes(int id) throws BaseException {
 
         List<GetReviewRes> getReviewResList = reviewDao.getReviewList(id);
@@ -31,5 +41,4 @@ public class ReviewProvider {
     }
 
 
-    }
-
+}

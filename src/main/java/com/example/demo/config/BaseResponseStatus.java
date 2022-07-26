@@ -189,6 +189,9 @@ public enum BaseResponseStatus {
     EXPIRED_REVIEW_WRITE(false, 3110, "리뷰 작성 기한이 지났습니다."),
     NOT_AVALIABLE_WRITE_SELLER_STATUS(false, 3111, "해당 상점이 리뷰를 작성할 수 있는 상태가 아닙니다."),
 
+    //[Patch] Review
+    NOT_EXIST_REVIEW(false, 3115, "수정할 수 있는 리뷰가 없습니다."),
+
     //[Delete] Users
     DELETED_USER(false,3120, "회원탈퇴한 유저입니다"),
 

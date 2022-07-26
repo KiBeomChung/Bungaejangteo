@@ -2,6 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.review.model.DeleteReviewReq;
 import com.example.demo.src.review.model.GetReviewRes;
 import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
@@ -80,12 +81,29 @@ public class ReviewController {
         return new BaseResponse<>(getReviewRes);
     }
 
+    /**
+     * 리뷰 수정 API
+     * @param patchModifyReviewReq
+     * @return
+     */
     @ResponseBody
     @PatchMapping("")
     public BaseResponse<String> modifyReview(@RequestBody PatchModifyReviewReq patchModifyReviewReq) {
 
+        if(patchModifyReviewReq.getReviewText() == null) {
+            return new BaseResponse<>(EMPTY_REVIEW_TEXT);
+        }
+        if(patchModifyReviewReq.getReviewText().length() == 0 || patchModifyReviewReq.getReviewText().length() > 1000){
+            return new BaseResponse<>(INVALID_REVIEW_TEXT_LENGTH);  // 리뷰 텍스트가 너무 길때
+        }
+        if(patchModifyReviewReq.getReviewScore() > 5 || patchModifyReviewReq.getReviewScore() < 0) {
+            return new BaseResponse<>(INVALID_REVIEW_SCORE);     // 별점을 0~ 5 사이로 안줬을때
+        }
         try {
             int userIdxByJwt = jwtService.getUserIdx();
+            if (reviewProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {
+                return new BaseResponse<>(DELETED_USER);
+            }
 
             String result = reviewService.modifyReview(userIdxByJwt, patchModifyReviewReq);
             return new BaseResponse<>(result);
@@ -93,5 +111,22 @@ public class ReviewController {
             return new BaseResponse<>((exception.getStatus()));
         }
 
+    }
+
+    @ResponseBody
+    @DeleteMapping("")
+    public BaseResponse<String> deleteReview(@RequestBody DeleteReviewReq deleteReviewReq) {
+        // buy, sell 테이블의 리뷰 수정, 리뷰테이블 해당 행 삭제, 리뷰 이미지 테이블의 해당 행 삭제
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (reviewProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {
+                return new BaseResponse<>(DELETED_USER);
+            }
+
+            String result = reviewService.deleteReview(userIdxByJwt, deleteReviewReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 }

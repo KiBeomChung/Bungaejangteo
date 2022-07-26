@@ -1,5 +1,6 @@
 package com.example.demo.src.review;
 
+import com.example.demo.src.review.model.DeleteReviewReq;
 import com.example.demo.src.review.model.GetReviewRes;
 import com.example.demo.src.review.model.PatchModifyReviewReq;
 import com.example.demo.src.review.model.PostRegisterReviewReq;
@@ -74,7 +75,7 @@ public class ReviewDao {
 
     public int registerReviewImg(int lastInsertId, List<String> imageUrl) {
 
-    int registerImgNum = 0;
+        int registerImgNum = 0;
 
         for(String url : imageUrl) {
             String registerReviewImgQuery = "insert into ReviewImage(reviewId, reviewImageUrl) values(?,?)";
@@ -122,8 +123,42 @@ public class ReviewDao {
                 "    reviewScore = ?\n" +
                 "where Review.reviewId = (select tmp.reviewId from (select Review.reviewId from Review where Review.reviewId = ?) as tmp)";
         Object[] modifyReviewParams = new Object[] {patchModifyReviewReq.getReviewText(), patchModifyReviewReq.getReviewScore(),
-        patchModifyReviewReq.getReviewId()};
+                patchModifyReviewReq.getReviewId()};
 
         return this.jdbcTemplate.update(modifyReviewQuery, modifyReviewParams);
+    }
+
+    public int checkUserStatusByUserId(int userId) {
+        String checkUserStatusByUserIdQuery = "select exists(select * from Users where id = ? and status = 'DELETED')";
+        int checkUserStatusByUserIdParams = userId;
+        return this.jdbcTemplate.queryForObject(checkUserStatusByUserIdQuery, int.class, checkUserStatusByUserIdParams);
+    }
+
+    public int isExistReview(PatchModifyReviewReq patchModifyReviewReq) {
+        String isExistReviewQuery = "select exists(select * from Review where Review.reviewId = ?)";
+
+        return this.jdbcTemplate.queryForObject(isExistReviewQuery, int.class, patchModifyReviewReq.getReviewId());
+    }
+
+    public int deleteReviewImage(DeleteReviewReq deleteReviewReq) {
+        String deleteReviewImageQuery = "delete from ReviewImage where ReviewImage.reviewId = ?";
+
+        return this.jdbcTemplate.update(deleteReviewImageQuery, deleteReviewReq.getReviewId());
+    }
+
+    public int updateBuySell(DeleteReviewReq deleteReviewReq) {
+        String updateBuySellQuery = "update Buy as b, Sell as s\n" +
+                "set b.reviewId = null,\n" +
+                "    s.reviewId = null\n" +
+                "where b.connectId = s.sellId and b.reviewId = ? and s.reviewId = ?";
+        Object[] updateBuySellParams = new Object[]{deleteReviewReq.getReviewId(), deleteReviewReq.getReviewId()};
+
+        return this.jdbcTemplate.update(updateBuySellQuery, updateBuySellParams);
+    }
+
+    public int deleteReview(DeleteReviewReq deleteReviewReq) {
+        String deleteReviewQuery = "delete from Review where Review.reviewId = ?";
+
+        return this.jdbcTemplate.update(deleteReviewQuery, deleteReviewReq.getReviewId());
     }
 }
