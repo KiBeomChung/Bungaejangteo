@@ -192,6 +192,9 @@ public enum BaseResponseStatus {
     //[Patch] Review
     NOT_EXIST_REVIEW(false, 3115, "수정할 수 있는 리뷰가 없습니다."),
 
+    //[Patch] Review
+    NOT_EXIST_REVIEW_DELETE(false, 3116,"삭제할 리뷰가 없습니다."),
+
     //[Delete] Users
     DELETED_USER(false,3120, "회원탈퇴한 유저입니다"),
 

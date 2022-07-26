@@ -134,10 +134,10 @@ public class ReviewDao {
         return this.jdbcTemplate.queryForObject(checkUserStatusByUserIdQuery, int.class, checkUserStatusByUserIdParams);
     }
 
-    public int isExistReview(PatchModifyReviewReq patchModifyReviewReq) {
+    public int isExistReview(int reviewId) {
         String isExistReviewQuery = "select exists(select * from Review where Review.reviewId = ?)";
 
-        return this.jdbcTemplate.queryForObject(isExistReviewQuery, int.class, patchModifyReviewReq.getReviewId());
+        return this.jdbcTemplate.queryForObject(isExistReviewQuery, int.class, reviewId);
     }
 
     public int deleteReviewImage(DeleteReviewReq deleteReviewReq) {

@@ -113,10 +113,16 @@ public class ReviewController {
 
     }
 
+    /**
+     * 리뷰 삭제 API
+     * @param deleteReviewReq
+     * @return
+     */
     @ResponseBody
     @DeleteMapping("")
     public BaseResponse<String> deleteReview(@RequestBody DeleteReviewReq deleteReviewReq) {
         // buy, sell 테이블의 리뷰 수정, 리뷰테이블 해당 행 삭제, 리뷰 이미지 테이블의 해당 행 삭제
+
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (reviewProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {

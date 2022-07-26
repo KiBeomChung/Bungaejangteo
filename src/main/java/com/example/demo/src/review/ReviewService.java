@@ -61,7 +61,7 @@ public class ReviewService {
 
     public String modifyReview(int userId, PatchModifyReviewReq patchModifyReviewReq) throws BaseException {
 
-        if(reviewDao.isExistReview(patchModifyReviewReq) == 0) {
+        if(reviewDao.isExistReview(patchModifyReviewReq.getReviewId()) == 0) {
             throw new BaseException(NOT_EXIST_REVIEW);   //해당 리뷰가 없을 경우
         }
         if (reviewDao.checkBuyerStatus(userId) == 1) {   // 내가 탈퇴
@@ -86,8 +86,15 @@ public class ReviewService {
 
     public String deleteReview(int userId, DeleteReviewReq deleteReviewReq) throws BaseException {
 
-        String result = "";
 
+        if(reviewDao.isExistReview(deleteReviewReq.getReviewId()) == 0) {
+            throw new BaseException(NOT_EXIST_REVIEW_DELETE);   //해당 리뷰가 없을 경우
+        }
+        if (reviewDao.checkBuyerStatus(userId) == 1) {   // 내가 탈퇴
+            throw new BaseException(DELETED_USER);
+        }
+
+        String result = "";
         try {
             reviewDao.deleteReviewImage(deleteReviewReq);
             if (reviewDao.updateBuySell(deleteReviewReq) == 2) {
