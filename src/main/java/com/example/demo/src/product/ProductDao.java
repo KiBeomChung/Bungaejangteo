@@ -250,7 +250,32 @@ public class ProductDao {
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
     }
 
+    public int checkUserStatusByUserId(int userId) {
+        String checkUserStatusByUserIdQuery = "select exists(select * from Users where id = ? and status = 'DELETED')";
+        int checkUserStatusByUserIdParams = userId;
+        return this.jdbcTemplate.queryForObject(checkUserStatusByUserIdQuery, int.class, checkUserStatusByUserIdParams);
+    }
 
+    public List<GetRelatedProdcutRes> getRelatedProduct(int userId, int productId) {
+        String getRelatedProductQuery = "select Products.productId, ProductImages.imageUrl, Products.price, Products.name, Products.isSafePayment, ProductTags.tag\n" +
+                "from ProductTags inner join Products on Products.productId = ProductTags.productId\n" +
+                "inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt)a GROUP BY productId) ProductImages on ProductImages.productId = Products.productId\n" +
+                "where ProductTags.tag in (select ProductTags.tag from ProductTags inner join Products on Products.productId = ProductTags.productId and ProductTags.productId = ?);\n";
+
+        return this.jdbcTemplate.query(getRelatedProductQuery,
+                (rs, rowNum) -> new GetRelatedProdcutRes(
+                        rs.getInt("productId"),
+                        rs.getString("imageUrl"),
+                        rs.getInt("price"),
+                        rs.getString("name"),
+                        this.jdbcTemplate.queryForObject("select exists(select * from Likes where userId = ? AND productId = ? and status = 'NORMAL') as isLike",
+                                (rs3, rowNum3) -> new Integer(
+                                        rs3.getInt("isLike")),
+                                userId, rs.getInt("productId")),
+                        rs.getInt("isSafePayment"),
+                        rs.getString("tag")
+                ), productId);
+    }
 
 }
 

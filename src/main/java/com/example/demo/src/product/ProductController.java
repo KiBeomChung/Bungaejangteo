@@ -161,4 +161,20 @@ public class ProductController {
 
     }
 
+    @ResponseBody
+    @GetMapping("/{productIdx}/relation")
+    public BaseResponse<List<GetRelatedProdcutRes>> getRelatedProduct(@PathVariable("productIdx") int productIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (productProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {
+                return new BaseResponse<>(DELETED_USER);
+            }
+
+            List<GetRelatedProdcutRes> getRelatedProdcutRes = productProvider.getRelatedProduct(userIdxByJwt, productIdx);
+            return new BaseResponse<>(getRelatedProdcutRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }
