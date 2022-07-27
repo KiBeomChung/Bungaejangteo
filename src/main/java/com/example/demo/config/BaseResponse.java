@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
+import java.io.IOException;
+
 import static com.example.demo.config.BaseResponseStatus.SUCCESS;
 
 @Getter
@@ -40,6 +42,12 @@ public class BaseResponse<T> {
         this.isSuccess = false;
         this.message = status.getMessage();
         this.code = status.getCode();
+    }
+
+    public BaseResponse(IOException status) {
+        this.isSuccess = false;
+        this.message = status.getMessage();
+        this.code = 2028;
     }
 }
 

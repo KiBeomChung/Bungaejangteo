@@ -1,19 +1,17 @@
 package com.example.demo.src.user;
 
-import com.example.demo.src.product.model.GetProductRes;
-import com.example.demo.src.sms.model.PostSMSReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.product.model.GetProductRes;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
+import java.io.IOException;
 import java.util.List;
-
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.*;
@@ -467,4 +465,46 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+    /**
+     * 카카오 로그인 API
+     * [POST] app/users/kakao-login
+     * @return BaseResponse<String>*/
+    @ResponseBody
+    @PostMapping("/kakao-login")
+    public BaseResponse<PostUserRes>  createKakaoUser(@RequestBody PostKakaoReq postKakaoReq) throws BaseException {
+        System.out.println(postKakaoReq.getAccessToken());
+        if (postKakaoReq.getPhoneNum() == null) {
+            return new BaseResponse<>(EMPTY_PHONENUM);
+        }
+        if (postKakaoReq.getAccessToken() == null) {
+            System.out.println(postKakaoReq.getAccessToken());
+            return new BaseResponse<>(EMPTY_ACCESS_TOKEN);
+        }
+
+        try {
+            if(userProvider.isDeletedUser(postKakaoReq.getPhoneNum()) == 1){
+                return new BaseResponse<>(DELETED_USER);
+            }
+            String name = userService.getKakaoUserInfo(postKakaoReq.getAccessToken());
+            System.out.print("하하"+name);
+            if (userProvider.checkExisttUser(postKakaoReq.getPhoneNum()) == 1 && userProvider.checkExisttKakaoUser(postKakaoReq.getPhoneNum()) == 1) {
+                PostUserReq postUserReq = new PostUserReq(name,postKakaoReq.getPhoneNum());
+                PostUserRes postUserRes = userProvider.logIn(postUserReq);
+                return new BaseResponse<>(postUserRes);
+            }else if  (userProvider.checkExisttUser(postKakaoReq.getPhoneNum()) == 1 && userProvider.checkExisttKakaoUser(postKakaoReq.getPhoneNum()) == 0){
+                PostUserReq postUserReq = new PostUserReq(name,postKakaoReq.getPhoneNum());
+                PostUserRes postUserRes = userProvider.kakaologIn(postUserReq);
+                return new BaseResponse<>(postUserRes);
+            }else {
+                PostUserRes postUserRes = userService.createKakaoUser(name,postKakaoReq.getPhoneNum());
+                return new BaseResponse<>(postUserRes);
+            }
+        } catch (BaseException exception ) {
+            return new BaseResponse<>(exception.getStatus());
+        }catch(IOException exception){
+            return new BaseResponse<>(exception);
+        }
+
+    }
+
 }

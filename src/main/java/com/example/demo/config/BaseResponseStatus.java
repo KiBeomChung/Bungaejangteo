@@ -38,6 +38,8 @@ public enum BaseResponseStatus {
     INCORRECT_TYPEOF_STORENAME(false,2024,"상점 이름은 한국어,영어,숫자만 사용가능합니다"),
     POST_USERS_LONG_INQUIRING(false,2025, "문의 내용이 너무 깁니다. 100자 이내로 작성하세요."),
     POST_USERS_EMPTY_INQUIRING(false, 2026, "문의하시려면 문의 내용을 작성해주세요."),
+    EMPTY_ACCESS_TOKEN(false, 2027, "access Token을 입력해주세요"),
+    //EMPTY_ACCESS_TOKEN(false, 2028, "access Token을 입력해주세요"),
 
     // [PATCH] /users
     PATCH_USERS_EMPTY_STORENAME(false,2050,"상점 이름을 입력해주세요."),

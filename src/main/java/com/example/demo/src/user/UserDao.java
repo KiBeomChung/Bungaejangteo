@@ -38,6 +38,14 @@ public class UserDao {
                 checkphoneNumParams);
 
     }
+    public int checkExisttKakaoUser(String phoneNum) {
+        String checkphoneNumQuery = "select isLinkedWithKakao from Users where phoneNum = ?)";
+        String checkphoneNumParams = phoneNum;
+        return this.jdbcTemplate.queryForObject(checkphoneNumQuery,
+                int.class,
+                checkphoneNumParams);
+
+    }
 
     public int modifyUserName(PatchUserReq patchUserReq) {
         String modifyUserNameQuery = "update UserInfo set userName = ? where userIdx = ? ";
@@ -373,4 +381,20 @@ public class UserDao {
 
         return this.jdbcTemplate.queryForObject(checkInquiringQuery, int.class, checkInquiringParams);
     }
+
+    public int createKakaoUser(String name, String phoneNum) {
+        String createUserQuery = "insert into Users (name, phoneNum, isLinkedWithKakao) VALUES (?,?,?)";
+        Object[] createUserParams = new Object[]{name,phoneNum,1};
+        this.jdbcTemplate.update(createUserQuery, createUserParams);
+
+        String lastInserIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInserIdQuery, int.class);
+    }
+
+    public void setKaKaoLinked(PostUserReq postUserReq){
+        String createUserQuery = "update Users set isLinkedWithKakao = 1  where phoneNum = ?";
+        this.jdbcTemplate.update(createUserQuery, postUserReq.getPhoneNum());
+
+    }
+
 }
