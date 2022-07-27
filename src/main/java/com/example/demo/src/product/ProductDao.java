@@ -260,7 +260,7 @@ public class ProductDao {
         String getRelatedProductQuery = "select Products.productId, ProductImages.imageUrl, Products.price, Products.name, Products.isSafePayment, ProductTags.tag\n" +
                 "from ProductTags inner join Products on Products.productId = ProductTags.productId\n" +
                 "inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt)a GROUP BY productId) ProductImages on ProductImages.productId = Products.productId\n" +
-                "where ProductTags.tag in (select ProductTags.tag from ProductTags inner join Products on Products.productId = ProductTags.productId and ProductTags.productId = ?);\n";
+                "where ProductTags.tag in (select ProductTags.tag from ProductTags inner join Products on Products.productId = ProductTags.productId and ProductTags.productId = ?) order by rand()\n";
 
         return this.jdbcTemplate.query(getRelatedProductQuery,
                 (rs, rowNum) -> new GetRelatedProdcutRes(

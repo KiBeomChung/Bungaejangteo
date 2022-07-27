@@ -1,9 +1,6 @@
 package com.example.demo.src.review;
 
-import com.example.demo.src.review.model.DeleteReviewReq;
-import com.example.demo.src.review.model.GetReviewRes;
-import com.example.demo.src.review.model.PatchModifyReviewReq;
-import com.example.demo.src.review.model.PostRegisterReviewReq;
+import com.example.demo.src.review.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,7 +19,7 @@ public class ReviewDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetReviewRes> getReviewList(int id){
+    public List<GetReviewRes> getReviewList(int id) {
 
         String getReviewListQuery = "select Users.imageUrl, Buy.id, Users.storeName, reviewScore, PayResult.bungaePay, reviewText, Products.name,\n" +
                 "CASE WHEN timestampdiff(second, Review.createdAt, current_timestamp) < 60\n" +
@@ -65,7 +62,7 @@ public class ReviewDao {
     public int registerReview(PostRegisterReviewReq postRegisterReviewReq) {
 
         String registerReviewQuery = "insert into Review(reviewText, reviewScore, productId) values(?,?,?)";
-        Object[] registerReviewParams = new Object[] {postRegisterReviewReq.getReviewText(), postRegisterReviewReq.getReviewScore(), postRegisterReviewReq.getProductId()};
+        Object[] registerReviewParams = new Object[]{postRegisterReviewReq.getReviewText(), postRegisterReviewReq.getReviewScore(), postRegisterReviewReq.getProductId()};
 
         this.jdbcTemplate.update(registerReviewQuery, registerReviewParams);
 
@@ -77,7 +74,7 @@ public class ReviewDao {
 
         int registerImgNum = 0;
 
-        for(String url : imageUrl) {
+        for (String url : imageUrl) {
             String registerReviewImgQuery = "insert into ReviewImage(reviewId, reviewImageUrl) values(?,?)";
             Object[] registerReviewImgParams = new Object[]{lastInsertId, url};
             this.jdbcTemplate.update(registerReviewImgQuery, registerReviewImgParams);
@@ -122,7 +119,7 @@ public class ReviewDao {
                 "set reviewText = ?,\n" +
                 "    reviewScore = ?\n" +
                 "where Review.reviewId = (select tmp.reviewId from (select Review.reviewId from Review where Review.reviewId = ?) as tmp)";
-        Object[] modifyReviewParams = new Object[] {patchModifyReviewReq.getReviewText(), patchModifyReviewReq.getReviewScore(),
+        Object[] modifyReviewParams = new Object[]{patchModifyReviewReq.getReviewText(), patchModifyReviewReq.getReviewScore(),
                 patchModifyReviewReq.getReviewId()};
 
         return this.jdbcTemplate.update(modifyReviewQuery, modifyReviewParams);
@@ -160,5 +157,32 @@ public class ReviewDao {
         String deleteReviewQuery = "delete from Review where Review.reviewId = ?";
 
         return this.jdbcTemplate.update(deleteReviewQuery, deleteReviewReq.getReviewId());
+    }
+
+    public int reportReview(PostReviewReportReq postReviewReportReq) {
+        String reportReviewQuery = "insert into ReviewReports(reportsCategory, reviewId) values(?,?)";
+        Object[] reportReviewParams = new Object[]{postReviewReportReq.getReportCategory(), postReviewReportReq.getReviewId()};
+
+        return this.jdbcTemplate.update(reportReviewQuery, reportReviewParams);
+    }
+
+    public int checkReportAvailable(int userId, int reviewId) {
+        String checkReportAvailableQuery = "select exists(select * from Review inner join Products on Products.productId = Review.productId and Review.reviewId = ? where Products.userId = ?)";
+        Object[] checkReportAvailableParams = new Object[]{userId, reviewId};
+
+        return this.jdbcTemplate.queryForObject(checkReportAvailableQuery, int.class, checkReportAvailableParams);
+    }
+
+    public int isAlreadyReport(int reviewId) {
+        String isAlreadyReportQuery = "select exists(select * from ReviewReports where reviewId = ?)";
+
+        return this.jdbcTemplate.queryForObject(isAlreadyReportQuery, int.class, reviewId);
+    }
+
+    public int deleteReviewReport(int reviewId) {
+        String deleteReviewReportQuery = "delete from ReviewReports where ReviewReports.reviewId = ?";
+
+        return this.jdbcTemplate.update(deleteReviewReportQuery, reviewId);
+
     }
 }
