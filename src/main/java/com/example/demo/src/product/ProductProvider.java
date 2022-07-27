@@ -76,5 +76,19 @@ public class ProductProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int checkUserStatusByUserId(int userId) throws BaseException {
+        try {
+            return productDao.checkUserStatusByUserId(userId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetRelatedProdcutRes> getRelatedProduct(int userId, int productIdx) {
+
+        List<GetRelatedProdcutRes> getRelatedProductRes = productDao.getRelatedProduct(userId, productIdx);
+        return getRelatedProductRes;
+    }
 }
 
