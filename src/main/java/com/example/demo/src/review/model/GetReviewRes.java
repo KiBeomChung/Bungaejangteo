@@ -1,22 +1,23 @@
 package com.example.demo.src.review.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Timestamp;
+import javax.annotation.Nullable;
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GetReviewRes {
 
-    private String imageUrl;
-    private int id; //구매자 id
-    private String storeName;
-    private int reviewScore;
-    private String bungaePay;
-    private String reviewText;
-    private String name; //상품 명
-    private String createdAt;
+    @NonNull private int reviewId;
+    @NonNull private String imageUrl;
+    @NonNull private int id; //구매자 id
+    @NonNull private String storeName;
+    @NonNull private int reviewScore;
+    @NonNull private String reviewText;
+    @NonNull private String name; //상품 명
+    @NonNull private String createdAt;
+    private GetCommentRes comment;
+    private List<GetReviewImageRes> reviewImages;
 }

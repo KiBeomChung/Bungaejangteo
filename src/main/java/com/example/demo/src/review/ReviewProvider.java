@@ -37,6 +37,19 @@ public class ReviewProvider {
     public List<GetReviewRes> getReviewRes(int id) throws BaseException {
 
         List<GetReviewRes> getReviewResList = reviewDao.getReviewList(id);
+
+        int i = 0;
+        for(GetReviewRes g : getReviewResList) {
+            System.out.println(i++);
+            if(reviewDao.checkComment(g.getReviewId()) == 1) {
+                // 만일 해당 리뷰에 대한 코멘트가 있으면
+                g.setComment(reviewDao.getReviewComment(g.getReviewId(), id));
+            }
+            if(reviewDao.checkImage(g.getReviewId()) != 0){
+                g.setReviewImages(reviewDao.getReviewImages(g.getReviewId()));
+            }
+        }
+
         return getReviewResList;
     }
 

@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -21,7 +20,26 @@ public class ReviewDao {
 
     public List<GetReviewRes> getReviewList(int id) {
 
-        String getReviewListQuery = "select Users.imageUrl, Buy.id, Users.storeName, reviewScore, PayResult.bungaePay, reviewText, Products.name,\n" +
+        String getCommentQuery = "select Users.storeName, ReviewComment.commentText,CASE WHEN timestampdiff(second, ReviewComment.createdAt, current_timestamp) < 60\n" +
+                "                                THEN concat(timestampdiff(second,ReviewComment.createdAt, current_timestamp), ' 초 전')\n" +
+                "                            WHEN timestampdiff(minute, ReviewComment.createdAt, current_timestamp) < 60\n" +
+                "                                THEN concat(timestampdiff(minute, ReviewComment.createdAt, current_timestamp), ' 분 전')\n" +
+                "                           WHEN timestampdiff(hour,ReviewComment.createdAt, current_timestamp) < 24\n" +
+                "                               THEN concat(timestampdiff(hour,ReviewComment.createdAt, current_timestamp), ' 시간 전')\n" +
+                "                            WHEN timestampdiff(day,ReviewComment.createdAt, current_timestamp) < 7\n" +
+                "                                THEN concat(timestampdiff(day,ReviewComment.createdAt, current_timestamp), ' 일 전')\n" +
+                "                            WHEN timestampdiff(week,ReviewComment.createdAt, current_timestamp) < 5\n" +
+                "                                THEN concat(timestampdiff(week,ReviewComment.createdAt, current_timestamp), ' 주 전')\n" +
+                "                            WHEN timestampdiff(month,ReviewComment.createdAt, current_timestamp) < 12\n" +
+                "                                THEN concat(timestampdiff(month,ReviewComment.createdAt, current_timestamp), ' 달 전')\n" +
+                "                            WHEN timestampdiff(year,ReviewComment.createdAt, current_timestamp) < 1000\n" +
+                "                                THEN concat(timestampdiff(year,ReviewComment.createdAt, current_timestamp), ' 년 전')\n" +
+                "                           END AS 'createdAt'\n" +
+                "from Review inner join ReviewComment on Review.reviewId = ReviewComment.reviewId\n" +
+                "inner join Users on Users.id = ReviewComment.id\n" +
+                "where ReviewComment.id = ?  and ReviewComment.reviewId = ?";
+
+        String getReviewListQuery = "select Review.reviewId, Users.imageUrl, Buy.id, Users.storeName, reviewScore, reviewText, Products.name,\n" +
                 "CASE WHEN timestampdiff(second, Review.createdAt, current_timestamp) < 60\n" +
                 "                THEN concat(timestampdiff(second,Review.createdAt, current_timestamp), ' 초 전')\n" +
                 "            WHEN timestampdiff(minute, Review.createdAt, current_timestamp) < 60\n" +
@@ -41,22 +59,76 @@ public class ReviewDao {
                 "inner join Buy on Review.reviewId = Buy.reviewId\n" +
                 "inner join Users on Buy.id = Users.id\n" +
                 "inner join Products on Products.productId = Review.productId\n" +
-                "inner join PayResult on Buy.buyId = PayResult.buyId\n" +
                 "inner join Sell on Sell.reviewId = Review.reviewId\n" +
                 "and Sell.id = ?\n" +
                 "where Review.status = 'active'";
         int getReviewListParam = id;
         return this.jdbcTemplate.query(getReviewListQuery,
-                (rs, rowNum) -> new GetReviewRes(
-                        rs.getString("imageUrl"),
-                        rs.getInt("id"),
+                   (rs, rowNum) -> new GetReviewRes(
+                           rs.getInt("reviewId"),
+                           rs.getString("imageUrl"),
+                           rs.getInt("id"),
+                           rs.getString("storeName"),
+                           rs.getInt("reviewScore"),
+                           rs.getString("reviewText"),
+                           rs.getString("name"),
+                           rs.getString("createdAt")
+                   ), getReviewListParam);
+
+    }
+
+    public int checkComment(int reviewId) {
+        String checkCommentQuery = "select exists(select * from ReviewComment inner join Review \n" +
+                "    on Review.reviewId = ReviewComment.reviewId where Review.reviewId = ?)";
+
+        return this.jdbcTemplate.queryForObject(checkCommentQuery, int.class, reviewId);
+    }
+
+    public int checkImage(int reviewId) {
+        String checkImageQuery = "select exists(select * from ReviewImage where ReviewImage.reviewId = ?)";
+        return this.jdbcTemplate.queryForObject(checkImageQuery, int.class, reviewId);
+
+    }
+
+    public GetCommentRes getReviewComment(int reviewId, int id) {
+        String getCommentQuery = "select Users.storeName, ReviewComment.commentText,CASE WHEN timestampdiff(second, ReviewComment.createdAt, current_timestamp) < 60\n" +
+                "                                THEN concat(timestampdiff(second,ReviewComment.createdAt, current_timestamp), ' 초 전')\n" +
+                "                            WHEN timestampdiff(minute, ReviewComment.createdAt, current_timestamp) < 60\n" +
+                "                                THEN concat(timestampdiff(minute, ReviewComment.createdAt, current_timestamp), ' 분 전')\n" +
+                "                           WHEN timestampdiff(hour,ReviewComment.createdAt, current_timestamp) < 24\n" +
+                "                               THEN concat(timestampdiff(hour,ReviewComment.createdAt, current_timestamp), ' 시간 전')\n" +
+                "                            WHEN timestampdiff(day,ReviewComment.createdAt, current_timestamp) < 7\n" +
+                "                                THEN concat(timestampdiff(day,ReviewComment.createdAt, current_timestamp), ' 일 전')\n" +
+                "                            WHEN timestampdiff(week,ReviewComment.createdAt, current_timestamp) < 5\n" +
+                "                                THEN concat(timestampdiff(week,ReviewComment.createdAt, current_timestamp), ' 주 전')\n" +
+                "                            WHEN timestampdiff(month,ReviewComment.createdAt, current_timestamp) < 12\n" +
+                "                                THEN concat(timestampdiff(month,ReviewComment.createdAt, current_timestamp), ' 달 전')\n" +
+                "                            WHEN timestampdiff(year,ReviewComment.createdAt, current_timestamp) < 1000\n" +
+                "                                THEN concat(timestampdiff(year,ReviewComment.createdAt, current_timestamp), ' 년 전')\n" +
+                "                           END AS 'createdAt'\n" +
+                "from Review inner join ReviewComment on Review.reviewId = ReviewComment.reviewId\n" +
+                "inner join Users on Users.id = ReviewComment.id\n" +
+                "where ReviewComment.id = ?  and ReviewComment.reviewId = ?";
+
+        Object[] getCommentParams = new Object[]{id, reviewId};
+
+        return this.jdbcTemplate.queryForObject(getCommentQuery,
+                (rs, rowNum) -> new GetCommentRes(
                         rs.getString("storeName"),
-                        rs.getInt("reviewScore"),
-                        rs.getString("bungaePay"),
-                        rs.getString("reviewText"),
-                        rs.getString("name"),
+                        rs.getString("commentText"),
                         rs.getString("createdAt")
-                ), getReviewListParam);
+                ), getCommentParams);
+    }
+
+    public List<GetReviewImageRes> getReviewImages(int reviewId) {
+        String getReviewImagesQuery = "select Review.reviewId, ReviewImage.reviewImageUrl\n" +
+                "from Review inner join ReviewImage on Review.reviewId = ReviewImage.reviewId\n" +
+                "where ReviewImage.reviewId = ?";
+        return this.jdbcTemplate.query(getReviewImagesQuery,
+                (rs, rowNum) -> new GetReviewImageRes(
+                        rs.getInt("reviewId"),
+                        rs.getString("reviewImageUrl")
+                ), reviewId);
     }
 
     public int registerReview(PostRegisterReviewReq postRegisterReviewReq) {
@@ -83,9 +155,14 @@ public class ReviewDao {
         return registerImgNum;
     }
 
-    public int checkCreatedAt(int userId) {
-        String checkCreatedAtQuery = "select timestampdiff(day, OrderInfo.createdAt, current_timestamp) from OrderInfo where OrderInfo.id = ? ";
-        return this.jdbcTemplate.queryForObject(checkCreatedAtQuery, int.class, userId);
+    public int checkCreatedAt(int productId) {
+        String checkCreatedAtQuery = "select timestampdiff(day, OrderInfo.createdAt, current_timestamp) from OrderInfo where OrderInfo.productId = ? ";
+        return this.jdbcTemplate.queryForObject(checkCreatedAtQuery, int.class, productId);
+    }
+
+    public int checkCreatedAt2(int reviewId) {
+        String checkCreatedAtQuery = "select timestampdiff(day, OrderInfo.createdAt, current_timestamp) from OrderInfo inner join Review on Review.reviewId = OrderInfo.reviewId and Review.reviewId = ?";
+        return this.jdbcTemplate.queryForObject(checkCreatedAtQuery, int.class, reviewId);
     }
 
     public int checkSellerStatus(int productId) {

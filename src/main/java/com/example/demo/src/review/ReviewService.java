@@ -39,7 +39,7 @@ public class ReviewService {
         if (reviewDao.isAlreadyWriting(postRegisterReviewReq.getProductId()) != 0) {
             throw new BaseException(ALREADY_WRITING_REVIEW);  // 이미 작성했을 경우  -> 확인
         }
-        if (reviewDao.checkCreatedAt(userId) > 30) {  // 리뷰 기한은 30일 이내로 작성하지 않았을 경우  -> 확인
+        if (reviewDao.checkCreatedAt(postRegisterReviewReq.getProductId()) > 30) {  // 리뷰 기한은 30일 이내로 작성하지 않았을 경우  -> 확인
             throw new BaseException(EXPIRED_REVIEW_WRITE);
         }
 
@@ -67,7 +67,7 @@ public class ReviewService {
         if (reviewDao.checkBuyerStatus(userId) == 1) {   // 내가 탈퇴
             throw new BaseException(DELETED_USER);
         }
-        if (reviewDao.checkCreatedAt(userId) > 30) {  // 리뷰 기한은 30일 이내로 작성하지 않았을 경우  -> 확인
+        if (reviewDao.checkCreatedAt2(patchModifyReviewReq.getReviewId()) > 30) {  // 리뷰 기한은 30일 이내로 작성하지 않았을 경우  -> 확인
             throw new BaseException(EXPIRED_REVIEW_WRITE);
         }
         int result = 0;
@@ -142,7 +142,7 @@ public class ReviewService {
 
     public String registerComment(int userId, PostRegisterCommentReq postRegisterCommentReq) throws BaseException {
 
-        if (reviewDao.checkCreatedAt(userId) > 30) {         //30일이 지났을경우
+        if (reviewDao.checkCreatedAt2(postRegisterCommentReq.getReviewId()) > 30) {         //30일이 지났을경우
             throw new BaseException(EXPIRED_REVIEW_WRITE);
         }
         if (reviewDao.isExistReview(postRegisterCommentReq.getReviewId()) == 0) {
