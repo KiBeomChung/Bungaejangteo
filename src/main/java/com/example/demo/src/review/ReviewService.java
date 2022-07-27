@@ -1,12 +1,10 @@
 package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.product.model.PostReportReq;
-import com.example.demo.src.review.model.DeleteReviewReq;
-import com.example.demo.src.review.model.PatchModifyReviewReq;
-import com.example.demo.src.review.model.PostRegisterReviewReq;
-import com.example.demo.src.review.model.PostReviewReportReq;
+import com.example.demo.src.review.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +98,8 @@ public class ReviewService {
         try {
             reviewDao.deleteReviewImage(deleteReviewReq);
             if (reviewDao.updateBuySell(deleteReviewReq) == 2){
-                if (reviewDao.deleteReviewReport(deleteReviewReq.getReviewId()) == 1 && reviewDao.deleteReview(deleteReviewReq) == 1) {
+                reviewDao.deleteReviewReport(deleteReviewReq.getReviewId());
+                if (reviewDao.deleteReview(deleteReviewReq) == 1) {
                     result = "리뷰 삭제를 완료했습니다.";
                     return result;
                 }
@@ -140,4 +139,32 @@ public class ReviewService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public String registerComment(int userId, PostRegisterCommentReq postRegisterCommentReq) throws BaseException {
+
+        if (reviewDao.checkCreatedAt(userId) > 30) {         //30일이 지났을경우
+            throw new BaseException(EXPIRED_REVIEW_WRITE);
+        }
+        if (reviewDao.isExistReview(postRegisterCommentReq.getReviewId()) == 0) {
+            throw new BaseException(NOT_EXIST_REVIEW_DELETE);   //해당 리뷰가 없을 경우
+        }
+        if(reviewDao.isAlreadyComment(postRegisterCommentReq.getReviewId(), userId) == 1) {
+            throw new BaseException(ALREADY_EXIST_COMMENT);   //이미 댓글을 남겼을 경우
+        }
+
+        String result = "";
+
+        try {
+            int res = reviewDao.registerComment(userId, postRegisterCommentReq);
+            if (res == 1) {
+                result = "해당 리뷰에 댓글을 남겼습니다.";
+                return result;
+            } else {
+                throw new BaseException(DATABASE_ERROR);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
+

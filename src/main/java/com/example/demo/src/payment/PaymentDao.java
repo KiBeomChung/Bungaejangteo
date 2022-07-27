@@ -101,7 +101,14 @@ public class PaymentDao {
         Object[] storeOrderInfoParams = new Object[]{userId, productId, postOrderInfoReq.getDealCategory(), postOrderInfoReq.getProductName(), postOrderInfoReq.getUsingBungaePoint(),
                 postOrderInfoReq.getFinalPrice(), postOrderInfoReq.getBungaePay(), postOrderInfoReq.getPayMethod(), postOrderInfoReq.getIsAgree()};
 
-        return this.jdbcTemplate.update(storeOrderInfoQuery, storeOrderInfoParams);
+        this.jdbcTemplate.update(storeOrderInfoQuery, storeOrderInfoParams);
+
+        String lastInsertIdStr = "select last_insert_id()";
+        String result = this.jdbcTemplate.queryForObject(lastInsertIdStr, String.class);
+        int lastInsertId = Integer.parseInt(result);
+
+        return lastInsertId;
+
     }
 
     public int changeProductState(int productId) {
@@ -109,10 +116,10 @@ public class PaymentDao {
         return this.jdbcTemplate.update(changeProductStateQuery, productId);
     }
 
-    public int storeBuySellInfo(int userId, int productId) {
+    public int storeBuySellInfo(int userId, int productId, int lastInsert) {
 
-        String storeSellInfoQuery = "insert into Sell(id) select Products.userId from Products where Products.productId = ?";
-        this.jdbcTemplate.update(storeSellInfoQuery, productId);
+        String storeSellInfoQuery = "insert into Sell(id, orderId) values((select Products.userId from Products where Products.productId = ?), ?)";
+        this.jdbcTemplate.update(storeSellInfoQuery, productId, lastInsert);
 
         String lastInsertIdStr = "select last_insert_id()";
         String result = this.jdbcTemplate.queryForObject(lastInsertIdStr, String.class);

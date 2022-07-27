@@ -185,4 +185,18 @@ public class ReviewDao {
         return this.jdbcTemplate.update(deleteReviewReportQuery, reviewId);
 
     }
+
+    public int registerComment(int id, PostRegisterCommentReq postRegisterCommentReq) {
+        String registerCommentQuery = "insert into ReviewComment(commentText, reviewId, id) values(?, ?, ?)";
+        Object[] registerCommentParams = new Object[] {postRegisterCommentReq.getCommentText(), postRegisterCommentReq.getReviewId(), id};
+
+        return this.jdbcTemplate.update(registerCommentQuery, registerCommentParams);
+    }
+
+    public int isAlreadyComment(int reviewId, int userId) {
+        String isAlreadyCommentQuery = "select exists(select * from ReviewComment where reviewId = ? and id = ?)" ;
+        Object[] isAlreadyCommentParams = new Object[] {reviewId, userId};
+
+        return this.jdbcTemplate.queryForObject(isAlreadyCommentQuery, int.class, isAlreadyCommentParams);
+    }
 }

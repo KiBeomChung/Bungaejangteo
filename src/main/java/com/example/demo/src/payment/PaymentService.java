@@ -55,18 +55,18 @@ public class PaymentService {
                 throw new BaseException(USED_BUNGAE_POINTS_WRONG);    // 자신이 가지고 있는 번개포인트 보다 더 사용했을 경우
             }
 
-            int isStored = paymentDao.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq);
 
-            if (isStored == 1) {
-                result = "판매내역 저장완료하였습니다.";
-                paymentDao.changeProductState(productId); // 상품 상태 변경 메소드
-                // 변경에 실팼을 경우
-                paymentDao.storeBuySellInfo(userIdxByJwt, productId); // 판매, 구매 테이블에 기록
-                // 기록에 실패했을 경우
-                if(postOrderInfoReq.getUsingBungaePoint() != 0) {
-                    paymentDao.updateUserBungaePoint(userIdxByJwt, postOrderInfoReq.getUsingBungaePoint());
-                }
+            int lastInsertId = paymentDao.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq);
+
+            result = "판매내역 저장완료하였습니다.";
+            paymentDao.changeProductState(productId); // 상품 상태 변경 메소드
+            // 변경에 실팼을 경우
+            paymentDao.storeBuySellInfo(userIdxByJwt, productId, lastInsertId); // 판매, 구매 테이블에 기록
+            // 기록에 실패했을 경우
+            if(postOrderInfoReq.getUsingBungaePoint() != 0) {
+                paymentDao.updateUserBungaePoint(userIdxByJwt, postOrderInfoReq.getUsingBungaePoint());
             }
+
 
         } else if (postOrderInfoReq.getDealCategory() == 1) {
             //paymentDao.storeOrderInfo(userIdxByJwt, productId, postOrderInfoReq); // 택배거래일 경우 메소드 만들어야함

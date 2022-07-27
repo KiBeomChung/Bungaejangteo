@@ -118,6 +118,10 @@ public enum BaseResponseStatus {
     INVALID_REVIEW_SCORE(false, 2132, "리뷰 별점은 0 ~ 5점 사이로 줘야 합니다."),
     ALREADY_WRITING_REVIEW(false, 2133, "이미 해당 상품에 대한 리뷰를 작성했습니다."),
     NOT_PROPER_CATEGORY(false, 2134, "신고 유형을 잘못 입력하였습니다."),
+    EMPTY_COMMENT_TEXT(false, 2135, "댓글을 달려면 내용을 작성해야 합니다."),
+    INVALID_COMMENT_LENGTH(false,2136, "댓글은 100자를 넘을 수 없습니다."),
+    ALREADY_EXIST_COMMENT(false, 2137, "이미 해당 리뷰에 댓글을 남겼습니다"),
+
 
 
     /**

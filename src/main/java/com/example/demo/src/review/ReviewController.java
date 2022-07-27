@@ -162,4 +162,29 @@ public class ReviewController {
         }
 
     }
+
+    @ResponseBody
+    @PostMapping("comments")
+    public BaseResponse<String> registerComment(@RequestBody PostRegisterCommentReq postRegisterCommentReq) {
+
+        //댓글 텍스트가 없을 경우
+        if(postRegisterCommentReq.getCommentText() == null) {
+            return new BaseResponse<>(EMPTY_COMMENT_TEXT);
+        }
+        if(postRegisterCommentReq.getCommentText().length() > 100) {
+            return new BaseResponse<>(INVALID_COMMENT_LENGTH);
+        }
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (reviewProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {
+                return new BaseResponse<>(DELETED_USER);
+            }
+            String result = reviewService.registerComment(userIdxByJwt, postRegisterCommentReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
