@@ -511,4 +511,28 @@ public class UserController {
 
     }
 
+    /**
+     *검색 - 검색 - 검색어 엔터치기 전에 상점 검색
+     * [GET] /app/users/search
+     * @return BaseResponse<List<GetSearchStoreRes>>
+     */
+    @GetMapping("/search")
+    public BaseResponse<List<GetSearchStoreRes>> getSearchStore(@RequestParam(value = "searchword") String searchword) {
+        if(searchword.equals("")){
+            return new BaseResponse<>(EMPTY_SEARCHWORD);
+        }
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            List<GetSearchStoreRes> result = userProvider.getSearchStore(userIdxByJwt,searchword);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
 }

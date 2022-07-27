@@ -397,4 +397,20 @@ public class UserDao {
 
     }
 
+    public List<GetSearchStoreRes> getSearchStore(int userIdx, String searchword) {
+        String getSearchStoreQuery = "select Users.id, Users.storeName, Users.imageUrl,(select count(*) as followerNum from Following where Following.followingId = Users.id )as followerNum,(select count(*) from Products where Users.id = Products.userId ) as productNum\n" +
+                "from Users\n" +
+                "where storeName like ?";
+        return this.jdbcTemplate.query(getSearchStoreQuery,
+                (rs, rowNum) -> new GetSearchStoreRes(
+                        rs.getInt("Users.id"),
+                        rs.getString("Users.storeName"),
+                        rs.getString("Users.imageUrl"),
+                        rs.getInt("followerNum"),
+                        rs.getInt("productNum")
+                        ),
+                '%'+searchword+'%');
+    }
+
+
 }
