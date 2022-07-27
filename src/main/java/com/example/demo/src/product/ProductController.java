@@ -1,20 +1,19 @@
 package com.example.demo.src.product;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.product.model.*;
 import com.example.demo.utils.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.*;
-
-
 
 import java.util.List;
+
+import static com.example.demo.config.BaseResponseStatus.*;
+import static com.example.demo.utils.ValidationRegex.*;
 
 
 @RestController
@@ -178,6 +177,28 @@ public class ProductController {
             List<GetRelatedProdcutRes> getRelatedProdcutRes = productProvider.getRelatedProduct(userIdxByJwt, productIdx);
             return new BaseResponse<>(getRelatedProdcutRes);
         } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     *검색 - 검색어 엔터치기 전에 상품 검색
+     * [GET] /app/products/search?searchword=
+     * @return BaseResponse<List<String>>
+     */
+    @GetMapping("/search")
+    public BaseResponse<List<String>> getProductSearchWord(@RequestParam(value = "searchword") String searchword) {
+        if(searchword.equals("")){
+            return new BaseResponse<>(EMPTY_SEARCHWORD);
+        }
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (productProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            List<String> result = productProvider.getProductSearchWord(searchword);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
     }

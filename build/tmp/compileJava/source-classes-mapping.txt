@@ -2,6 +2,8 @@ com/example/demo/src/like/model/PostCollectionReq.java
  com.example.demo.src.like.model.PostCollectionReq
 com/example/demo/src/brand/BrandProvider.java
  com.example.demo.src.brand.BrandProvider
+com/example/demo/src/review/model/PostReviewReportReq.java
+ com.example.demo.src.review.model.PostReviewReportReq
 com/example/demo/src/review/ReviewDao.java
  com.example.demo.src.review.ReviewDao
 com/example/demo/src/user/model/PatchProductStateReq.java
@@ -72,6 +74,8 @@ com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
 com/example/demo/src/review/model/PostRegisterReviewReq.java
  com.example.demo.src.review.model.PostRegisterReviewReq
+com/example/demo/src/user/model/GetSearchStoreRes.java
+ com.example.demo.src.user.model.GetSearchStoreRes
 com/example/demo/src/sms/model/PostSMSReq.java
  com.example.demo.src.sms.model.PostSMSReq
 com/example/demo/src/product/model/storeInfo.java

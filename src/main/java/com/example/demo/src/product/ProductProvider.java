@@ -2,20 +2,19 @@ package com.example.demo.src.product;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.product.model.*;
+import com.example.demo.src.product.model.GetDetailProductRes;
 import com.example.demo.src.product.model.GetProductRes;
+import com.example.demo.src.product.model.GetRelatedProdcutRes;
 import com.example.demo.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 import static com.example.demo.config.BaseResponseStatus.DELETED_USER;
-
-import java.util.List;
 
 @Service
 public class ProductProvider {
@@ -89,6 +88,16 @@ public class ProductProvider {
 
         List<GetRelatedProdcutRes> getRelatedProductRes = productDao.getRelatedProduct(userId, productIdx);
         return getRelatedProductRes;
+    }
+
+    public List<String> getProductSearchWord(String searchword) throws BaseException {
+        try {
+            List<String> getProductSearchWordRes = productDao.getProductSearchWord(searchword);
+            return getProductSearchWordRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
 

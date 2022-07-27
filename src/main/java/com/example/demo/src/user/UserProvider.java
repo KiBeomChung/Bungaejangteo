@@ -171,9 +171,6 @@ public class UserProvider {
     }
 
     public List<GetSearchStoreRes> getSearchStore(int userIdx,String searchword) throws BaseException {
-        if (isDeletedUser(userIdx) == 1){
-            throw new BaseException(DELETED_USER);
-        }
         try {
             List<GetSearchStoreRes> getSearchStoreRes = userDao.getSearchStore(userIdx,searchword);
             return getSearchStoreRes;

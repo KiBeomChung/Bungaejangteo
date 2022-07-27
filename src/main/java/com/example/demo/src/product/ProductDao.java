@@ -1,18 +1,16 @@
 package com.example.demo.src.product;
 
 //import com.example.demo.src.product.model*
+
 import com.example.demo.config.BaseException;
 import com.example.demo.src.product.model.*;
-import com.example.demo.src.user.model.GetUserRes;
-import com.example.demo.src.user.model.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -275,6 +273,24 @@ public class ProductDao {
                         rs.getInt("isSafePayment"),
                         rs.getString("tag")
                 ), productId);
+    }
+
+    public List<String> getProductSearchWord(String searchword) {
+        String getSearchStoreQuery = "SELECT concat(SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, 1),' ',-2),SUBSTRING_INDEX(SUBSTRING_INDEX(name, SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, 1),' ',-2), -1),' ',2)) as searchWord\n" +
+                "from Products\n" +
+                "where name like ?  and SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, 1),' ',-2) != ''\n" +
+                "UNION\n" +
+                "select concat(SUBSTRING_INDEX(SUBSTRING_INDEX(name, SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, -1),' ',2), 1),' ',-2),SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, -1),' ',2)) as backSearchWord\n" +
+                "from Products\n" +
+                "where name like ?  and SUBSTRING_INDEX(SUBSTRING_INDEX(name, ?, -1),' ',2) != '';";
+
+        Object[] getSearchStoreParams = new Object[]{searchword,searchword,'%'+searchword+'%',searchword,searchword,searchword,'%'+searchword+'%',searchword};
+        return this.jdbcTemplate.query(getSearchStoreQuery,
+                (rs, rowNum) -> new String(
+                        rs.getString("searchWord")
+                ),
+                getSearchStoreParams);
+
     }
 
 }
