@@ -2,10 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.review.model.DeleteReviewReq;
-import com.example.demo.src.review.model.GetReviewRes;
-import com.example.demo.src.review.model.PatchModifyReviewReq;
-import com.example.demo.src.review.model.PostRegisterReviewReq;
+import com.example.demo.src.review.model.*;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +36,7 @@ public class ReviewController {
 
     /**
      * 구매상품에 대한 리뷰 작성
+     *
      * @param postRegisterReviewReq
      * @return
      */
@@ -46,13 +44,13 @@ public class ReviewController {
     @PostMapping("")
     public BaseResponse<String> registerReview(@RequestBody PostRegisterReviewReq postRegisterReviewReq) {
 
-        if(postRegisterReviewReq.getReviewText() == null) {  //리뷰 텍스트가 null 일 경우
+        if (postRegisterReviewReq.getReviewText() == null) {  //리뷰 텍스트가 null 일 경우
             return new BaseResponse<>(EMPTY_REVIEW_TEXT);
         }
-        if(postRegisterReviewReq.getReviewText().length() == 0 || postRegisterReviewReq.getReviewText().length() > 1000){
+        if (postRegisterReviewReq.getReviewText().length() == 0 || postRegisterReviewReq.getReviewText().length() > 1000) {
             return new BaseResponse<>(INVALID_REVIEW_TEXT_LENGTH);  // 리뷰 텍스트가 너무 길때
         }
-        if(postRegisterReviewReq.getReviewScore() > 5 || postRegisterReviewReq.getReviewScore() < 0) {
+        if (postRegisterReviewReq.getReviewScore() > 5 || postRegisterReviewReq.getReviewScore() < 0) {
             return new BaseResponse<>(INVALID_REVIEW_SCORE);     // 별점을 0~ 5 사이로 안줬을때
         }
 
@@ -83,6 +81,7 @@ public class ReviewController {
 
     /**
      * 리뷰 수정 API
+     *
      * @param patchModifyReviewReq
      * @return
      */
@@ -90,13 +89,13 @@ public class ReviewController {
     @PatchMapping("")
     public BaseResponse<String> modifyReview(@RequestBody PatchModifyReviewReq patchModifyReviewReq) {
 
-        if(patchModifyReviewReq.getReviewText() == null) {
+        if (patchModifyReviewReq.getReviewText() == null) {
             return new BaseResponse<>(EMPTY_REVIEW_TEXT);
         }
-        if(patchModifyReviewReq.getReviewText().length() == 0 || patchModifyReviewReq.getReviewText().length() > 1000){
+        if (patchModifyReviewReq.getReviewText().length() == 0 || patchModifyReviewReq.getReviewText().length() > 1000) {
             return new BaseResponse<>(INVALID_REVIEW_TEXT_LENGTH);  // 리뷰 텍스트가 너무 길때
         }
-        if(patchModifyReviewReq.getReviewScore() > 5 || patchModifyReviewReq.getReviewScore() < 0) {
+        if (patchModifyReviewReq.getReviewScore() > 5 || patchModifyReviewReq.getReviewScore() < 0) {
             return new BaseResponse<>(INVALID_REVIEW_SCORE);     // 별점을 0~ 5 사이로 안줬을때
         }
         try {
@@ -115,6 +114,7 @@ public class ReviewController {
 
     /**
      * 리뷰 삭제 API
+     *
      * @param deleteReviewReq
      * @return
      */
@@ -134,5 +134,32 @@ public class ReviewController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    /**
+     * 리뷰 신고 API
+     * @param postReviewReportReq
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("reports")
+    public BaseResponse<String> reportReview(@RequestBody PostReviewReportReq postReviewReportReq) {
+
+//        if(postReviewReportReq.getReportCategory() != 0 || postReviewReportReq.getReportCategory() != 1 || postReviewReportReq.getReportCategory() !=2) {
+//            return new BaseResponse<>(NOT_PROPER_CATEGORY);
+//        }
+
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (reviewProvider.checkUserStatusByUserId(userIdxByJwt) == 1) {
+                return new BaseResponse<>(DELETED_USER);
+            }
+            String result = reviewService.reportReview(userIdxByJwt, postReviewReportReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 }

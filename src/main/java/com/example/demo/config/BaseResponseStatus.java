@@ -116,6 +116,7 @@ public enum BaseResponseStatus {
     INVALID_REVIEW_TEXT_LENGTH(false, 2131, "리뷰 내용은 빈칸이거나 1000자를 넘으면 안됩니다."),
     INVALID_REVIEW_SCORE(false, 2132, "리뷰 별점은 0 ~ 5점 사이로 줘야 합니다."),
     ALREADY_WRITING_REVIEW(false, 2133, "이미 해당 상품에 대한 리뷰를 작성했습니다."),
+    NOT_PROPER_CATEGORY(false, 2134, "신고 유형을 잘못 입력하였습니다."),
 
 
     /**
@@ -190,11 +191,11 @@ public enum BaseResponseStatus {
     //[Post] Review
     EXPIRED_REVIEW_WRITE(false, 3110, "리뷰 작성 기한이 지났습니다."),
     NOT_AVALIABLE_WRITE_SELLER_STATUS(false, 3111, "해당 상점이 리뷰를 작성할 수 있는 상태가 아닙니다."),
+    NOT_REPORT_USER(false, 3112, "해당 리뷰의 주인이 아니기 떄문에 리뷰를 신고할 수 없습니다."),
+    ALREADY_REPORT_REVIEW(false, 3113, "이미 신고된 리뷰 입니다."),
 
     //[Patch] Review
     NOT_EXIST_REVIEW(false, 3115, "수정할 수 있는 리뷰가 없습니다."),
-
-    //[Patch] Review
     NOT_EXIST_REVIEW_DELETE(false, 3116,"삭제할 리뷰가 없습니다."),
 
     //[Delete] Users

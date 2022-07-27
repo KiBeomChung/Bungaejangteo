@@ -161,6 +161,11 @@ public class ProductController {
 
     }
 
+    /**
+     * 특정 상품 조회시 해당 상품과 연관있는 상품 조회 API
+     * @param productIdx
+     * @return
+     */
     @ResponseBody
     @GetMapping("/{productIdx}/relation")
     public BaseResponse<List<GetRelatedProdcutRes>> getRelatedProduct(@PathVariable("productIdx") int productIdx) {
