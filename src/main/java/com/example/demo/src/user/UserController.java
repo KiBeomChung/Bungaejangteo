@@ -480,6 +480,10 @@ public class UserController {
             System.out.println(postKakaoReq.getAccessToken());
             return new BaseResponse<>(EMPTY_ACCESS_TOKEN);
         }
+        //휴대폰 정규표현
+        if (!isRegexPhonNum(postKakaoReq.getPhoneNum())) {
+            return new BaseResponse<>(INCORRECT_SHAPEOF_PHONENUM);
+        }
 
         try {
             if(userProvider.isDeletedUser(postKakaoReq.getPhoneNum()) == 1){
