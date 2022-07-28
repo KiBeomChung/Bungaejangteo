@@ -152,6 +152,11 @@ public class ProductController {
     public BaseResponse<GetDetailProductRes> getDetailProduct(@PathVariable("productIdx") Integer productIdx) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
+            if(productProvider.isExistRecentProducts(userIdxByJwt,productIdx) == 1){
+                productService.updateRecentProducts(userIdxByJwt,productIdx);
+            }else{
+                productService.createRecentProducts(userIdxByJwt,productIdx);
+            }
             GetDetailProductRes getProductRes = productProvider.getDetailProduct(userIdxByJwt,productIdx);
             return new BaseResponse<>(getProductRes);
         } catch (BaseException exception) {
@@ -271,6 +276,28 @@ public class ProductController {
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    /**
+     * 최근 본 상품 조회 API
+     * [GET] /app/products/recent
+     * @return BaseResponse<GetProductRes>
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/recent") // (GET) 127.0.0.1:9000/app/users/:userIdx
+    public BaseResponse<List<GetProductRes>> getRecentProducts() {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (productProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            List<GetProductRes> getProductRes = productProvider.getRecentProducts(userIdxByJwt);
+            return new BaseResponse<>(getProductRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 
 }

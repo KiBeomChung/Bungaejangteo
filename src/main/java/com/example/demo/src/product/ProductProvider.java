@@ -58,6 +58,7 @@ public class ProductProvider {
         if (isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
         }
+
         try {
             GetDetailProductRes getProductRes = productDao.getDetailProduct(userIdx,productIdx);
             return getProductRes;
@@ -66,6 +67,17 @@ public class ProductProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int isExistRecentProducts(int userIdx, int productIdx) throws BaseException {
+        try {
+            return productDao.isExistRecentProducts(userIdx,productIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
 
     public int isDeletedUser(int userIdx) throws BaseException {
         try {
@@ -105,6 +117,16 @@ public class ProductProvider {
         try {
             List<GetProductRes> getProductFilteringRes = productDao.getProductFiltering(userIdx,fiteringPrameters);
             return getProductFilteringRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetProductRes> getRecentProducts(int userIdx) throws BaseException {
+        try {
+            List<GetProductRes> getProductRes = productDao.getRecentProducts(userIdx);
+            return getProductRes;
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);

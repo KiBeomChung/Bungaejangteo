@@ -62,5 +62,27 @@ public class ProductService {
         }
 
     }
+
+    public int updateRecentProducts(int userIdx,int productIdx) throws BaseException {
+        try {
+            return productDao.updateRecentProducts(userIdx,productIdx);
+
+        } catch (Exception exception) {
+
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    public int createRecentProducts(int userIdx,int productIdx) throws BaseException {
+        try {
+            return productDao.createRecentProducts(userIdx,productIdx);
+
+        } catch (Exception exception) {
+
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }
 

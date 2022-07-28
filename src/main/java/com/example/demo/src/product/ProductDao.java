@@ -443,6 +443,63 @@ public class ProductDao {
 
     }
 
+    public List<GetProductRes> getRecentProducts(int userIdx) {
+        String getRecentProductsQuery = "SELECT Products.productId,name,price,region,isSafePayment,\n" +
+                "case \n" +
+                "    when (TIMESTAMPDIFF(WEEK,createdAt,NOW()) >= 1)  then CONCAT(TIMESTAMPDIFF(WEEK,createdAt,NOW()), '주전') \n" +
+                "\twhen (TIMESTAMPDIFF(DAY,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(WEEK,createdAt,NOW()) < 1)  then CONCAT(TIMESTAMPDIFF(DAY,createdAt,NOW()), '일전') \n" +
+                "\twhen (TIMESTAMPDIFF(HOUR,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(HOUR,createdAt,NOW()), '시간전') \n" +
+                "    when (TIMESTAMPDIFF(MINUTE,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(MINUTE,createdAt,NOW()), '분전') \n" +
+                "END AS elapsedTime,\n" +
+                "case \n" +
+                "    when (likeCount is null) then 0\n" +
+                "    when (likeCount is not null) then likeCount\n" +
+                "end as likeCount, exists(select * from Likes where userId = ? AND productId = Products.productId) as isExist,imageUrl\n" +
+                "from (Products left outer join (SELECT imageUrl, productId\n" +
+                "                FROM (SELECT *\n" +
+                "                       FROM ProductImages\n" +
+                "                       ORDER BY createdAt)b\n" +
+                "                 GROUP BY productId\n" +
+                "                 )as imageTable\n" +
+                "                 on imageTable.productId = Products.productId)\n" +
+                "left outer join (select productId,count(*) as likeCount from Likes group by productId)as c\n" +
+                "on Products.productId =  c.productId\n" +
+                "where Products.productId in (select RecentSeenProducts.productId from RecentSeenProducts where userId = ? order by updatedAt desc)  limit 5";
+
+
+        return this.jdbcTemplate.query(getRecentProductsQuery,
+                (rs, rowNum) -> new GetProductRes(
+                        rs.getInt("Products.productId"),
+                        rs.getString("imageUrl"),
+                        rs.getInt("isExist"),
+                        rs.getInt("price"),
+                        rs.getString("name"),
+                        rs.getString("region"),
+                        rs.getString("elapsedTime"),
+                        rs.getInt("isSafePayment"),
+                        rs.getInt("likeCount")
+                ),userIdx,userIdx);
+    }
+
+    public int isExistRecentProducts(int userIdx,int productIdx) {
+        String isExistRecentProductsQuery = "select exists(select * from RecentSeenProducts where userId = ? and productId = ?)";
+        return this.jdbcTemplate.queryForObject(isExistRecentProductsQuery, int.class,userIdx, productIdx);
+    }
+
+    public int createRecentProducts(int userIdx,int productIdx) {
+        String createRecentProductsQuery = "insert into RecentSeenProducts (userId, productId) VALUES (?,?)";
+        Object[] createRecentProductsParams = new Object[]{userIdx,productIdx};
+        return this.jdbcTemplate.update(createRecentProductsQuery, createRecentProductsParams);
+    }
+
+    public int updateRecentProducts(int userIdx,int productIdx) {
+        String createRecentProductsQuery = "update RecentSeenProducts set userId = ? productId = ?";
+        Object[] createRecentProductsParams = new Object[]{userIdx,productIdx};
+        return this.jdbcTemplate.update(createRecentProductsQuery, createRecentProductsParams);
+    }
+
+
+
 }
 
 
