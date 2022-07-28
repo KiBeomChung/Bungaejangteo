@@ -26,6 +26,12 @@ public class AddressController {
         this.jwtService = jwtService;
     }
 
+
+    /**
+     * 유저의 배송지 추가
+     * @param postAddressReq
+     * @return
+     */
     @ResponseBody
     @PostMapping("")
     public BaseResponse<String> createAddress(@RequestBody PostAddressReq postAddressReq) {
@@ -43,3 +49,4 @@ public class AddressController {
         }
     }
 }
+

@@ -40,8 +40,8 @@ public class FavoriteDao {
     public int deleteFavorite(int followingId, int followerId) {
         String deleteFollowingQuery = "delete F, FI\n" +
                 "from Follow F inner join Following FI\n" +
-                "where F.followingId = FI.id\n" +
-                "and F.followerId = ? and FI.followingId = ?";
+                "on F.followingId = FI.id\n" +
+                "where F.followerId = ? and FI.followingId = ?";
         Object[] deleteFollowingParams = new Object[]{followerId, followingId};
 
         return this.jdbcTemplate.update(deleteFollowingQuery, deleteFollowingParams);
@@ -51,6 +51,11 @@ public class FavoriteDao {
         String checkUserStatusQuery = "select exists(select id from Users where Users.id = ? AND Users.status ='NORMAL')";
         int checkUserStatusParam = followingId;
         return this.jdbcTemplate.queryForObject(checkUserStatusQuery, int.class, checkUserStatusParam);
+    }
+
+    public int isAlreadyFollow(int followingId, int followerId) {
+        String isAlreadyFollowQuery = "select exists(select * from Following inner join Follow on Follow.followingId = Following.id and Following.followingId = ? and Follow.followerId = ?)";
+        return this.jdbcTemplate.queryForObject(isAlreadyFollowQuery, int.class, new Object[]{followingId, followerId});
     }
 
     public List<GetFavoriteUserRes> getFavoriteUserDetailList(int userId) {

@@ -30,26 +30,26 @@ public class FavoriteService {
 
     public PostFavoriteStoreRes addFavorite(int followingId, int followerId) throws BaseException {
 
+        if (favoriteDao.checkUserStatus(followingId) == 0) { // 해당 상점이 신고 받거나 탈퇴한 상점이 아닌지 확인
+            throw new BaseException(NOT_AVALIABLE_ADD_FOLLOW);
+        }
+        if (favoriteDao.isAlreadyFollow(followingId, followerId) == 1) {
+            throw new BaseException(ALREADY_EXIST_FOLLOW);
+        }
+
         try {
-            if (favoriteDao.checkUserStatus(followingId) == 0) { // 해당 상점이 신고 받거나 탈퇴한 상점이 아닌지 확인
-                throw new BaseException(NOT_AVALIABLE_ADD_FOLLOW);
-            }
-
-            try {
-                String lastInsertIdStr = favoriteDao.addFollowing(followingId);
-                //     System.out.println("lastInsertIdStr : " + lastInsertIdStr);
-                int lastInsertId = Integer.parseInt(lastInsertIdStr);
-                //     System.out.println("lastInsertId : " + lastInsertId);
-                String result = favoriteDao.receiveFollowing(followerId, lastInsertId);
-                //     System.out.println("Service Result : " + result);
-                return new PostFavoriteStoreRes(result);
-            } catch (Exception exception) {
-                throw new BaseException(DATABASE_ERROR);
-            }
-
+            String lastInsertIdStr = favoriteDao.addFollowing(followingId);
+            //     System.out.println("lastInsertIdStr : " + lastInsertIdStr);
+            int lastInsertId = Integer.parseInt(lastInsertIdStr);
+            //     System.out.println("lastInsertId : " + lastInsertId);
+            String result = favoriteDao.receiveFollowing(followerId, lastInsertId);
+            //     System.out.println("Service Result : " + result);
+            return new PostFavoriteStoreRes(result);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+
+
     }
 
     public String deleteFavorite(int followingId, int followerId) throws BaseException {

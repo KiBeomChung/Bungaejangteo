@@ -157,11 +157,12 @@ public enum BaseResponseStatus {
     //[POST] favorites
     NOT_AVALIABLE_ADD_FOLLOW(false, 3040, "해당 상점은 팔로잉 할 수 없는 상태입니다."),
     FOLLOW_BRAND_FAIL(false, 3045, "브랜드 팔로우에 실패하였습니다."),
+    ALREADY_EXIST_FOLLOW(false, 3046, "이미 팔로우를 진행했습니다."),
 
 
     //[DELETE] favorites
     FOLLOW_CANCEL_FAIL(false, 3050, "팔로위 취소 하지 못했습니다."),
-    FOLLOW_DOESNT_EXISTS(false,3047, "해당 브랜드를 팔로우한적이 없습니다."),
+    FOLLOW_DOESNT_EXISTS(false,3047, "해당 브랜드를 팔로우한 상태가 아닙니다."),
 
 
     //[POST] likes

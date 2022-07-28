@@ -81,13 +81,7 @@ public class SearchDao {
                 "inner join ProductTags on ProductTags.productId = Products.productId\n" +
                 "inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt) a GROUP BY productId) ProductImages on Products.productId = ProductImages.productId\n" +
                 "where Products.productId in (select productId from ProductTags where tag = ? or ?)";
-//        String getSearchBrandQuery = "select distinct Products.id, Brands.imageUrl as brandImageUrl, Brands.name as brandName, Brands.englishName, exists(select * from BrandFollows inner join Brands on Brands.id = BrandFollows.brandId where BrandFollows.userId = ? and BrandFollows.brandId = ?) as isFollow,\n" +
-//                "ProductImages.imageUrl, Products.price, Products.name, Products.isSafePayment,\n" +
-//                "from Products\n" +
-//                "inner join ProductTags on ProductTags.productId = Products.productId\n" +
-//                "inner join Brands on Brands.name = (ProductTags.tag) or Brands.englishName = (ProductTags.tag)\n" +
-//                "inner join (SELECT imageUrl, productId FROM (SELECT * FROM ProductImages ORDER BY createdAt) a GROUP BY productId) ProductImages on Products.productId = ProductImages.productId\n" +
-//                "where Products.productId in (select productId from ProductTags where tag = ? or ?);";
+
         return this.jdbcTemplate.query(getSearchBrandQuery,
                 (rs, rowNum) -> new GetSearchBrandRes(
                         rs.getString("imageUrl"),
@@ -126,6 +120,3 @@ public class SearchDao {
         return this.jdbcTemplate.queryForObject(checkBrandStatusQuery, int.class, brandId);
     }
 }
-
-
-
