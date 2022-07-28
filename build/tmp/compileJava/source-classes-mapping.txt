@@ -58,6 +58,8 @@ com/example/demo/src/sms/SmsController.java
  com.example.demo.src.sms.SmsController
 com/example/demo/src/favorite/FavoriteController.java
  com.example.demo.src.favorite.FavoriteController
+com/example/demo/src/address/model/Address.java
+ com.example.demo.src.address.model.Address
 com/example/demo/src/user/model/GetAnotherUserStoreInfoRes.java
  com.example.demo.src.user.model.GetAnotherUserStoreInfoRes
 com/example/demo/src/user/model/PostLoginRes.java

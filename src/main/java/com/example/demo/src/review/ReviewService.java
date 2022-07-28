@@ -142,9 +142,9 @@ public class ReviewService {
 
     public String registerComment(int userId, PostRegisterCommentReq postRegisterCommentReq) throws BaseException {
 
-        if (reviewDao.checkCreatedAt2(postRegisterCommentReq.getReviewId()) > 30) {         //30일이 지났을경우
-            throw new BaseException(EXPIRED_REVIEW_WRITE);
-        }
+//        if (reviewDao.checkCreatedAt2(postRegisterCommentReq.getReviewId()) > 30) {         //30일이 지났을경우
+//            throw new BaseException(EXPIRED_REVIEW_WRITE);
+//        }
         if (reviewDao.isExistReview(postRegisterCommentReq.getReviewId()) == 0) {
             throw new BaseException(NOT_EXIST_REVIEW_DELETE);   //해당 리뷰가 없을 경우
         }

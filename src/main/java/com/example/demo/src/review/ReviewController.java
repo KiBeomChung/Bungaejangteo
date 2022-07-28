@@ -163,6 +163,11 @@ public class ReviewController {
 
     }
 
+    /**
+     * 리뷰 댓글 작성
+     * @param postRegisterCommentReq
+     * @return
+     */
     @ResponseBody
     @PostMapping("comments")
     public BaseResponse<String> registerComment(@RequestBody PostRegisterCommentReq postRegisterCommentReq) {
