@@ -324,10 +324,19 @@ public class ProductDao {
         }
 
         if(fiteringPrameters.getCategory() != null){
-            if(count<0){
-                getProductFilteringQuery += " where category = 1";
+            if ((fiteringPrameters.getCategory()).equals(1000)){
+                if(count<0){
+                    getProductFilteringQuery += "where category between 1 and 14";
+                }else{
+                    getProductFilteringQuery += "and category between 1 and 14";
+                }
+
             }else{
-                getProductFilteringQuery += " and category = 1";
+                if(count<0){
+                    getProductFilteringQuery += String.format(" where category = %d",fiteringPrameters.getCategory());
+                }else{
+                    getProductFilteringQuery += String.format(" and category = %d",fiteringPrameters.getCategory());
+                }
             }
         }
 

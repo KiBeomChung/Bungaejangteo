@@ -221,7 +221,7 @@ public class ProductController {
             }
 
             if(category != null){
-                if (!(category > 0 && category < 20 )) {
+                if (!((category > 0 && category < 20 )||category.equals(1000))) {
                     return new BaseResponse<>( INVALIDT_CATEGORY_CODE_TYPE);
                 }
             }
