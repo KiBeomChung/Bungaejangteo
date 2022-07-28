@@ -38,8 +38,14 @@ com/example/demo/src/favorite/FavoriteService.java
  com.example.demo.src.favorite.FavoriteService
 com/example/demo/src/brand/BrandDao.java
  com.example.demo.src.brand.BrandDao
+com/example/demo/src/review/model/GetReviewImageRes.java
+ com.example.demo.src.review.model.GetReviewImageRes
 com/example/demo/src/product/ProductController.java
  com.example.demo.src.product.ProductController
+com/example/demo/src/review/model/GetCommentRes.java
+ com.example.demo.src.review.model.GetCommentRes
+com/example/demo/src/review/model/PostRegisterCommentReq.java
+ com.example.demo.src.review.model.PostRegisterCommentReq
 com/example/demo/src/review/model/PatchModifyReviewReq.java
  com.example.demo.src.review.model.PatchModifyReviewReq
 com/example/demo/src/sms/SmsDao.java
@@ -52,6 +58,8 @@ com/example/demo/src/sms/SmsController.java
  com.example.demo.src.sms.SmsController
 com/example/demo/src/favorite/FavoriteController.java
  com.example.demo.src.favorite.FavoriteController
+com/example/demo/src/address/model/Address.java
+ com.example.demo.src.address.model.Address
 com/example/demo/src/user/model/GetAnotherUserStoreInfoRes.java
  com.example.demo.src.user.model.GetAnotherUserStoreInfoRes
 com/example/demo/src/user/model/PostLoginRes.java
