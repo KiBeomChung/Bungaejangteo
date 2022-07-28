@@ -78,6 +78,11 @@ public enum BaseResponseStatus {
     INCORRECT_SHAPEOF_LATITUDE(false,2081,"올바른 위도 형식이 아닙니다"),
     INCORRECT_SHAPEOF_LONGITUDE(false,2082,"올바른 경도 형식이 아닙니다"),
     INVALIDT_CATEGORY_CODE_TYPE(false,2083,"유효한 카테고리 코드가 아닙니다"),
+    INVALIDT_BRAND(false,2084,"유효한 브랜드가 아닙니다"),
+    INVALIDT_ORDER(false,2085, "querystring order는 low,high,recent만 가능합니다"),
+    INVALIDT_SOLDOUT(false,2086, "querystring soldout은 yes,no 가능합니다"),
+    INVALID_DELIVERYFEE(false,2087, "querystring delieveryfee는 included, not-included, all만 가능합니다"),
+    INVALID_STATUS(false,2088, "querystring status는 old,new,all만 가능합니다"),
 
     //[POST] likes/collections
     POST_COLLECTION_EMPTY_COLLECTION_NAME(false,2090,"찜 컬렉션명을 입력해주세요"),

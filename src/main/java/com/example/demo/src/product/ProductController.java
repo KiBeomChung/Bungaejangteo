@@ -209,15 +209,61 @@ public class ProductController {
      * @return BaseResponse<List<GetProductRes>>
      */
     @GetMapping("")
-    public BaseResponse<List<GetProductRes>> getProductFiltering(@RequestParam(value = "searchword") String searchword,@RequestParam(value = "category") Integer category
-    ,@RequestParam(value = "order") String order,@RequestParam(value = "brand") String brand,@RequestParam(value = "minprice") Integer minprice
-    ,@RequestParam(value = "maxprice") Integer maxprice,@RequestParam(value = "soldout") String soldout,@RequestParam(value = "deliveryfee") String deliveryfee
-    ,@RequestParam(value = "status") String status) {
+    public BaseResponse<List<GetProductRes>> getProductFiltering(@RequestParam(required = false,value = "searchword") String searchword,@RequestParam(required = false,value = "category") Integer category
+    ,@RequestParam(required = false,value = "order") String order,@RequestParam(required = false,value = "brand") String brand,@RequestParam(required = false,value = "minprice") Integer minprice
+    ,@RequestParam(required = false,value = "maxprice") Integer maxprice,@RequestParam(required = false,value = "soldout") String soldout,@RequestParam(required = false,value = "deliveryfee") String deliveryfee
+    ,@RequestParam(required = false,value = "status") String status) {
         try {
+            if(searchword != null){
+                if(searchword.equals("")){
+                    return new BaseResponse<>(EMPTY_SEARCHWORD);
+                }
+            }
+
+            if(category != null){
+                if (!(category > 0 && category < 20 )) {
+                    return new BaseResponse<>( INVALIDT_CATEGORY_CODE_TYPE);
+                }
+            }
+
+
+            if(brand != null){
+                if(!(brand.equals("BTS")||brand.equals("엔시티")||brand.equals("세븐틴")||brand.equals("더보이즈")||brand.equals("투모로우바이투게더")||brand.equals("엑소")||brand.equals("몬스타엑스")
+                        ||brand.equals("아이즈원")||brand.equals("트와이스")||brand.equals("에스파")||brand.equals("스테이씨")||brand.equals("오마이걸")||brand.equals("블랙핑크")||brand.equals("아이브")||brand.equals("있지")||brand.equals("(여자)아이들"))){
+                    return new BaseResponse<>(INVALIDT_BRAND);
+                }
+            }
+
+            if(order != null){
+                if (!(order.equals("low")||order.equals("high")||order.equals("recent"))) {
+                    return new BaseResponse<>(INVALIDT_ORDER);
+                }
+            }
+
+
+            if(soldout != null){
+                if (!(soldout.equals("no")||soldout.equals("yes"))) {
+                    return new BaseResponse<>(INVALIDT_SOLDOUT);
+                }
+            }
+
+            if(deliveryfee != null){
+                if (!(deliveryfee.equals("included")||deliveryfee.equals("not-included")||deliveryfee.equals("all"))) {
+                    return new BaseResponse<>(INVALID_DELIVERYFEE);
+                }
+            }
+
+            if(status != null){
+                if (!(status.equals("old")||status.equals("new")||status.equals("all"))) {
+                    return new BaseResponse<>(INVALID_STATUS);
+                }
+            }
+
             int userIdxByJwt = jwtService.getUserIdx();
             if (productProvider.isDeletedUser(userIdxByJwt) == 1){
                 throw new BaseException(DELETED_USER);
             }
+
             FiteringPrameters fiteringPrameters = new FiteringPrameters(searchword ,category ,order ,brand ,minprice ,maxprice ,soldout, deliveryfee,status);
             List<GetProductRes> result = productProvider.getProductFiltering(userIdxByJwt,fiteringPrameters);
 

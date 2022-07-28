@@ -318,8 +318,8 @@ public class ProductDao {
 
 
         int count = 0;
-        if(fiteringPrameters.getSearchword() != ""){
-            getProductFilteringQuery += String.format(" where name like %s ", '%'+fiteringPrameters.getSearchword()+'%');
+        if(fiteringPrameters.getSearchword() != null){
+            getProductFilteringQuery += String.format(" where name like '%s' ",'%'+fiteringPrameters.getSearchword()+'%');
             count += 1;
         }
 
@@ -331,7 +331,7 @@ public class ProductDao {
             }
         }
 
-        if(fiteringPrameters.getBrand() != ""){
+        if(fiteringPrameters.getBrand() != null){
             if(count<0){
                 getProductFilteringQuery += String.format(" where Products.productId in (select productId from ProductTags where ProductTags.tag = '%s')",fiteringPrameters.getBrand() );
             }else{
@@ -343,17 +343,17 @@ public class ProductDao {
 
         if(fiteringPrameters.getMinprice() != null){
             if(count<0){
-                getProductFilteringQuery += String.format(" where price < %d",fiteringPrameters.getMinprice());
+                getProductFilteringQuery += String.format(" where price > %d",fiteringPrameters.getMinprice());
             }else{
-                getProductFilteringQuery += String.format(" and price < %d",fiteringPrameters.getMinprice());
+                getProductFilteringQuery += String.format(" and price > %d",fiteringPrameters.getMinprice());
             }
         }
 
         if(fiteringPrameters.getMaxprice() != null){
             if(count<0){
-                getProductFilteringQuery += String.format(" where price > %d",fiteringPrameters.getMaxprice());
+                getProductFilteringQuery += String.format(" where price < %d",fiteringPrameters.getMaxprice());
             }else{
-                getProductFilteringQuery += String.format(" and price > %d",fiteringPrameters.getMaxprice());
+                getProductFilteringQuery += String.format(" and price < %d",fiteringPrameters.getMaxprice());
             }
         }
 
@@ -374,47 +374,49 @@ public class ProductDao {
             if(count<0){
                 if(fiteringPrameters.getDeliveryfee().equals("included")){
                     getProductFilteringQuery += " where isDeliveryIncluded = 1";
-                }else{
+                }else if (fiteringPrameters.getDeliveryfee().equals("not-included")){
                     getProductFilteringQuery += " where isDeliveryIncluded = 0";
                 }
 
             }else{
                 if(fiteringPrameters.getDeliveryfee().equals("included")){
-                    getProductFilteringQuery += " where isDeliveryIncluded = 1";
-                }else{
-                    getProductFilteringQuery += " where isDeliveryIncluded = 0";
+                    getProductFilteringQuery += " and isDeliveryIncluded = 1";
+                }else if(fiteringPrameters.getDeliveryfee().equals("not-included")){
+                    getProductFilteringQuery += " and isDeliveryIncluded = 0";
                 }
             }
         }
 
+          System.out.println(fiteringPrameters.getStatus() );
         if(fiteringPrameters.getStatus() != null){
             if(count<0){
-                if(fiteringPrameters.getDeliveryfee().equals("old")){
+                if(fiteringPrameters.getStatus().equals("old")){
                     getProductFilteringQuery += " where isOld = 1";
-                }else{
+                }else if(fiteringPrameters.getStatus().equals("new")){
                     getProductFilteringQuery += " where isOld = 0";
                 }
 
             }else{
-                if(fiteringPrameters.getDeliveryfee().equals("old")){
+                if(fiteringPrameters.getStatus().equals("old")){
                     getProductFilteringQuery += " and isOld = 1";
-                }else{
+                }else if(fiteringPrameters.getStatus().equals("new")){
                     getProductFilteringQuery += " and isOld = 0";
                 }
             }
         }
 
         if(fiteringPrameters.getOrder() != null){
-            if(fiteringPrameters.getOrder() == "low"){
+            if(fiteringPrameters.getOrder().equals("low") ){
                 getProductFilteringQuery += " order by price";
 
-            }else if(fiteringPrameters.getOrder() == "high"){
+            }else if(fiteringPrameters.getOrder().equals("high") ){
                 getProductFilteringQuery += " order by price desc";
             }else{//최신순
                 getProductFilteringQuery += " order by Products.createdAt desc";
             }
         }
 
+        System.out.println(getProductFilteringQuery);
 
         return this.jdbcTemplate.query(getProductFilteringQuery,
                 (rs, rowNum) -> new GetProductRes(

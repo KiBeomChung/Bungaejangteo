@@ -16,6 +16,8 @@ com/example/demo/src/product/model/ReviewInfo.java
  com.example.demo.src.product.model.ReviewInfo
 com/example/demo/src/sms/SmsService.java
  com.example.demo.src.sms.SmsService
+com/example/demo/src/address/AddressController.java
+ com.example.demo.src.address.AddressController
 com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
 com/example/demo/src/search/model/GetSearchWordRes.java
@@ -30,6 +32,8 @@ com/example/demo/src/product/ProductDao.java
  com.example.demo.src.product.ProductDao
 com/example/demo/src/user/model/PostKakaoReq.java
  com.example.demo.src.user.model.PostKakaoReq
+com/example/demo/src/address/AddressProvider.java
+ com.example.demo.src.address.AddressProvider
 com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
 com/example/demo/src/like/LikeController.java
@@ -44,6 +48,8 @@ com/example/demo/src/product/ProductController.java
  com.example.demo.src.product.ProductController
 com/example/demo/src/review/model/GetCommentRes.java
  com.example.demo.src.review.model.GetCommentRes
+com/example/demo/src/address/AddressDao.java
+ com.example.demo.src.address.AddressDao
 com/example/demo/src/review/model/PostRegisterCommentReq.java
  com.example.demo.src.review.model.PostRegisterCommentReq
 com/example/demo/src/review/model/PatchModifyReviewReq.java
@@ -82,6 +88,8 @@ com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
 com/example/demo/src/review/model/PostRegisterReviewReq.java
  com.example.demo.src.review.model.PostRegisterReviewReq
+com/example/demo/src/address/model/PostAddressReq.java
+ com.example.demo.src.address.model.PostAddressReq
 com/example/demo/src/user/model/GetSearchStoreRes.java
  com.example.demo.src.user.model.GetSearchStoreRes
 com/example/demo/src/sms/model/PostSMSReq.java
@@ -202,6 +210,8 @@ com/example/demo/src/like/LikeService.java
  com.example.demo.src.like.LikeService
 com/example/demo/src/user/model/GetUserRes.java
  com.example.demo.src.user.model.GetUserRes
+com/example/demo/src/address/AddressService.java
+ com.example.demo.src.address.AddressService
 com/example/demo/DemoApplication.java
  com.example.demo.DemoApplication
 com/example/demo/src/like/model/PostCollectionProductReq.java
