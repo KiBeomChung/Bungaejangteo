@@ -34,7 +34,7 @@ public class ProductService {
             throw new BaseException(DELETED_USER);
         }
         if (productProvider.getReport(userIdx,productIdx) == 1){
-            throw new BaseException(DELETE_USER_NOT_REMOVABLE_USER);
+            throw new BaseException(POST_REPORT_EXIST_REPORT);
         }
         try {
             productDao.createReport(userIdx,productIdx,postReportReq);
