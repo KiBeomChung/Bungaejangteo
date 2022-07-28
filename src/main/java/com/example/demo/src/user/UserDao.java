@@ -412,5 +412,24 @@ public class UserDao {
                 '%'+searchword+'%');
     }
 
+    public GetMypageRes getMyPage(int userIdx) {
+        String getMyPageQuery = "select storename,isCertified,imageUrl,(select round(avg(Review.reviewScore), 1) from Review where Review.productId in (select Products.productId from Products where userId = Users.id))as ratings,(select count(*) from Likes where Likes.userId = Users.id)as likeNum,(select count(*) from Review where Review.productId in (select productId from Products where userId = Users.id))as reviewNum,\n" +
+                "(select count(*) from Following where followingId =  Users.id)as followerNum, (select count(*) from Follow where followerId = Users.id)as followingNum\n" +
+                "from Users\n" +
+                "where Users.id = ?";
+
+        return this.jdbcTemplate.queryForObject(getMyPageQuery,
+                (rs, rowNum) -> new GetMypageRes(
+                        rs.getString("storename"),
+                        rs.getInt("isCertified"),
+                        rs.getString("imageUrl"),
+                        rs.getDouble("ratings"),
+                        rs.getInt("likeNum"),
+                        rs.getInt("reviewNum"),
+                        rs.getInt("followerNum"),
+                        rs.getInt("followingNum")
+                ), userIdx);
+    }
+
 
 }

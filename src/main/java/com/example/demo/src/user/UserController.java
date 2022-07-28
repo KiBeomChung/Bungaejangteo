@@ -533,6 +533,25 @@ public class UserController {
         }
     }
 
+    /**
+     *마이페이지- 찜, 후기 화면 조회 API
+     * [GET] /app/users/search
+     * @return BaseResponse<List<GetSearchStoreRes>>
+     */
+    @GetMapping("/mypage")
+    public BaseResponse<GetMypageRes> getMyPage() {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            GetMypageRes result = userProvider.getMyPage(userIdxByJwt);
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
 
 }

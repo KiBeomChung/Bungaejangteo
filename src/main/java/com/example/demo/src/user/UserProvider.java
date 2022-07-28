@@ -179,6 +179,14 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
+    public GetMypageRes getMyPage(int userIdx) throws BaseException {
+        try {
+            GetMypageRes getMyPageRes = userDao.getMyPage(userIdx);
+            return getMyPageRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }
