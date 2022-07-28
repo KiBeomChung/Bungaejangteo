@@ -2,6 +2,7 @@ package com.example.demo.src.product;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.product.model.FiteringPrameters;
 import com.example.demo.src.product.model.GetDetailProductRes;
 import com.example.demo.src.product.model.GetProductRes;
 import com.example.demo.src.product.model.GetRelatedProdcutRes;
@@ -94,6 +95,16 @@ public class ProductProvider {
         try {
             List<String> getProductSearchWordRes = productDao.getProductSearchWord(searchword);
             return getProductSearchWordRes;
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetProductRes> getProductFiltering(int userIdx, FiteringPrameters fiteringPrameters) throws BaseException {
+        try {
+            List<GetProductRes> getProductFilteringRes = productDao.getProductFiltering(userIdx,fiteringPrameters);
+            return getProductFilteringRes;
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);

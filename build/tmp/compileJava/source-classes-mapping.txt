@@ -38,8 +38,14 @@ com/example/demo/src/favorite/FavoriteService.java
  com.example.demo.src.favorite.FavoriteService
 com/example/demo/src/brand/BrandDao.java
  com.example.demo.src.brand.BrandDao
+com/example/demo/src/review/model/GetReviewImageRes.java
+ com.example.demo.src.review.model.GetReviewImageRes
 com/example/demo/src/product/ProductController.java
  com.example.demo.src.product.ProductController
+com/example/demo/src/review/model/GetCommentRes.java
+ com.example.demo.src.review.model.GetCommentRes
+com/example/demo/src/review/model/PostRegisterCommentReq.java
+ com.example.demo.src.review.model.PostRegisterCommentReq
 com/example/demo/src/review/model/PatchModifyReviewReq.java
  com.example.demo.src.review.model.PatchModifyReviewReq
 com/example/demo/src/sms/SmsDao.java
@@ -102,6 +108,8 @@ com/example/demo/src/search/model/GetSearchBrandRes.java
  com.example.demo.src.search.model.GetSearchBrandRes
 com/example/demo/src/brand/model/GetBrandListRes.java
  com.example.demo.src.brand.model.GetBrandListRes
+com/example/demo/src/product/model/FiteringPrameters.java
+ com.example.demo.src.product.model.FiteringPrameters
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
 com/example/demo/src/user/UserProvider.java

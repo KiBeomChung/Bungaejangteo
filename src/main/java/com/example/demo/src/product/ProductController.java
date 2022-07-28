@@ -203,4 +203,28 @@ public class ProductController {
         }
     }
 
+    /**
+     *검색 - 검색어 엔터치기 전에 상품 검색
+     * [GET] /app/products?searchword=
+     * @return BaseResponse<List<GetProductRes>>
+     */
+    @GetMapping("")
+    public BaseResponse<List<GetProductRes>> getProductFiltering(@RequestParam(value = "searchword") String searchword,@RequestParam(value = "category") Integer category
+    ,@RequestParam(value = "order") String order,@RequestParam(value = "brand") String brand,@RequestParam(value = "minprice") Integer minprice
+    ,@RequestParam(value = "maxprice") Integer maxprice,@RequestParam(value = "soldout") String soldout,@RequestParam(value = "deliveryfee") String deliveryfee
+    ,@RequestParam(value = "status") String status) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (productProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            FiteringPrameters fiteringPrameters = new FiteringPrameters(searchword ,category ,order ,brand ,minprice ,maxprice ,soldout, deliveryfee,status);
+            List<GetProductRes> result = productProvider.getProductFiltering(userIdxByJwt,fiteringPrameters);
+
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

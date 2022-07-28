@@ -293,6 +293,145 @@ public class ProductDao {
 
     }
 
+    public List<GetProductRes> getProductFiltering(int userIdx,FiteringPrameters fiteringPrameters) {
+
+        String getProductFilteringQuery = "SELECT Products.productId,name,price,region,isSafePayment,\n" +
+                "case \n" +
+                "    when (TIMESTAMPDIFF(WEEK,createdAt,NOW()) >= 1)  then CONCAT(TIMESTAMPDIFF(WEEK,createdAt,NOW()), '주전') \n" +
+                "\twhen (TIMESTAMPDIFF(DAY,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(WEEK,createdAt,NOW()) < 1)  then CONCAT(TIMESTAMPDIFF(DAY,createdAt,NOW()), '일전') \n" +
+                "\twhen (TIMESTAMPDIFF(HOUR,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(HOUR,createdAt,NOW()), '시간전') \n" +
+                "    when (TIMESTAMPDIFF(MINUTE,createdAt,NOW()) >= 1 AND TIMESTAMPDIFF(DAY,createdAt,NOW()) < 1) then CONCAT(TIMESTAMPDIFF(MINUTE,createdAt,NOW()), '분전') \n" +
+                "END AS elapsedTime,\n" +
+                "case \n" +
+                "    when (likeCount is null) then 0\n" +
+                "    when (likeCount is not null) then likeCount\n" +
+                "end as likeCount, exists(select * from Likes where userId = ? AND productId = Products.productId) as isExist,imageUrl\n" +
+                "from (Products left outer join (SELECT imageUrl, productId\n" +
+                "                FROM (SELECT *\n" +
+                "                       FROM ProductImages\n" +
+                "                       ORDER BY createdAt)b\n" +
+                "                 GROUP BY productId\n" +
+                "                 )as imageTable\n" +
+                "                 on imageTable.productId = Products.productId)\n" +
+                "left outer join (select productId,count(*) as likeCount from Likes group by productId)as c\n" +
+                "on Products.productId =  c.productId\n";
+
+
+        int count = 0;
+        if(fiteringPrameters.getSearchword() != ""){
+            getProductFilteringQuery += String.format(" where name like %s ", '%'+fiteringPrameters.getSearchword()+'%');
+            count += 1;
+        }
+
+        if(fiteringPrameters.getCategory() != null){
+            if(count<0){
+                getProductFilteringQuery += " where category = 1";
+            }else{
+                getProductFilteringQuery += " and category = 1";
+            }
+        }
+
+        if(fiteringPrameters.getBrand() != ""){
+            if(count<0){
+                getProductFilteringQuery += String.format(" where Products.productId in (select productId from ProductTags where ProductTags.tag = '%s')",fiteringPrameters.getBrand() );
+            }else{
+                getProductFilteringQuery += String.format(" and Products.productId in (select productId from ProductTags where ProductTags.tag = '%s')",fiteringPrameters.getBrand() );
+
+            }
+        }
+
+
+        if(fiteringPrameters.getMinprice() != null){
+            if(count<0){
+                getProductFilteringQuery += String.format(" where price < %d",fiteringPrameters.getMinprice());
+            }else{
+                getProductFilteringQuery += String.format(" and price < %d",fiteringPrameters.getMinprice());
+            }
+        }
+
+        if(fiteringPrameters.getMaxprice() != null){
+            if(count<0){
+                getProductFilteringQuery += String.format(" where price > %d",fiteringPrameters.getMaxprice());
+            }else{
+                getProductFilteringQuery += String.format(" and price > %d",fiteringPrameters.getMaxprice());
+            }
+        }
+
+        if(fiteringPrameters.getSoldout() != null){
+            if(count<0){
+                if(fiteringPrameters.getSoldout().equals("no")){
+                    getProductFilteringQuery += " where Products.status = 'RESERVE' or 'SALE'";
+                }
+
+            }else{
+                if(fiteringPrameters.getSoldout().equals("no")){
+                    getProductFilteringQuery += " and Products.status = 'RESERVE' or 'SALE'";
+                }
+            }
+        }
+
+        if(fiteringPrameters.getDeliveryfee() != null){
+            if(count<0){
+                if(fiteringPrameters.getDeliveryfee().equals("included")){
+                    getProductFilteringQuery += " where isDeliveryIncluded = 1";
+                }else{
+                    getProductFilteringQuery += " where isDeliveryIncluded = 0";
+                }
+
+            }else{
+                if(fiteringPrameters.getDeliveryfee().equals("included")){
+                    getProductFilteringQuery += " where isDeliveryIncluded = 1";
+                }else{
+                    getProductFilteringQuery += " where isDeliveryIncluded = 0";
+                }
+            }
+        }
+
+        if(fiteringPrameters.getStatus() != null){
+            if(count<0){
+                if(fiteringPrameters.getDeliveryfee().equals("old")){
+                    getProductFilteringQuery += " where isOld = 1";
+                }else{
+                    getProductFilteringQuery += " where isOld = 0";
+                }
+
+            }else{
+                if(fiteringPrameters.getDeliveryfee().equals("old")){
+                    getProductFilteringQuery += " and isOld = 1";
+                }else{
+                    getProductFilteringQuery += " and isOld = 0";
+                }
+            }
+        }
+
+        if(fiteringPrameters.getOrder() != null){
+            if(fiteringPrameters.getOrder() == "low"){
+                getProductFilteringQuery += " order by price";
+
+            }else if(fiteringPrameters.getOrder() == "high"){
+                getProductFilteringQuery += " order by price desc";
+            }else{//최신순
+                getProductFilteringQuery += " order by Products.createdAt desc";
+            }
+        }
+
+
+        return this.jdbcTemplate.query(getProductFilteringQuery,
+                (rs, rowNum) -> new GetProductRes(
+                        rs.getInt("Products.productId"),
+                        rs.getString("imageUrl"),
+                        rs.getInt("isExist"),
+                        rs.getInt("price"),
+                        rs.getString("name"),
+                        rs.getString("region"),
+                        rs.getString("elapsedTime"),
+                        rs.getInt("isSafePayment"),
+                        rs.getInt("likeCount")
+                ),
+                userIdx);
+
+    }
+
 }
 
 
