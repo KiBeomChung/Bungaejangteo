@@ -4,8 +4,8 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.google.gson.JsonElement;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +165,6 @@ public class UserService {
     public String getKakaoUserInfo(String token) throws IOException,BaseException {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
-        String nickname = "";
 
         //access_token을 이용하여 사용자 정보 조회
         try {
@@ -190,27 +189,23 @@ public class UserService {
             }
             System.out.println("response body : " + result);
 
-            //Gson 라이브러리로 JSON
-            JSONParser parser = new JSONParser();
-            JsonElement element = (JsonElement) parser.parse(result);
-            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-            String email = "";
-            if(hasEmail){
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-            }
-            nickname = element.getAsJsonObject().get("nickname").getAsString();
+            //Gson 라이브러리로 JSON파싱
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            String nickname = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
+
 
             System.out.println("nickname : " + nickname);
-            System.out.println("email : " + email);
+
 
             br.close();
+            return nickname;
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException(e.getMessage());
-        }catch (ParseException e){
-           // throw new ParseException(e.getErrorType());
+            throw new RuntimeException(e);
+        } catch (JsonSyntaxException e) {
+            throw new RuntimeException(e);
         }
-        return nickname;
     }
 
     public void logoutUser(int userIdx) throws BaseException {
