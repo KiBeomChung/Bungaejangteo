@@ -62,4 +62,34 @@ public class LikeProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int isExistLike(int userIdx,int productIdx) throws BaseException {
+        try {
+            return likeDao.isExistLike(userIdx,productIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public int isExistCanceledLike(int userIdx,int productIdx) throws BaseException {
+        try {
+            return likeDao.isExistCanceledLike(userIdx,productIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public int isDeletedCollections(int userIdx,int collectionIdx) throws BaseException {
+        try {
+            return likeDao.isDeletedCollections(userIdx,collectionIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int isExistColloectionIdx(int collectionIdx) throws BaseException {
+        try {
+            return likeDao.isExistColloectionIdx(collectionIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

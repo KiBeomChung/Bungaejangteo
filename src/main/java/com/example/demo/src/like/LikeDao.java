@@ -209,6 +209,26 @@ public class LikeDao {
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
     }
 
+    public int isExistLike(int userIdx,int productIdx) {
+        String isDeletedUserQuery = "select exists(select * from Likes where userId = ? and productId = ?)";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx,productIdx);
+    }
+
+    public int isExistCanceledLike(int userIdx,int productIdx) {
+        String isDeletedUserQuery = "select exists(select * from Likes where userId = ? and productId = ? and status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx,productIdx);
+    }
+
+    public int isDeletedCollections(int userIdx,int collectionIdx) {
+        String isDeletedUserQuery = "select exists(select * from LikeCollections where id = ? and userId = ? and status = 'DELETED')";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, collectionIdx,userIdx);
+    }
+
+    public int isExistColloectionIdx(int collectionIdx) {
+        String isDeletedUserQuery = "select exists(select * from LikeCollections where id = ?)";
+        return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, collectionIdx);
+    }
+
 
 
 }

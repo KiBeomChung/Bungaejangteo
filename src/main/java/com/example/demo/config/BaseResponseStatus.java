@@ -168,14 +168,18 @@ public enum BaseResponseStatus {
 
 
     //[POST] likes
-    FAILED_TO_PRODUCT_LIKE(false,3051,"찜 생성에 실패하였습니다"),
+    ALREADY_LIKED_PRODUCT(false,3051,"이미 찜한 상품입니다"),
+
     //[PATCH] likes
-    FAILED_TO_CANCEL_LIKE(false,3052,"찜 취소에 실패하였습니다"),
+    ALREADY_CANCELED_LIKE(false,3052,"이미 취소한 찜입니다"),
+
     //[POST] likes/collections
     FAILED_TO_CREATE_COLLECTION(false,3053,"찜 컬렉션 생성에 실패하였습니다"),
     //[PATCH] likes/collections
     FAILED_TO_UPDATE_COLLECTION(false,3054,"찜 컬렉션 수정에 실패하였습니다"),
     FAILED_TO_CREATE_COLLECTION_PRODUCT(false,3055,"상품을 찜 컬렉션으로 이동하는 것에 실패하였습니다"),
+    ALREADY_DELETED_COLLECTION(false,3056,"이미 삭제한 찜컬렉션 입니다"),
+    NOT_EXIST_COLLECTION_IDX(false,3057,"존재하지 않는 찜컬렉션 idx입니다"),
 
     //[GET]
     NOT_AVALIABLE_GET_USER_STATE(false, 3060, "유저정보를 수정할 수 없는 상태입니다."),

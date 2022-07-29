@@ -1,17 +1,15 @@
 package com.example.demo.src.like;
 
-import com.example.demo.src.like.*;
-import com.example.demo.src.like.LikeProvider;
-import com.example.demo.config.*;
-import static com.example.demo.config.BaseResponseStatus.*;
-
-import com.example.demo.src.like.model.PostCollectionProductReq;
+import com.example.demo.config.BaseException;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class LikeService {
@@ -34,11 +32,12 @@ public class LikeService {
         if (likeProvider.isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
         }
+        if (likeProvider.isExistLike(userIdx,productIdx) == 1){
+            throw new BaseException(ALREADY_LIKED_PRODUCT);
+        }
+
         try{
             int result = likeDao.createLike(userIdx,productIdx);
-            if(result == 0){
-                throw new BaseException(FAILED_TO_PRODUCT_LIKE);
-            }
         } catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
@@ -50,11 +49,11 @@ public class LikeService {
         if (likeProvider.isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
         }
+        if (likeProvider.isExistCanceledLike(userIdx,productIdx) == 1){
+            throw new BaseException(ALREADY_CANCELED_LIKE);
+        }
         try{
             int result = likeDao.cancelLike(userIdx, productIdx);
-            if(result == 0){
-                throw new BaseException(FAILED_TO_CANCEL_LIKE);
-            }
         } catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
@@ -82,6 +81,9 @@ public class LikeService {
         if (likeProvider.isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
         }
+        if (likeProvider.isExistColloectionIdx(collectionIdx) == 0){
+            throw new BaseException(NOT_EXIST_COLLECTION_IDX);
+        }
         try{
             int result = likeDao.updateCollection(collectionIdx,collectionName);
             if(result == 0){
@@ -96,6 +98,9 @@ public class LikeService {
     public void createCollectionProduct(int userIdx,int collectionIdx, List<Integer> productIdxList) throws BaseException {
         if (likeProvider.isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
+        }
+        if (likeProvider.isExistColloectionIdx(collectionIdx) == 0){
+            throw new BaseException(NOT_EXIST_COLLECTION_IDX);
         }
         try{
             int result = likeDao.createCollectionProduct(userIdx,collectionIdx,productIdxList);
@@ -113,11 +118,16 @@ public class LikeService {
         if (likeProvider.isDeletedUser(userIdx) == 1){
             throw new BaseException(DELETED_USER);
         }
+        if (likeProvider.isDeletedCollections(userIdx,collectionIdx) == 1){
+            throw new BaseException(ALREADY_DELETED_COLLECTION);
+        }
+        if (likeProvider.isExistColloectionIdx(collectionIdx) == 0){
+            throw new BaseException(NOT_EXIST_COLLECTION_IDX);
+        }
+
         try{
             int result = likeDao.deleteCollection(collectionIdx);
-            if(result == 0){
-                throw new BaseException(FAILED_TO_DELETE_COLLECTION);
-            }
+
         } catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
