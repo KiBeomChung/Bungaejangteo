@@ -163,7 +163,6 @@ public class UserService {
     }
 
     public String getKakaoUserInfo(String token) throws IOException,BaseException {
-        System.out.println("여기까지 왔니");
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String nickname = "";
@@ -212,6 +211,18 @@ public class UserService {
            // throw new ParseException(e.getErrorType());
         }
         return nickname;
+    }
+
+    public void logoutUser(int userIdx) throws BaseException {
+        if (userProvider.isLogOutUser(userIdx) == 1){
+            throw new BaseException(PATCH_USER_ALREADY_LOGOUT_USER);
+        }
+        try {
+            userDao.logoutUser(userIdx);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 

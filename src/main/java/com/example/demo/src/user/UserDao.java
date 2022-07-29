@@ -350,6 +350,11 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, userIdx);
     }
 
+    public int isLogOutUser(int userIdx) {
+        String isLogOutUserQuery = "select exists(select * from Users where id = ? and status ='LOGOUT')";
+        return this.jdbcTemplate.queryForObject(isLogOutUserQuery, int.class, userIdx);
+    }
+
     public int isDeletedUser(String phoneNum) {
         String isDeletedUserQuery = "select exists(select * from Users where phoneNum = ? and status ='DELETED')";
         return this.jdbcTemplate.queryForObject(isDeletedUserQuery, int.class, phoneNum);
@@ -372,6 +377,12 @@ public class UserDao {
             reason = deleteUserReq.getReasonText();
         }
         return this.jdbcTemplate.update(deleteInquiringQuery,reason, userIdx);
+    }
+
+
+    public int logoutUser(int userIdx) {
+        String logoutUserQuery = "update Users set status ='LOGOUT' where id = ?";
+        return this.jdbcTemplate.update(logoutUserQuery, userIdx);
     }
 
     public int checkInquiringStatus(int inquiredId, int inquiringId) {

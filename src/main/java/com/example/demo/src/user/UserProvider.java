@@ -170,6 +170,15 @@ public class UserProvider {
         }
     }
 
+
+    public int isLogOutUser(int userIdx) throws BaseException {
+        try {
+            return userDao.isLogOutUser(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public List<GetSearchStoreRes> getSearchStore(int userIdx,String searchword) throws BaseException {
         try {
             List<GetSearchStoreRes> getSearchStoreRes = userDao.getSearchStore(userIdx,searchword);

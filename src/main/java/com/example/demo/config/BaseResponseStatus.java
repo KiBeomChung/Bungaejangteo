@@ -64,6 +64,7 @@ public enum BaseResponseStatus {
     INQUIRING_ALREADY_DELETED(false, 2068, "이미 삭제된 문의 입니다."),
     INQUIRING_DOESNT_EXISTS(false, 2069, "작성된 적 없는 문의 입니다."),
 
+
     //[POST] /products
     POST_REPORT_EMPTY_PRODUCT_IDX(false,2071,"상품 idx값을 입력해주세요"),
     POST_REPORT_EMPTY_REPORT_TYPE(false,2072,"신고 유형 코드를 입력해주세요"),
@@ -143,6 +144,7 @@ public enum BaseResponseStatus {
     FAILED_TO_INQUIRED (false, 3011, "해당 상점은 현재 문의가 불가능 합니다."),
     FAILED_TO_WRITE_INQUIRY (false, 3012, "문의 작성에 실패하였습니다."),
     FAILED_TO_LOAD_INQUIRY(false,3013, "상품 문의를 조회할 수 없는 상태입니다"),
+    PATCH_USER_ALREADY_LOGOUT_USER(false, 3014, "이미 로그아웃한 유저입니다"),
 
     // sms
     FAILED_TO_COOLSMS(false,3015,"CoolSMS Error."),
@@ -211,6 +213,7 @@ public enum BaseResponseStatus {
 
     //[Delete] Users
     DELETED_USER(false,3120, "회원탈퇴한 유저입니다"),
+
 
     /**
      * 4000 : Database, Server 오류

@@ -552,6 +552,29 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원탈퇴 API
+     * [PATCH] /app/users/:userIdx?reason=
+     * @return BaseResponse<String>*/
+    @ResponseBody
+    @PatchMapping("/{userIdx}")
+    public BaseResponse<String> logoutUser(@PathVariable("userIdx") int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            if (userProvider.isDeletedUser(userIdxByJwt) == 1){
+                throw new BaseException(DELETED_USER);
+            }
+            userService.logoutUser(userIdx);
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
 
 }
