@@ -5,9 +5,14 @@
 
 # 기술 스택
 
+# API 명세서
++ https://docs.google.com/spreadsheets/d/16CDwqMrnW06r5HvUMu9j3ZL9nc_s9DNL4R7t9eKvK-o/edit#gid=0
+
+# ERD 설계서
++ https://www.erdcloud.com/d/L5SMup6D4epKDpRHw
 
 # 기간
-### 2022.07.16 ~
+### 2022.07.16 ~ 2022.07.19
 
 
 # 일자별 정리
@@ -129,6 +134,7 @@
 # 개발중 이슈사항
 * (7.18)문자전송 요청이 성공한 후에 통신사 등의 이유로 문자 전송이 안 될 경우가 있어 response값으로 동일한 인증코드 전송
 * (7.27)추천 검색어를 조회하는 부분에서 검색어를 포함하면서 앞뒤로 2~3단어씩 뽑아내는 쿼리를 짜기 어려웠음 -> SUBSTRING_INDEX를 여러번 중첩하여 뽑아냄
+
 
 # 1차 피드백(7.18)
 * api 명세서는 최대한 빠르게 업데이트하여 클라이언트측에 지체없이 전달되도록 하기  
